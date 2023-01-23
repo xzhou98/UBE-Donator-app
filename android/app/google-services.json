@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "681002248888",
+    "project_id": "springbeta-6cb29",
+    "storage_bucket": "springbeta-6cb29.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:681002248888:android:02131b09e29c8134da624d",
+        "android_client_info": {
+          "package_name": "com.fullstackquizapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681002248888-h5pvsrl7vq9nrqipgm9qk088ln04b35n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwayc3ksj_7OYyQj15t8AQG8_a3LuW7hQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681002248888-h5pvsrl7vq9nrqipgm9qk088ln04b35n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:681002248888:android:4c81e58119eab979da624d",
+        "android_client_info": {
+          "package_name": "com.quizapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681002248888-h5pvsrl7vq9nrqipgm9qk088ln04b35n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwayc3ksj_7OYyQj15t8AQG8_a3LuW7hQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681002248888-h5pvsrl7vq9nrqipgm9qk088ln04b35n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
