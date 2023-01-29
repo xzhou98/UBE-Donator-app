@@ -85,6 +85,9 @@ const HomeScreen = ({ navigation }) => {
               <Text style={{ fontSize: 18, color: COLORS.black }}>
                 {quiz.title}
               </Text>
+              <Text style={{ color: '#CC0033' }}>
+              {quiz.isPublish ? 'published': 'unpublish'}
+              </Text>
               {quiz.description != '' ? (
                 <Text style={{ opacity: 0.5 }}>{quiz.description}</Text>
               ) : null}
@@ -92,7 +95,7 @@ const HomeScreen = ({ navigation }) => {
             <TouchableOpacity
               style={{
                 paddingVertical: 10,
-                paddingHorizontal: 30,
+                paddingHorizontal: 25,
                 borderRadius: 50,
                 backgroundColor: COLORS.primary + '20',
               }}
@@ -102,6 +105,21 @@ const HomeScreen = ({ navigation }) => {
                 });
               }}>
               <Text style={{ color: COLORS.primary }}>Play</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                paddingVertical: 10,
+                paddingHorizontal: 25,
+                borderRadius: 50,
+                backgroundColor: COLORS.primary + '20',
+              }}
+              onPress={() => {
+                // navigation.navigate('PlayQuizScreen', {
+                //   quizId: quiz.id,
+                // });
+              }}>
+              <Text style={{ color: COLORS.primary }}>edit</Text>
             </TouchableOpacity>
           </View>
         )}

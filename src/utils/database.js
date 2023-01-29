@@ -6,6 +6,8 @@ export const createQuiz = (currentQuizId, title, description) => {
     return firestore().collection('Quizzes').doc(currentQuizId).set({
         title,
         description,
+        isPublish: false,
+        users:[],
     });
 };
 

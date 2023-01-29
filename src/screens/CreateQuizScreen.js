@@ -42,7 +42,7 @@ const CreateQuizScreen = ({ navigation }) => {
                     fontWeight: 'bold',
                     color: COLORS.black,
                 }}>
-                Create Quiz
+                Create Questionnaire
             </Text>
 
             <FormInput

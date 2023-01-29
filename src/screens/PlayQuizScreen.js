@@ -49,12 +49,15 @@ const PlayQuizScreen = ({ navigation, route }) => {
 
     const handleOnSubmit = () => {
         let result = []
+        if(questionNum != questions.length) Alert.alert("Please finish all questions!")
+
         for (let i = 0; i < questions.length; i++) {
             let temp = [];
             for (let j = 0; j < answers.length; j++) 
                 if(answers[i][j]) temp.push(questions[i][j])
             result.push(temp);
         }
+
         // Alert.alert(answers.toString())
     }
 
@@ -204,12 +207,27 @@ const PlayQuizScreen = ({ navigation, route }) => {
 
                                         // Increase correct/incorrect count
                                         answers[index][optionIndex] = !answers[index][optionIndex]
+                                        
+                                        let isEmpty = true
+                                        answers[index].forEach(element => {
+                                            if(element) isEmpty = false;
+                                        });
+
                                         if (!item.selectedOption) {
                                             setQuestionNum(questionNum + 1);
                                         }
+                                        // if(item.selectedOption) setQuestionNum(questionNum + 1);
+                                        // else setQuestionNum(questionNum - 1);
 
                                         let tempQuestions = [...questions];
-                                        tempQuestions[index].selectedOption = option;
+                                        if(isEmpty){
+                                            setQuestionNum(questionNum - 1);
+                                            tempQuestions[index].selectedOption = false;
+                                        }else{
+                                            tempQuestions[index].selectedOption = true;
+                                        }
+                                        // tempQuestions[index].selectedOption = true;
+                                        // Alert.alert(tempQuestions[0].selectedOption.toString())
                                         setQuestions([...tempQuestions]);
                                     }}>
                                     <Text style={{
