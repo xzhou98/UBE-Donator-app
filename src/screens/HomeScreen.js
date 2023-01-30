@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, SafeAreaView, StatusBar, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, SafeAreaView, StatusBar, FlatList, TouchableOpacity, Alert } from 'react-native'
 import { signOut } from '../utils/auth';
 import FormButton from '../components/shared/FormButton';
 import { COLORS } from '../constants/theme';
-import {getQuizzes} from '../utils/database';
+import { getQuizzes, PulishQuiz } from '../utils/database';
 
 
 const HomeScreen = ({ navigation }) => {
@@ -18,10 +18,16 @@ const HomeScreen = ({ navigation }) => {
     // Transform quiz data
     let tempQuizzes = [];
     await quizzes.docs.forEach(async quiz => {
-      await tempQuizzes.push({id: quiz.id, ...quiz.data()});
+      await tempQuizzes.push({ id: quiz.id, ...quiz.data() });
     });
     await setAllQuizzes([...tempQuizzes]);
 
+    setRefreshing(false);
+  }
+
+  const handlePublish = async (quizId, isPublish) => {
+    setRefreshing(true);
+    await PulishQuiz(quizId, isPublish);
     setRefreshing(false);
   }
 
@@ -86,26 +92,42 @@ const HomeScreen = ({ navigation }) => {
                 {quiz.title}
               </Text>
               <Text style={{ color: '#CC0033' }}>
-              {quiz.isPublish ? 'published': 'unpublish'}
+                {quiz.isPublish ? 'published' : 'unpublish'}
               </Text>
               {quiz.description != '' ? (
                 <Text style={{ opacity: 0.5 }}>{quiz.description}</Text>
               ) : null}
             </View>
-            <TouchableOpacity
-              style={{
-                paddingVertical: 10,
-                paddingHorizontal: 25,
-                borderRadius: 50,
-                backgroundColor: COLORS.primary + '20',
-              }}
-              onPress={() => {
-                navigation.navigate('PlayQuizScreen', {
-                  quizId: quiz.id,
-                });
-              }}>
-              <Text style={{ color: COLORS.primary }}>Play</Text>
-            </TouchableOpacity>
+            <View>
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                  paddingHorizontal: 25,
+                  marginVertical: 15,
+                  borderRadius: 50,
+                  backgroundColor: COLORS.primary + '20',
+                }}
+                onPress={() => {
+                  navigation.navigate('PlayQuizScreen', {
+                    quizId: quiz.id,
+                  });
+                }}>
+                <Text style={{ color: COLORS.primary }}>Play</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                  paddingHorizontal: 10,
+                  borderRadius: 50,
+                  backgroundColor: COLORS.primary + '20',
+                }}
+                onPress={() => { handlePublish(quiz.id, !quiz.isPublish) }}>
+                <Text style={{ color: COLORS.primary }}>{quiz.isPublish ? "unPublish" : "Publish"}</Text>
+              </TouchableOpacity>
+            </View>
+
 
             {/* <TouchableOpacity
               style={{

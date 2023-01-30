@@ -296,7 +296,9 @@ const PlayQuizScreen = ({ navigation, route }) => {
                                 </TouchableOpacity>
                             )
                         })) : null}
-                        {item.type == "2" ? (item.option.map((option, optionIndex) => {})) : null}
+                        {item.type == "2" ? (item.option.map((option, optionIndex) => {
+                            
+                        })) : null}
                         {item.type == "3" ? (<Text>3</Text>) : null}
 
 

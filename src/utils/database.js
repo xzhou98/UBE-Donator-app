@@ -47,3 +47,10 @@ export const getQuestionsByQuizId = currentQuizId => {
         .collection('QNA')
         .get();
 };
+
+// Update quiz publishing state
+export const PulishQuiz = (quizId, isPublish) => {
+    return firestore().collection('Quizzes').doc(quizId).update({
+        isPublish: isPublish,
+    })
+};
