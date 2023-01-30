@@ -8,6 +8,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FormButton from '../components/shared/FormButton';
 // import ResultModal from '../components/playQuizScreen/ResultModal';
 import { getQuizById, getQuestionsByQuizId } from '../utils/database';
+import { SelectList   } from 'react-native-dropdown-select-list'
 
 
 
@@ -18,6 +19,17 @@ const PlayQuizScreen = ({ navigation, route }) => {
     const [questions, setQuestions] = useState([])
     const [questionNum, setQuestionNum] = useState(0)
     const [answers, setAnswers] = useState([]);
+
+    const [selected, setSelected] = React.useState("");
+    const data = [
+        { key: '1', value: 'Mobiles', disabled: true },
+        { key: '2', value: 'Appliances' },
+        { key: '3', value: 'Cameras' },
+        { key: '4', value: 'Computers', disabled: true },
+        { key: '5', value: 'Vegetables' },
+        { key: '6', value: 'Diary Products' },
+        { key: '7', value: 'Drinks' },
+    ]
 
     const getQuizAndQuestionDetials = async () => {
         //Get Quiz
@@ -297,7 +309,16 @@ const PlayQuizScreen = ({ navigation, route }) => {
                             )
                         })) : null}
                         {item.type == "2" ? (item.option.map((option, optionIndex) => {
-                            
+                            return (
+                                // <SelectList
+                                //     setSelected={(val) => setSelected(val)}
+                                //     data={data}
+                                //     save="value"
+                                // />
+                                // <SelectList></SelectList>
+                                // <MultipleSelectList></MultipleSelectList>
+                                <Text></Text>
+                            )
                         })) : null}
                         {item.type == "3" ? (<Text>3</Text>) : null}
 
