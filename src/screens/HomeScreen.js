@@ -12,7 +12,7 @@ const HomeScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false)
 
   const getAllQuizzes = async () => {
-    setRefreshing(true);
+    // setRefreshing(true);
     const quizzes = await getQuizzes();
 
     // Transform quiz data
@@ -33,7 +33,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     getAllQuizzes();
-  }, [])
+  }, [refreshing])
 
   return (
     <SafeAreaView
@@ -103,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
                 style={{
                   paddingVertical: 10,
                   alignItems: 'center',
-                  paddingHorizontal: 25,
+                  paddingHorizontal: 15,
                   marginVertical: 15,
                   borderRadius: 50,
                   backgroundColor: COLORS.primary + '20',
@@ -119,7 +119,7 @@ const HomeScreen = ({ navigation }) => {
                 style={{
                   paddingVertical: 10,
                   alignItems: 'center',
-                  paddingHorizontal: 10,
+                  paddingHorizontal: 15,
                   borderRadius: 50,
                   backgroundColor: COLORS.primary + '20',
                 }}
