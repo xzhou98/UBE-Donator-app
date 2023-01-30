@@ -4,6 +4,7 @@ import FormButton from '../components/shared/FormButton';
 import FormInput from '../components/shared/FormInput';
 import { COLORS } from '../constants/theme';
 import {signUp} from '../utils/auth';
+import { createUser } from '../utils/database';
 
 const SignUpScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ const SignUpScreen = ({ navigation }) => {
         if (email != '' && password != '' && confirmPassword != '') {
             if (password == confirmPassword) {
               signUp(email, password);
+              createUser(email);
             } else {
               Alert.alert('password did not match');
             }

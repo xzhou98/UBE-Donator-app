@@ -11,6 +11,13 @@ export const createQuiz = (currentQuizId, title, description) => {
     });
 };
 
+export const createUser = (email) => {
+    return firestore().collection('Users').add({
+        email: email,
+        isAdmin: false,
+    });
+}
+
 // Create new question for current quiz
 export const createQuestion = (currentQuizId, currentQuestionId, question) => {
     Alert.alert(question.option.toString())

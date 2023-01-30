@@ -49,12 +49,12 @@ const PlayQuizScreen = ({ navigation, route }) => {
 
     const handleOnSubmit = () => {
         let result = []
-        if(questionNum != questions.length) Alert.alert("Please finish all questions!")
+        if (questionNum != questions.length) Alert.alert("Please finish all questions!")
 
         for (let i = 0; i < questions.length; i++) {
             let temp = [];
-            for (let j = 0; j < answers.length; j++) 
-                if(answers[i][j]) temp.push(questions[i][j])
+            for (let j = 0; j < answers.length; j++)
+                if (answers[i][j]) temp.push(questions[i][j])
             result.push(temp);
         }
 
@@ -185,7 +185,122 @@ const PlayQuizScreen = ({ navigation, route }) => {
                         </View>
 
                         {/* Options */}
-                        {item.option.map((option, optionIndex) => {
+                        {item.type == "0" ? (item.option.map((option, optionIndex) => {
+                            return (<TouchableOpacity
+                                key={optionIndex}
+                                style={{
+                                    paddingVertical: 14,
+                                    paddingHorizontal: 20,
+                                    borderTopWidth: 1,
+                                    borderColor: COLORS.border,
+                                    backgroundColor: answers[index][optionIndex] ? (COLORS.success) : (COLORS.white),
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'flex-start',
+                                }}
+
+                                onPress={() => {
+                                    //check did the question be selected before
+                                    let isEmpty = true;
+                                    answers[index].forEach(element => {
+                                        if (element == true) isEmpty = false;
+                                    });
+                                    // increase count
+                                    if (isEmpty) setQuestionNum(questionNum + 1);
+
+                                    answers[index][optionIndex] = true
+
+                                    for (let i = 0; i < answers[index].length; i++) {
+                                        if (i != optionIndex) answers[index][i] = false;
+                                    }
+
+                                    let tempQuestions = [...questions];
+
+                                    tempQuestions[index].selectedOption = true;
+
+                                    setQuestions([...tempQuestions]);
+                                }}>
+                                <Text style={{
+                                    width: 25,
+                                    height: 25,
+                                    padding: 2,
+                                    borderWidth: 1,
+                                    borderColor: COLORS.border,
+                                    textAlign: 'center',
+                                    marginRight: 16,
+                                    borderRadius: 25,
+                                    color: answers[index][optionIndex] ? (COLORS.white) : (COLORS.black),
+                                }}>
+                                    {optionIndex + 1}</Text>
+                                <Text style={{ color: answers[index][optionIndex] ? (COLORS.white) : (COLORS.black) }}>{option}</Text>
+                            </TouchableOpacity>)
+                        })) : null}
+                        {item.type == "1" ? (item.option.map((option, optionIndex) => {
+                            return (
+                                <TouchableOpacity
+                                    key={optionIndex}
+                                    style={{
+                                        paddingVertical: 14,
+                                        paddingHorizontal: 20,
+                                        borderTopWidth: 1,
+                                        borderColor: COLORS.border,
+                                        backgroundColor: answers[index][optionIndex] ? (COLORS.success) : (COLORS.white),
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'flex-start',
+                                    }}
+
+                                    onPress={() => {
+                                        // if (item.selectedOption) {
+                                        //     return null;
+                                        // }
+
+                                        // Increase correct/incorrect count
+                                        answers[index][optionIndex] = !answers[index][optionIndex]
+
+                                        let isEmpty = true
+                                        answers[index].forEach(element => {
+                                            if (element) isEmpty = false;
+                                        });
+
+                                        if (!item.selectedOption) {
+                                            setQuestionNum(questionNum + 1);
+                                        }
+                                        // if(item.selectedOption) setQuestionNum(questionNum + 1);
+                                        // else setQuestionNum(questionNum - 1);
+
+                                        let tempQuestions = [...questions];
+                                        if (isEmpty) {
+                                            setQuestionNum(questionNum - 1);
+                                            tempQuestions[index].selectedOption = false;
+                                        } else {
+                                            tempQuestions[index].selectedOption = true;
+                                        }
+                                        // tempQuestions[index].selectedOption = true;
+                                        // Alert.alert(tempQuestions[0].selectedOption.toString())
+                                        setQuestions([...tempQuestions]);
+                                    }}>
+                                    <Text style={{
+                                        width: 25,
+                                        height: 25,
+                                        padding: 2,
+                                        borderWidth: 1,
+                                        borderColor: COLORS.border,
+                                        textAlign: 'center',
+                                        marginRight: 16,
+                                        borderRadius: 25,
+                                        color: answers[index][optionIndex] ? (COLORS.white) : (COLORS.black),
+                                    }}>
+                                        {optionIndex + 1}</Text>
+                                    <Text style={{ color: answers[index][optionIndex] ? (COLORS.white) : (COLORS.black) }}>{option}</Text>
+                                </TouchableOpacity>
+                            )
+                        })) : null}
+                        {item.type == "2" ? (item.option.map((option, optionIndex) => {})) : null}
+                        {item.type == "3" ? (<Text>3</Text>) : null}
+
+
+                        {/* {item.option.map((option, optionIndex) => {
                             return (
                                 <TouchableOpacity
                                     key={optionIndex}
@@ -245,7 +360,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
                                     <Text style={{ color: answers[index][optionIndex] ? (COLORS.white) : (COLORS.black) }}>{option}</Text>
                                 </TouchableOpacity>
                             )
-                        })}
+                        })} */}
                     </View>
                 )}
 

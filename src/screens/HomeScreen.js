@@ -47,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
           elevation: 4,
           paddingHorizontal: 20,
         }}>
-        <Text style={{ fontSize: 20, color: COLORS.black }}>Quiz App</Text>
+        <Text style={{ fontSize: 20, color: COLORS.black }}>Questionnaire App</Text>
         <Text
           style={{
             fontSize: 20,
@@ -107,7 +107,7 @@ const HomeScreen = ({ navigation }) => {
               <Text style={{ color: COLORS.primary }}>Play</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{
                 paddingVertical: 10,
                 paddingHorizontal: 25,
@@ -120,12 +120,12 @@ const HomeScreen = ({ navigation }) => {
                 // });
               }}>
               <Text style={{ color: COLORS.primary }}>edit</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         )}
       />
 
-      {/* Button */}
+      {/* Button
       <FormButton
         labelText="Create Quiz"
         style={{
@@ -136,7 +136,7 @@ const HomeScreen = ({ navigation }) => {
           paddingHorizontal: 30,
         }}
         handleOnPress={() => navigation.navigate('CreateQuizScreen')}
-      />
+      /> */}
 
 
     </SafeAreaView>
