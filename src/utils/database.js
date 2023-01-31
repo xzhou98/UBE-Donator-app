@@ -54,3 +54,8 @@ export const PulishQuiz = (quizId, isPublish) => {
         isPublish: isPublish,
     })
 };
+
+// Get User info by email
+export const getUserInfoByEmail = email => {
+    
+}

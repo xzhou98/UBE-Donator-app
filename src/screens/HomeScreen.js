@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Text, View, SafeAreaView, StatusBar, FlatList, TouchableOpacity, Alert } from 'react-native'
 import { signOut } from '../utils/auth';
 import FormButton from '../components/shared/FormButton';
 import { COLORS } from '../constants/theme';
 import { getQuizzes, PulishQuiz } from '../utils/database';
+import { AuthContext } from "../context/AuthContext";
 
 
 const HomeScreen = ({ navigation }) => {
-
+  // const { currentUser } = useContext(AuthContext);
   const [allQuizzes, setAllQuizzes] = useState([])
   const [refreshing, setRefreshing] = useState(false)
 

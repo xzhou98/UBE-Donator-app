@@ -38,7 +38,9 @@ const PlayQuizScreen = ({ navigation, route }) => {
         //Transform and shuffle options
         let tempQuestions = [];
         await questions.docs.forEach(async res => {
+            
             let question = res.data();
+            question.id = res.id;
             let temp = []
             for (let i = 0; i < question.option.length; i++) {
                 temp.push(false);
@@ -77,31 +79,6 @@ const PlayQuizScreen = ({ navigation, route }) => {
         // Alert.alert(answers.toString())
     }
 
-    // const getOptionBgColor = (currentQuestion, currentOption) => {
-    //     if (currentQuestion.selectedOption) {
-    //         if (currentOption == currentQuestion.selectedOption) {
-
-    //             return COLORS.success;
-
-    //         } else {
-    //             return COLORS.white;
-    //         }
-    //     } else {
-    //         return COLORS.white;
-    //     }
-    // };
-
-    // const getOptionTextColor = (currentQuestion, currentOption) => {
-    //     if (currentQuestion.selectedOption) {
-    //         if (currentOption == currentQuestion.selectedOption) {
-    //             return COLORS.white;
-    //         } else {
-    //             return COLORS.black;
-    //         }
-    //     } else {
-    //         return COLORS.black;
-    //     }
-    // };
 
     return (
         <SafeAreaView style={{ flex: 1, position: 'relative', }}>
@@ -333,9 +310,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
 
                                 setIsFocus(false);
                             }}
-                        />)
-                            : null}
-
+                        />) : null}
                         {item.type == "3" ? (<Text>3</Text>) : null}
 
                     </View>
