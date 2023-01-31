@@ -64,14 +64,16 @@ const PlayQuizScreen = ({ navigation, route }) => {
     const handleOnSubmit = () => {
         let result = []
         if (questionNum != questions.length) Alert.alert("Please finish all questions!")
-
-        for (let i = 0; i < questions.length; i++) {
-            let temp = [];
-            for (let j = 0; j < answers.length; j++)
-                if (answers[i][j]) temp.push(questions[i][j])
-            result.push(temp);
+        else{
+            for (let i = 0; i < questions.length; i++) {
+                let temp = [];
+                for (let j = 0; j < answers.length; j++)
+                    if (answers[i][j]) temp.push(questions[i][j])
+                result.push(temp);
+            }
+    
+            navigation.navigate('HomeScreen')
         }
-
         // Alert.alert(answers.toString())
     }
 
