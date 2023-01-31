@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
     View, Text, SafeAreaView, StatusBar, FlatList,
-    Image, TouchableOpacity, Alert,
+    Image, TouchableOpacity, Alert,StyleSheet
 } from 'react-native';
 import { COLORS } from '../constants/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FormButton from '../components/shared/FormButton';
 // import ResultModal from '../components/playQuizScreen/ResultModal';
 import { getQuizById, getQuestionsByQuizId } from '../utils/database';
-// import ModalDropdown from 'react-native-modal-dropdown';
-import { SelectList } from 'react-native-dropdown-select-list';
+import { Dropdown } from 'react-native-element-dropdown';
 
 
 
@@ -22,16 +21,19 @@ const PlayQuizScreen = ({ navigation, route }) => {
     const [questionNum, setQuestionNum] = useState(0)
     const [answers, setAnswers] = useState([]);
 
-    const [selected, setSelected] = React.useState("");
+    const [selected, setSelected] = useState("");
+    const [isFocus, setIsFocus] = useState(false);
+    const [value, setValue] = useState(null);
     const data = [
-        { key: '1', value: 'Mobiles', disabled: true },
-        { key: '2', value: 'Appliances' },
-        { key: '3', value: 'Cameras' },
-        { key: '4', value: 'Computers', disabled: true },
-        { key: '5', value: 'Vegetables' },
-        { key: '6', value: 'Diary Products' },
-        { key: '7', value: 'Drinks' },
-    ]
+        { label: 'Item 1', value: '1' },
+        { label: 'Item 2', value: '2' },
+        { label: 'Item 3', value: '3' },
+        { label: 'Item 4', value: '4' },
+        { label: 'Item 5', value: '5' },
+        { label: 'Item 6', value: '6' },
+        { label: 'Item 7', value: '7' },
+        { label: 'Item 8', value: '8' },
+      ];
 
     const getQuizAndQuestionDetials = async () => {
         //Get Quiz
@@ -63,15 +65,16 @@ const PlayQuizScreen = ({ navigation, route }) => {
 
     const handleOnSubmit = () => {
         let result = []
+        Alert.alert(selected);
         if (questionNum != questions.length) Alert.alert("Please finish all questions!")
-        else{
+        else {
             for (let i = 0; i < questions.length; i++) {
                 let temp = [];
                 for (let j = 0; j < answers.length; j++)
                     if (answers[i][j]) temp.push(questions[i][j])
                 result.push(temp);
             }
-    
+
             navigation.navigate('HomeScreen')
         }
         // Alert.alert(answers.toString())
@@ -312,10 +315,27 @@ const PlayQuizScreen = ({ navigation, route }) => {
                                 </TouchableOpacity>
                             )
                         })) : null}
-                        {item.type == "2" ? (
-                        // <SelectList data={item.option}/> 
-                        <Text>1</Text>)
-                        : null}
+                        {item.type == "2" ? (<Dropdown
+                             style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                             placeholderStyle={styles.placeholderStyle}
+                             selectedTextStyle={styles.selectedTextStyle}
+                            //  inputSearchStyle={styles.inputSearchStyle}
+                             iconStyle={styles.iconStyle}
+                             data={data}
+                             maxHeight={300}
+                             labelField="label"
+                             valueField="value"
+                             placeholder={!isFocus ? 'Select item' : '...'}
+                             value={value}
+                             onFocus={() => setIsFocus(true)}
+                             onBlur={() => setIsFocus(false)}
+                             onChange={item => {
+                               setValue(item.value);
+                               setIsFocus(false);
+                             }}
+                           />)
+                            : null}
+                        {/* {if(item.type)} */}
 
                         {item.type == "3" ? (<Text>3</Text>) : null}
 
@@ -395,3 +415,43 @@ const PlayQuizScreen = ({ navigation, route }) => {
     )
 }
 export default PlayQuizScreen
+
+const styles = StyleSheet.create({
+    container: {
+      backgroundColor: 'white',
+      padding: 16,
+    },
+    dropdown: {
+      height: 50,
+      borderColor: 'gray',
+      borderWidth: 0.5,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+    },
+    icon: {
+      marginRight: 5,
+    },
+    label: {
+      position: 'absolute',
+      backgroundColor: 'white',
+      left: 22,
+      top: 8,
+      zIndex: 999,
+      paddingHorizontal: 8,
+      fontSize: 14,
+    },
+    placeholderStyle: {
+      fontSize: 16,
+    },
+    selectedTextStyle: {
+      fontSize: 16,
+    },
+    iconStyle: {
+      width: 20,
+      height: 20,
+    },
+    inputSearchStyle: {
+      height: 40,
+      fontSize: 16,
+    },
+  });
