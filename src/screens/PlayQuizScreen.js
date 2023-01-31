@@ -7,9 +7,9 @@ import { COLORS } from '../constants/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FormButton from '../components/shared/FormButton';
 // import ResultModal from '../components/playQuizScreen/ResultModal';
-import { getQuizById, getQuestionsByQuizId } from '../utils/database';
+import { getQuizById, getQuestionsByQuizId, getUserInfoByEmail, } from '../utils/database';
 import { Dropdown } from 'react-native-element-dropdown';
-
+import FormInput from '../components/shared/FormInput';
 
 
 
@@ -20,6 +20,8 @@ const PlayQuizScreen = ({ navigation, route }) => {
     const [questions, setQuestions] = useState([])
     const [questionNum, setQuestionNum] = useState(0)
     const [answers, setAnswers] = useState([]);
+
+    const [answer, answerText] = useState('');
 
     //set dropdown select value
     const [isFocus, setIsFocus] = useState(false);
@@ -38,7 +40,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
         //Transform and shuffle options
         let tempQuestions = [];
         await questions.docs.forEach(async res => {
-            
+
             let question = res.data();
             question.id = res.id;
             let temp = []
@@ -61,17 +63,17 @@ const PlayQuizScreen = ({ navigation, route }) => {
 
     const handleOnSubmit = () => {
         let result = []
-
+        getUserInfoByEmail
         if (questionNum != questions.length) Alert.alert("Please finish all questions!")
         else {
             for (let i = 0; i < questions.length; i++) {
                 let temp = [];
-                for (let j = 0; j < answers.length; j++){
+                for (let j = 0; j < answers.length; j++) {
                     if (answers[i][j]) temp.push(questions[i].option[j])
                 }
-                result.push({ answer:temp});
+                result.push({ answer: temp });
             }
-            console.log(result)
+            // console.log(result)
             // let currentQuiz = getQuizById(currentQuizId)
 
             // navigation.navigate('HomeScreen')
@@ -311,7 +313,15 @@ const PlayQuizScreen = ({ navigation, route }) => {
                                 setIsFocus(false);
                             }}
                         />) : null}
-                        {item.type == "3" ? (<Text>3</Text>) : null}
+                        {item.type == "3" ? (item.option.map((option, optionIndex) => {
+                            return (<FormInput
+                                // labelText="Answer:"
+                                placeholderText="enter your answer"
+                                onChangeText={value => answerText(value)}
+                                value={answer}
+                                secureTextEntry={false}
+                            />)
+                        })) : null}
 
                     </View>
                 )}

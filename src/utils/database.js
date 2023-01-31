@@ -57,5 +57,15 @@ export const PulishQuiz = (quizId, isPublish) => {
 
 // Get User info by email
 export const getUserInfoByEmail = email => {
-    
+    let user = {}
+    try {
+        firestore().collection("Users").where("email", "==", user.email).get().then(querySnapshot = (doc) => {
+            user = doc.data();
+            user.id = doc.id;
+        });
+        console.log(user)
+
+    } catch (error) {
+        console.log(error);
+    }
 }
