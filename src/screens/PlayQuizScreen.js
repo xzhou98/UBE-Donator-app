@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     View, Text, SafeAreaView, StatusBar, FlatList,
-    Image, TouchableOpacity, Alert,StyleSheet
+    Image, TouchableOpacity, Alert, StyleSheet
 } from 'react-native';
 import { COLORS } from '../constants/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -21,19 +21,10 @@ const PlayQuizScreen = ({ navigation, route }) => {
     const [questionNum, setQuestionNum] = useState(0)
     const [answers, setAnswers] = useState([]);
 
-    const [selected, setSelected] = useState("");
+    //set dropdown select value
     const [isFocus, setIsFocus] = useState(false);
-    const [value, setValue] = useState(null);
-    const data = [
-        { label: 'Item 1', value: '1' },
-        { label: 'Item 2', value: '2' },
-        { label: 'Item 3', value: '3' },
-        { label: 'Item 4', value: '4' },
-        { label: 'Item 5', value: '5' },
-        { label: 'Item 6', value: '6' },
-        { label: 'Item 7', value: '7' },
-        { label: 'Item 8', value: '8' },
-      ];
+    const [value, setValue] = useState([]);
+
 
     const getQuizAndQuestionDetials = async () => {
         //Get Quiz
@@ -53,11 +44,14 @@ const PlayQuizScreen = ({ navigation, route }) => {
                 temp.push(false);
             }
             answers.push(temp)
+            value.push(null)
             await tempQuestions.push(question)
         });
 
         setQuestions([...tempQuestions]);
     }
+
+
 
     useEffect(() => {
         getQuizAndQuestionDetials()
@@ -65,7 +59,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
 
     const handleOnSubmit = () => {
         let result = []
-        Alert.alert(selected);
+
         if (questionNum != questions.length) Alert.alert("Please finish all questions!")
         else {
             for (let i = 0; i < questions.length; i++) {
@@ -74,8 +68,8 @@ const PlayQuizScreen = ({ navigation, route }) => {
                     if (answers[i][j]) temp.push(questions[i][j])
                 result.push(temp);
             }
-            //let currentQuiz = getQuizById(currentQuizId)
-            //currentQuiz.isFinished = true
+            // let currentQuiz = getQuizById(currentQuizId)
+            // currentQuiz.isFinished = true
             navigation.navigate('HomeScreen')
         }
         // Alert.alert(answers.toString())
@@ -317,90 +311,31 @@ const PlayQuizScreen = ({ navigation, route }) => {
                             )
                         })) : null}
                         {item.type == "2" ? (<Dropdown
-                             style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                             placeholderStyle={styles.placeholderStyle}
-                             selectedTextStyle={styles.selectedTextStyle}
-                            //  inputSearchStyle={styles.inputSearchStyle}
-                             iconStyle={styles.iconStyle}
-                             data={data}
-                             maxHeight={300}
-                             labelField="label"
-                             valueField="value"
-                             placeholder={!isFocus ? 'Select item' : '...'}
-                             value={value}
-                             onFocus={() => setIsFocus(true)}
-                             onBlur={() => setIsFocus(false)}
-                             onChange={item => {
-                               setValue(item.value);
-                               setIsFocus(false);
-                             }}
-                           />)
+                            style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            iconStyle={styles.iconStyle}
+                            data={item.option.map((element, index) => ({ label: `${element}`, value: `${index}` }))}
+                            maxHeight={300}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={!isFocus ? 'Select item' : '...'}
+                            value={value[index]}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                                if (value[index] == null) setQuestionNum(questionNum + 1);
+                                answers[index][item.value] = true;
+
+                                value[index] = item.value;
+
+                                setIsFocus(false);
+                            }}
+                        />)
                             : null}
-                        {/* {if(item.type)} */}
 
                         {item.type == "3" ? (<Text>3</Text>) : null}
 
-                        {/* {item.option.map((option, optionIndex) => {
-                            return (
-                                <TouchableOpacity
-                                    key={optionIndex}
-                                    style={{
-                                        paddingVertical: 14,
-                                        paddingHorizontal: 20,
-                                        borderTopWidth: 1,
-                                        borderColor: COLORS.border,
-                                        backgroundColor: answers[index][optionIndex] ? (COLORS.success) : (COLORS.white),
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'flex-start',
-                                    }}
-
-                                    onPress={() => {
-                                        // if (item.selectedOption) {
-                                        //     return null;
-                                        // }
-
-                                        // Increase correct/incorrect count
-                                        answers[index][optionIndex] = !answers[index][optionIndex]
-                                        
-                                        let isEmpty = true
-                                        answers[index].forEach(element => {
-                                            if(element) isEmpty = false;
-                                        });
-
-                                        if (!item.selectedOption) {
-                                            setQuestionNum(questionNum + 1);
-                                        }
-                                        // if(item.selectedOption) setQuestionNum(questionNum + 1);
-                                        // else setQuestionNum(questionNum - 1);
-
-                                        let tempQuestions = [...questions];
-                                        if(isEmpty){
-                                            setQuestionNum(questionNum - 1);
-                                            tempQuestions[index].selectedOption = false;
-                                        }else{
-                                            tempQuestions[index].selectedOption = true;
-                                        }
-                                        // tempQuestions[index].selectedOption = true;
-                                        // Alert.alert(tempQuestions[0].selectedOption.toString())
-                                        setQuestions([...tempQuestions]);
-                                    }}>
-                                    <Text style={{
-                                        width: 25,
-                                        height: 25,
-                                        padding: 2,
-                                        borderWidth: 1,
-                                        borderColor: COLORS.border,
-                                        textAlign: 'center',
-                                        marginRight: 16,
-                                        borderRadius: 25,
-                                        color: answers[index][optionIndex] ? (COLORS.white) : (COLORS.black),
-                                    }}>
-                                        {optionIndex + 1}</Text>
-                                    <Text style={{ color: answers[index][optionIndex] ? (COLORS.white) : (COLORS.black) }}>{option}</Text>
-                                </TouchableOpacity>
-                            )
-                        })} */}
                     </View>
                 )}
 
@@ -419,40 +354,42 @@ export default PlayQuizScreen
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: 'white',
-      padding: 16,
+        backgroundColor: 'white',
+        padding: 16,
     },
     dropdown: {
-      height: 50,
-      borderColor: 'gray',
-      borderWidth: 0.5,
-      borderRadius: 8,
-      paddingHorizontal: 8,
+        marginHorizontal: 50,
+        marginVertical: 10,
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 0.5,
+        borderRadius: 8,
+        paddingHorizontal: 8,
     },
     icon: {
-      marginRight: 5,
+        marginRight: 5,
     },
     label: {
-      position: 'absolute',
-      backgroundColor: 'white',
-      left: 22,
-      top: 8,
-      zIndex: 999,
-      paddingHorizontal: 8,
-      fontSize: 14,
+        position: 'absolute',
+        backgroundColor: 'white',
+        left: 22,
+        top: 8,
+        zIndex: 999,
+        paddingHorizontal: 8,
+        fontSize: 14,
     },
     placeholderStyle: {
-      fontSize: 16,
+        fontSize: 16,
     },
     selectedTextStyle: {
-      fontSize: 16,
+        fontSize: 16,
     },
     iconStyle: {
-      width: 20,
-      height: 20,
+        width: 20,
+        height: 20,
     },
     inputSearchStyle: {
-      height: 40,
-      fontSize: 16,
+        height: 40,
+        fontSize: 16,
     },
-  });
+});
