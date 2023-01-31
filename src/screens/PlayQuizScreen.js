@@ -74,7 +74,8 @@ const PlayQuizScreen = ({ navigation, route }) => {
                     if (answers[i][j]) temp.push(questions[i][j])
                 result.push(temp);
             }
-
+            //let currentQuiz = getQuizById(currentQuizId)
+            //currentQuiz.isFinished = true
             navigation.navigate('HomeScreen')
         }
         // Alert.alert(answers.toString())

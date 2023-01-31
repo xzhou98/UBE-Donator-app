@@ -25,11 +25,11 @@ const HomeScreen = ({ navigation }) => {
     setRefreshing(false);
   }
 
-  const handlePublish = async (quizId, isPublish) => {
-    setRefreshing(true);
-    await PulishQuiz(quizId, isPublish);
-    setRefreshing(false);
-  }
+  // const handlePublish = async (quizId, isPublish) => {
+  //   setRefreshing(true);
+  //   await PulishQuiz(quizId, isPublish);
+  //   setRefreshing(false);
+  // }
 
   useEffect(() => {
     getAllQuizzes();
@@ -92,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
                 {quiz.title}
               </Text>
               <Text style={{ color: '#CC0033' }}>
-                {quiz.isPublish ? 'published' : 'unpublish'}
+                {quiz.isFinished ? 'finished' : 'unfinished'}
               </Text>
               {quiz.description != '' ? (
                 <Text style={{ opacity: 0.5 }}>{quiz.description}</Text>
@@ -115,6 +115,7 @@ const HomeScreen = ({ navigation }) => {
                 }}>
                 <Text style={{ color: COLORS.primary }}>Play</Text>
               </TouchableOpacity>
+              {/*               
               <TouchableOpacity
                 style={{
                   paddingVertical: 10,
@@ -126,6 +127,7 @@ const HomeScreen = ({ navigation }) => {
                 onPress={() => { handlePublish(quiz.id, !quiz.isPublish) }}>
                 <Text style={{ color: COLORS.primary }}>{quiz.isPublish ? "unPublish" : "Publish"}</Text>
               </TouchableOpacity>
+              */}
             </View>
 
 
