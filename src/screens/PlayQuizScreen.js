@@ -7,13 +7,19 @@ import { COLORS } from '../constants/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FormButton from '../components/shared/FormButton';
 // import ResultModal from '../components/playQuizScreen/ResultModal';
-import { getQuizById, getQuestionsByQuizId, getUserInfoByEmail, } from '../utils/database';
+import { getQuizById, getQuestionsByQuizId, getUserInfoByEmail, submitQuiz, checkQuizFinish, } from '../utils/database';
 import { Dropdown } from 'react-native-element-dropdown';
 import FormInput from '../components/shared/FormInput';
+import auth from "@react-native-firebase/auth";
 
 
 
 const PlayQuizScreen = ({ navigation, route }) => {
+
+    //text user
+    const [userEmail, setUserEmail] = useState();
+    const [user, setUser] = useState();
+
 
     const [currentQuizId, setCurrentQuiz] = useState(route.params.quizId)
     const [title, setTitle] = useState('')
@@ -21,7 +27,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
     const [questionNum, setQuestionNum] = useState(0)
     const [answers, setAnswers] = useState([]);
 
-    const [answer, answerText] = useState('');
+    const [answer, answerText] = useState('');;
 
     //set dropdown select value
     const [isFocus, setIsFocus] = useState(false);
@@ -40,7 +46,6 @@ const PlayQuizScreen = ({ navigation, route }) => {
         //Transform and shuffle options
         let tempQuestions = [];
         await questions.docs.forEach(async res => {
-
             let question = res.data();
             question.id = res.id;
             let temp = []
@@ -55,28 +60,45 @@ const PlayQuizScreen = ({ navigation, route }) => {
         setQuestions([...tempQuestions]);
     }
 
+    async function onAuthStateChanged (user) {
+        setUserEmail(user.email);
+        setUser(await getUserInfoByEmail(user.email));
+    }
+
 
 
     useEffect(() => {
-        getQuizAndQuestionDetials()
+        getQuizAndQuestionDetials();
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+        return subscriber; // unsubscribe on unmount
     }, [])
 
-    const handleOnSubmit = () => {
+    const handleOnSubmit = async () => {
         let result = []
-        getUserInfoByEmail
-        if (questionNum != questions.length) Alert.alert("Please finish all questions!")
-        else {
-            for (let i = 0; i < questions.length; i++) {
-                let temp = [];
-                for (let j = 0; j < answers.length; j++) {
-                    if (answers[i][j]) temp.push(questions[i].option[j])
-                }
-                result.push({ answer: temp });
-            }
-            // console.log(result)
-            // let currentQuiz = getQuizById(currentQuizId)
+        try {
+            if (await checkQuizFinish(currentQuizId, user.id)) {
+                Alert.alert("You have already finished this questionnaire!")
+            } else {
+                if (questionNum != questions.length) Alert.alert("Please finish all questions!")
+                else {
+                    for (let i = 0; i < questions.length; i++) {
+                        let temp = [];
+                        for (let j = 0; j < answers.length; j++) {
+                            if (answers[i][j]) temp.push(questions[i].option[j])
+                        }
+                        result.push({ questionId: questions[i].id, answer: temp });
+                    }
 
-            // navigation.navigate('HomeScreen')
+                    await submitQuiz(currentQuizId, user.id, result)
+
+                    // console.log(result)
+                    // let currentQuiz = getQuizById(currentQuizId)
+
+                    // navigation.navigate('HomeScreen')
+                }
+            }
+        } catch (error) {
+            console.log(error);
         }
         // Alert.alert(answers.toString())
     }

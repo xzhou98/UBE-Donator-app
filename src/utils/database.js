@@ -56,16 +56,64 @@ export const PulishQuiz = (quizId, isPublish) => {
 };
 
 // Get User info by email
-export const getUserInfoByEmail = email => {
-    let user = {}
-    try {
-        firestore().collection("Users").where("email", "==", user.email).get().then(querySnapshot = (doc) => {
-            user = doc.data();
-            user.id = doc.id;
-        });
-        console.log(user)
+export const getUserInfoByEmail = async (email) => {
+    let user = null
+    // const q =  firestore().collection("Users").where("email", "==", `${email}`).get()
+    const q = await firestore().collection("Users").get()
 
-    } catch (error) {
-        console.log(error);
+    await q.docs.forEach(async element => {
+        if (email == element.data().email)
+            user = { id: element.id, email: element.data().email, isAdmin: element.data().isAdmin }
+    });
+
+    return user;
+}
+
+//submit quiz
+export const submitQuiz = async (quizId, userId, answers) => {
+    let quiz = null
+    let question = 1;
+
+    // user finish
+    await firestore().collection('Quizzes').doc(quizId).get().then(data => {
+        quiz = data.data();
+    });
+    quiz.users.push(userId)
+    firestore().collection('Quizzes').doc(quizId).update({
+        users: quiz.users
+    });
+
+
+    //update answer
+    for (let i = 0; i < answers.length; i++) {
+        await firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).get().then(data =>{
+            question = data.data();
+        });
+
+        let res = question.answers;
+        res.push({userId: userId, answer: answers[i].answer});
+
+        console.log(res);
+        firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).update({
+            // answers: question.answers.push({userId: userId, answer: answers[i].answer})
+            answers: res
+        })
     }
+}
+
+//Check if user finished the quiz
+// true finished, false unfinished
+export const checkQuizFinish = async (quizId, userId) => {
+    // console.log(userId);
+    let finish = false;
+
+    await firestore().collection('Quizzes').doc(quizId).get().then(data => {
+        data.data().users.forEach(element => {
+            if (element == userId) {
+                finish = true;
+            }
+        });
+    });
+
+    return finish;
 }
