@@ -8,7 +8,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FormButton from '../components/shared/FormButton';
 // import ResultModal from '../components/playQuizScreen/ResultModal';
 import { getQuizById, getQuestionsByQuizId } from '../utils/database';
-import { SelectList   } from 'react-native-dropdown-select-list'
+// import ModalDropdown from 'react-native-modal-dropdown';
+import { SelectList } from 'react-native-dropdown-select-list';
+
 
 
 
@@ -308,20 +310,12 @@ const PlayQuizScreen = ({ navigation, route }) => {
                                 </TouchableOpacity>
                             )
                         })) : null}
-                        {item.type == "2" ? (item.option.map((option, optionIndex) => {
-                            return (
-                                // <SelectList
-                                //     setSelected={(val) => setSelected(val)}
-                                //     data={data}
-                                //     save="value"
-                                // />
-                                // <SelectList></SelectList>
-                                // <MultipleSelectList></MultipleSelectList>
-                                <Text></Text>
-                            )
-                        })) : null}
-                        {item.type == "3" ? (<Text>3</Text>) : null}
+                        {item.type == "2" ? (
+                        // <SelectList data={item.option}/> 
+                        <Text>1</Text>)
+                        : null}
 
+                        {item.type == "3" ? (<Text>3</Text>) : null}
 
                         {/* {item.option.map((option, optionIndex) => {
                             return (

@@ -146,8 +146,8 @@ const HomeScreen = ({ navigation }) => {
           </View>
         )}
       />
-
-      {/* Button
+{/* 
+      Button */}
       <FormButton
         labelText="Create Quiz"
         style={{
@@ -158,7 +158,7 @@ const HomeScreen = ({ navigation }) => {
           paddingHorizontal: 30,
         }}
         handleOnPress={() => navigation.navigate('CreateQuizScreen')}
-      /> */}
+      />
 
 
     </SafeAreaView>
