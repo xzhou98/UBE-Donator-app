@@ -7,7 +7,7 @@ export const createQuiz = (currentQuizId, title, description) => {
         title,
         description,
         isPublish: false,
-        users:[],
+        users: [],
     });
 };
 

@@ -64,13 +64,15 @@ const PlayQuizScreen = ({ navigation, route }) => {
         else {
             for (let i = 0; i < questions.length; i++) {
                 let temp = [];
-                for (let j = 0; j < answers.length; j++)
-                    if (answers[i][j]) temp.push(questions[i][j])
-                result.push(temp);
+                for (let j = 0; j < answers.length; j++){
+                    if (answers[i][j]) temp.push(questions[i].option[j])
+                }
+                result.push({ answer:temp});
             }
+            console.log(result)
             // let currentQuiz = getQuizById(currentQuizId)
-            // currentQuiz.isFinished = true
-            navigation.navigate('HomeScreen')
+
+            // navigation.navigate('HomeScreen')
         }
         // Alert.alert(answers.toString())
     }
