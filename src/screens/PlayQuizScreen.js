@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     View, Text, SafeAreaView, StatusBar, FlatList,
-    Image, TouchableOpacity, Alert, StyleSheet
+    Image, TouchableOpacity, Alert, StyleSheet, TextInput
 } from 'react-native';
 import { COLORS } from '../constants/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -27,7 +27,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
     const [questionNum, setQuestionNum] = useState(0)
     const [answers, setAnswers] = useState([]);
 
-    const [answer, answerText] = useState('');;
+    // const [answer, answerText] = useState('');;
 
     //set dropdown select value
     const [isFocus, setIsFocus] = useState(false);
@@ -60,7 +60,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
         setQuestions([...tempQuestions]);
     }
 
-    async function onAuthStateChanged (user) {
+    async function onAuthStateChanged(user) {
         setUserEmail(user.email);
         setUser(await getUserInfoByEmail(user.email));
     }
@@ -335,15 +335,29 @@ const PlayQuizScreen = ({ navigation, route }) => {
                                 setIsFocus(false);
                             }}
                         />) : null}
-                        {item.type == "3" ? (item.option.map((option, optionIndex) => {
-                            return (<FormInput
-                                // labelText="Answer:"
-                                placeholderText="enter your answer"
-                                onChangeText={value => answerText(value)}
-                                value={answer}
-                                secureTextEntry={false}
-                            />)
-                        })) : null}
+                        {item.type == "3" ? <View>
+                            <TextInput
+                                style={[styles.inputSearchStyle]}
+                                placeholder="enter your answer"
+                                onChangeText={text => {
+                                    if (value[index] == "" || value[index] == null) {
+                                        setQuestionNum(questionNum + 1);
+                                        answers[index][0] = true;
+                                    }
+                                    value[index] = text;
+                                    if (value[index] == "") {
+                                        setQuestionNum(questionNum - 1);
+                                        answers[index][0] = false;
+                                    }
+                                    questions[index].option[0] = text;
+                                    // console.log(questions[index]);
+                                }}
+                                defaultValue={item.option}
+                                blurOnSubmit={false}
+                                numberOfLines={6}
+                                multiline={true}
+                            />
+                        </View> : null}
 
                     </View>
                 )}
@@ -398,7 +412,12 @@ const styles = StyleSheet.create({
         height: 20,
     },
     inputSearchStyle: {
-        height: 40,
+        marginHorizontal: 15,
+        borderColor: 'gray',
+        borderRadius: 10,
+        borderWidth: 0.5,
+        height: 130,
         fontSize: 16,
+        paddingHorizontal: 8,
     },
 });

@@ -93,7 +93,6 @@ export const submitQuiz = async (quizId, userId, answers) => {
         let res = question.answers;
         res.push({userId: userId, answer: answers[i].answer});
 
-        console.log(res);
         firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).update({
             // answers: question.answers.push({userId: userId, answer: answers[i].answer})
             answers: res
