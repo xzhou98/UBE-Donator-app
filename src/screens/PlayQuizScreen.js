@@ -69,7 +69,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
         getQuizAndQuestionDetials();
         const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
         return subscriber; // unsubscribe on unmount
-    }, [])
+    }, [navigation])
 
     const handleOnSubmit = async () => {
         let result = []
@@ -89,7 +89,9 @@ const PlayQuizScreen = ({ navigation, route }) => {
 
                     await submitQuiz(currentQuizId, user.id, result, auth().currentUser.email)
 
-                    navigation.navigate('HomeScreen', )
+                    navigation.navigate('HomeScreen', {
+
+                    })
                 }
             }
         } catch (error) {

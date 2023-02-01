@@ -20,17 +20,17 @@ const HomeScreen = ({ navigation }) => {
     // Transform quiz data
     let tempQuizzes = [];
     await quizzes.docs.forEach(async quiz => {
-      await tempQuizzes.push({ id: quiz.id, ...quiz.data(), isfinish: false}); 
+      await tempQuizzes.push({ id: quiz.id, ...quiz.data(), isfinish: false });
     });
-    
+
     // check finish
     for (let i = 0; i < tempQuizzes.length; i++) {
       const element = tempQuizzes[i];
-      if(element.users.includes(auth().currentUser.email)){
+      if (element.users.includes(auth().currentUser.email)) {
         tempQuizzes[i].isfinish = true;
       }
     }
-   
+
     await setAllQuizzes([...tempQuizzes]);
 
     // setRefreshing(false);
@@ -53,10 +53,15 @@ const HomeScreen = ({ navigation }) => {
   // }
 
   useEffect(() => {
-    getUserInfo().then(res => {
+    getUserInfo().then(res => { 
       setUser(res)
     })
-    getAllQuizzes();
+
+    const focusHandler = navigation.addListener('focus', () => {
+      Alert.alert('Refreshed');
+      getAllQuizzes();
+    });
+    return focusHandler;
   }, [])
 
   return user ?
@@ -139,7 +144,7 @@ const HomeScreen = ({ navigation }) => {
                 }}>
                 <Text style={{ color: COLORS.primary }}>Play</Text>
               </TouchableOpacity>)}
-                        
+
               {/* <TouchableOpacity
                 style={{
                   paddingVertical: 10,
@@ -150,7 +155,7 @@ const HomeScreen = ({ navigation }) => {
                 }}
                 onPress={() => { handlePublish(quiz.id, !quiz.isPublish) }}>
                 <Text style={{ color: COLORS.primary }}>{quiz.isPublish ? "unPublish" : "Publish"}</Text>
-              </TouchableOpacity> */}     
+              </TouchableOpacity> */}
             </View>
 
 
