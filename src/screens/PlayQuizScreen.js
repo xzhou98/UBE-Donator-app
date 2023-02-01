@@ -6,10 +6,8 @@ import {
 import { COLORS } from '../constants/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FormButton from '../components/shared/FormButton';
-// import ResultModal from '../components/playQuizScreen/ResultModal';
 import { getQuizById, getQuestionsByQuizId, getUserInfoByEmail, submitQuiz, checkQuizFinish, } from '../utils/database';
 import { Dropdown } from 'react-native-element-dropdown';
-import FormInput from '../components/shared/FormInput';
 import auth from "@react-native-firebase/auth";
 
 
@@ -17,7 +15,7 @@ import auth from "@react-native-firebase/auth";
 const PlayQuizScreen = ({ navigation, route }) => {
 
     //text user
-    const [userEmail, setUserEmail] = useState();
+    // const [userEmail, setUserEmail] = useState();
     const [user, setUser] = useState();
 
 
@@ -61,7 +59,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
     }
 
     async function onAuthStateChanged(user) {
-        setUserEmail(user.email);
+        // setUserEmail(user.email);
         setUser(await getUserInfoByEmail(user.email));
     }
 
@@ -76,7 +74,7 @@ const PlayQuizScreen = ({ navigation, route }) => {
     const handleOnSubmit = async () => {
         let result = []
         try {
-            if (await checkQuizFinish(currentQuizId, user.id)) {
+            if (await checkQuizFinish(currentQuizId, auth().currentUser.email)) {
                 Alert.alert("You have already finished this questionnaire!")
             } else {
                 if (questionNum != questions.length) Alert.alert("Please finish all questions!")
@@ -89,18 +87,14 @@ const PlayQuizScreen = ({ navigation, route }) => {
                         result.push({ questionId: questions[i].id, answer: temp });
                     }
 
-                    await submitQuiz(currentQuizId, user.id, result)
+                    await submitQuiz(currentQuizId, user.id, result, auth().currentUser.email)
 
-                    // console.log(result)
-                    // let currentQuiz = getQuizById(currentQuizId)
-
-                    // navigation.navigate('HomeScreen')
+                    navigation.navigate('HomeScreen', )
                 }
             }
         } catch (error) {
             console.log(error);
         }
-        // Alert.alert(answers.toString())
     }
 
 

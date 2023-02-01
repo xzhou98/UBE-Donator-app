@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { getUserInfoByEmail } from '../utils/database';
 // import { auth } from "@react-native-firebase/auth";
 // import firestore from '@react-native-firebase/firestore';
 // import { onAuthStateChanged } from "@react-native-firebase/auth";
@@ -6,7 +7,7 @@ import { createContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState({ id: 1 });
+    const [currentUser, setCurrentUser] = useState();
 
     // useEffect(() => {
     //   const unsub = onAuthStateChanged(auth, async (user) => {
@@ -29,17 +30,22 @@ export const AuthContextProvider = ({ children }) => {
     //     unsub();
     //   };
     // });
-    useEffect(() => {
-        const unsub = () => {
-            setCurrentUser({ id: 2 });
+
+    const getUserInfo = async () => {
+        try {
+            let a = await getUserInfoByEmail(auth().currentUser.email);
+            setCurrentUser(a);
+        } catch (error) {
+            setCurrentUser({})
+            console.log(error);
         }
-        return () => {
-            unsub();
-        };
+    }
+    useEffect(async () => {
+        getUserInfo();
     }, [])
 
     return (
-        <AuthContext.Provider value={{ currentUser }}>
+        <AuthContext.Provider value={{currentUser}}>
             {children}
         </AuthContext.Provider>
     );

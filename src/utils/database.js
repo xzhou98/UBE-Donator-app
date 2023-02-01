@@ -57,20 +57,25 @@ export const PulishQuiz = (quizId, isPublish) => {
 
 // Get User info by email
 export const getUserInfoByEmail = async (email) => {
-    let user = null
-    // const q =  firestore().collection("Users").where("email", "==", `${email}`).get()
-    const q = await firestore().collection("Users").get()
 
-    await q.docs.forEach(async element => {
-        if (email == element.data().email)
-            user = { id: element.id, email: element.data().email, isAdmin: element.data().isAdmin }
-    });
+    try {
+        let user = null
+        const q = await firestore().collection("Users").get()
 
-    return user;
+        await q.docs.forEach(async element => {
+            if (email == element.data().email)
+                user = { id: element.id, email: element.data().email, isAdmin: element.data().isAdmin }
+        });
+
+        return user;
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
 //submit quiz
-export const submitQuiz = async (quizId, userId, answers) => {
+export const submitQuiz = async ( quizId, userId, answers, userEmail ) => {
     let quiz = null
     let question = 1;
 
@@ -78,7 +83,7 @@ export const submitQuiz = async (quizId, userId, answers) => {
     await firestore().collection('Quizzes').doc(quizId).get().then(data => {
         quiz = data.data();
     });
-    quiz.users.push(userId)
+    quiz.users.push(userEmail)
     firestore().collection('Quizzes').doc(quizId).update({
         users: quiz.users
     });
@@ -86,12 +91,12 @@ export const submitQuiz = async (quizId, userId, answers) => {
 
     //update answer
     for (let i = 0; i < answers.length; i++) {
-        await firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).get().then(data =>{
+        await firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).get().then(data => {
             question = data.data();
         });
 
         let res = question.answers;
-        res.push({userId: userId, answer: answers[i].answer});
+        res.push({ userId: userId, answer: answers[i].answer });
 
         firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).update({
             // answers: question.answers.push({userId: userId, answer: answers[i].answer})
@@ -102,13 +107,12 @@ export const submitQuiz = async (quizId, userId, answers) => {
 
 //Check if user finished the quiz
 // true finished, false unfinished
-export const checkQuizFinish = async (quizId, userId) => {
-    // console.log(userId);
+export const checkQuizFinish = async (quizId, userEmail) => {
     let finish = false;
 
     await firestore().collection('Quizzes').doc(quizId).get().then(data => {
         data.data().users.forEach(element => {
-            if (element == userId) {
+            if (element == userEmail) {
                 finish = true;
             }
         });

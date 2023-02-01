@@ -3,28 +3,48 @@ import { Text, View, SafeAreaView, StatusBar, FlatList, TouchableOpacity, Alert 
 import { signOut } from '../utils/auth';
 import FormButton from '../components/shared/FormButton';
 import { COLORS } from '../constants/theme';
-import { getQuizzes, PulishQuiz } from '../utils/database';
-// import { AuthContextProvider,AuthContext } from "../context/AuthContext"
+import { getQuizzes, checkQuizFinish, getUserInfoByEmail } from '../utils/database';
+import auth from "@react-native-firebase/auth";
+// import { AuthContextProvider, AuthContext } from "../context/AuthContext"
 
 
 const HomeScreen = ({ navigation }) => {
-  // const  currentUser  =  useContext(AuthContext);
-  const [allQuizzes, setAllQuizzes] = useState([])
-  const [refreshing, setRefreshing] = useState(false)
+  // const currentUser = useContext(AuthContextProvider);
+  const [allQuizzes, setAllQuizzes] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [user, setUser] = useState();
 
   const getAllQuizzes = async () => {
-    // setRefreshing(true);
+    console.log(123);
     const quizzes = await getQuizzes();
-
     // Transform quiz data
     let tempQuizzes = [];
     await quizzes.docs.forEach(async quiz => {
-      await tempQuizzes.push({ id: quiz.id, ...quiz.data() });
+      await tempQuizzes.push({ id: quiz.id, ...quiz.data(), isfinish: false}); 
     });
+    
+    // check finish
+    for (let i = 0; i < tempQuizzes.length; i++) {
+      const element = tempQuizzes[i];
+      if(element.users.includes(auth().currentUser.email)){
+        tempQuizzes[i].isfinish = true;
+      }
+    }
+   
     await setAllQuizzes([...tempQuizzes]);
 
-    setRefreshing(false);
+    // setRefreshing(false);
   }
+
+  const getUserInfo = async () => {
+    try {
+
+      return await getUserInfoByEmail(auth().currentUser.email)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   // const handlePublish = async (quizId, isPublish) => {
   //   setRefreshing(true);
@@ -33,10 +53,13 @@ const HomeScreen = ({ navigation }) => {
   // }
 
   useEffect(() => {
+    getUserInfo().then(res => {
+      setUser(res)
+    })
     getAllQuizzes();
-  }, [refreshing])
+  }, [])
 
-  return (
+  return user ?
     <SafeAreaView
       style={{
         flex: 1,
@@ -93,14 +116,14 @@ const HomeScreen = ({ navigation }) => {
                 {quiz.title}
               </Text>
               <Text style={{ color: '#CC0033' }}>
-                {quiz.isFinished ? 'finished' : 'unfinished'}
+                {quiz.isfinish ? 'finished' : 'unfinished'}
               </Text>
               {quiz.description != '' ? (
                 <Text style={{ opacity: 0.5 }}>{quiz.description}</Text>
               ) : null}
             </View>
             <View>
-              <TouchableOpacity
+              {quiz.isfinish ? null : (<TouchableOpacity
                 style={{
                   paddingVertical: 10,
                   alignItems: 'center',
@@ -115,9 +138,9 @@ const HomeScreen = ({ navigation }) => {
                   });
                 }}>
                 <Text style={{ color: COLORS.primary }}>Play</Text>
-              </TouchableOpacity>
-              {/*               
-              <TouchableOpacity
+              </TouchableOpacity>)}
+                        
+              {/* <TouchableOpacity
                 style={{
                   paddingVertical: 10,
                   alignItems: 'center',
@@ -127,8 +150,7 @@ const HomeScreen = ({ navigation }) => {
                 }}
                 onPress={() => { handlePublish(quiz.id, !quiz.isPublish) }}>
                 <Text style={{ color: COLORS.primary }}>{quiz.isPublish ? "unPublish" : "Publish"}</Text>
-              </TouchableOpacity>
-              */}
+              </TouchableOpacity> */}     
             </View>
 
 
@@ -149,9 +171,9 @@ const HomeScreen = ({ navigation }) => {
           </View>
         )}
       />
-{/* 
+      {/* 
       Button */}
-      <FormButton
+      {/* <FormButton
         labelText="Create Quiz"
         style={{
           position: 'absolute',
@@ -161,11 +183,9 @@ const HomeScreen = ({ navigation }) => {
           paddingHorizontal: 30,
         }}
         handleOnPress={() => navigation.navigate('CreateQuizScreen')}
-      />
+      /> */}
+    </SafeAreaView> : <></>
 
-
-    </SafeAreaView>
-  );
 };
 
 export default HomeScreen;
