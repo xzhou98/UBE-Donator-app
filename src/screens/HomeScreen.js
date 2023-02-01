@@ -58,7 +58,6 @@ const HomeScreen = ({ navigation }) => {
     })
 
     const focusHandler = navigation.addListener('focus', () => {
-      Alert.alert('Refreshed');
       getAllQuizzes();
     });
     return focusHandler;
