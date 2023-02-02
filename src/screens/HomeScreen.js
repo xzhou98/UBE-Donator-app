@@ -81,7 +81,7 @@ const HomeScreen = ({ navigation }) => {
           elevation: 4,
           paddingHorizontal: 20,
         }}>
-        <Text style={{ fontSize: 20, color: COLORS.black }}>Questionnaire App</Text>
+        <Text style={{ fontSize: 20, color: COLORS.black }}>UBE Donator</Text>
         <Text
           style={{
             fontSize: 20,
