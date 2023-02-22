@@ -1,10 +1,8 @@
 import 'react-native-gesture-handler';
-import React, { Component, useEffect, useState } from 'react'
-import { Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import AuthStackNavigator from './navigators/AuthStackNavigator';
 import auth from '@react-native-firebase/auth'
-import { HomeScreen } from './screens';
 import AppStackNavigator from './navigators/AppStackNavigator';
 
 const App = () => {
@@ -26,10 +24,6 @@ const App = () => {
   }
 
   return (
-    // <NavigationContainer>
-    //   {/* {currentUser ? <AppStackNavigator /> : <AuthStackNavigator />} */}
-    //   <AuthStackNavigator />
-    // </NavigationContainer>
     <NavigationContainer>
       {currentUser ? <AppStackNavigator /> : <AuthStackNavigator />}
     </NavigationContainer>

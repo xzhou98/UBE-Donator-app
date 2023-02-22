@@ -6,3 +6,5 @@ import CreateQuizScreen from "./CreateQuizScreen";
 import PlayQuizScreen from "./PlayQuizScreen";
 
 export { HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };
+
+// export const HomeScreen = ({naviagtion}) => {Screen navigation}
