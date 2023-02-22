@@ -1,13 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HomeScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
+import { TestScreen, HomeScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
 import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../constants/theme';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const Stack = createStackNavigator();
-// const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator();
 
 function AppStackNavigator() {
     return (
@@ -22,31 +22,32 @@ function AppStackNavigator() {
         //     <Stack.Screen name="PlayQuizScreen" component={PlayQuizScreen} />
         // </Stack.Navigator>
 
-        <View style={styles.container}>
-            <SafeAreaView style={{ flex: 1 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-                    paddingVertical: 10, paddingHorizontal: 20, backgroundColor: COLORS.white, elevation: 4,
-                }}>
-                    <TouchableOpacity style={{ flex: 1 }} >
-                        <MaterialIcons name="home" size={30} color="#161924" />
-                    </TouchableOpacity>
+        // <View style={styles.container}>
+        //     <SafeAreaView style={{ flex: 1 }}>
+        //         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+        //             paddingVertical: 10, paddingHorizontal: 20, backgroundColor: COLORS.white, elevation: 4,
+        //         }}>
+        //             <TouchableOpacity style={{ flex: 1 }} >
+        //                 <MaterialIcons name="home" size={30} color="#161924" />
+        //             </TouchableOpacity>
 
-                    <Text style={{ fontSize: 24 }}>Ube</Text>
+        //             <Text style={{ fontSize: 24 }}>Ube</Text>
 
-                    <TouchableOpacity style={{ alignItems: "flex-end", flex: 1 }} >
-                        <MaterialIcons name="reorder" size={30} color="#161924" />
-                    </TouchableOpacity>
-                </View>
+        //             <TouchableOpacity style={{ alignItems: "flex-end", flex: 1 }} >
+        //                 <MaterialIcons name="reorder" size={30} color="#161924" />
+        //             </TouchableOpacity>
+        //         </View>
 
-                <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                    <Text style={styles.text}>Home Page</Text>
-                </View>
-            </SafeAreaView>
-        </View>
-        // <Drawer.Navigator initialRouteName="Home">
-        //     <Drawer.Screen name="HomeScreen" component={HomeScreen} />
-        //     {/* <Drawer.Screen name="Notifications" component={NotificationsScreen} /> */}
-        // </Drawer.Navigator>
+        //         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        //             <Text style={styles.text}>Home Page</Text>
+        //         </View>
+        //     </SafeAreaView>
+        // </View>
+        <Drawer.Navigator>
+            <Drawer.Screen name="test" component={TestScreen} />
+            <Drawer.Screen name="HomeScreen" component={HomeScreen} />
+            
+        </Drawer.Navigator>
     );
 }
 

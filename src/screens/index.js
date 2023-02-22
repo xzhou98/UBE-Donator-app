@@ -4,7 +4,6 @@ import SignUpScreen from "./SignUpScreen";
 import AddQuestionScreen from "./AddQuestionScreen";
 import CreateQuizScreen from "./CreateQuizScreen";
 import PlayQuizScreen from "./PlayQuizScreen";
+import TestScreen from "./test";
 
-export { HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };
-
-// export const HomeScreen = ({naviagtion}) => {Screen navigation}
+export { TestScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };
