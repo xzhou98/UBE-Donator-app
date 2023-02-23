@@ -10,7 +10,7 @@ import auth from "@react-native-firebase/auth";
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
       <Text style={styles.text}>Home Page</Text>
     </View>
   )

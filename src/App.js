@@ -24,9 +24,7 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer>
-      {currentUser ? <AppStackNavigator /> : <AuthStackNavigator />}
-    </NavigationContainer>
+      currentUser ? <AppStackNavigator /> : <AuthStackNavigator />
   );
 };
 

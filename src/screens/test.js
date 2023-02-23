@@ -1,14 +1,22 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, StyleSheet} from 'react-native'
 
 
 const TestScreen = () => {
     return (
-        <View>
-            <Text> 111aaaa</Text>
-        </View>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <Text style={styles.text}>Test</Text>
+      </View>
     )
 }
+
+const styles = StyleSheet.create({
+    text: {
+      color: "#161924",
+      fontSize: 20,
+      fontWeight: "500"
+    }
+  })
 
 
 export default TestScreen;
