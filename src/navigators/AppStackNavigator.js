@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { TestScreen, HomeScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
+import { TestScreen, HomeScreen, HelpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
 import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../constants/theme';
 import Controler from '../views/Controler';
+import { signOut } from '../utils/auth';
 
 
 const Stack = createStackNavigator();
@@ -49,6 +50,7 @@ function AppStackNavigator({ navigation }) {
                     }
                     {TabButton(currentTab, setCurrentTab, "Home", "home")}
                     {TabButton(currentTab, setCurrentTab, "Test", "reorder")}
+                    {TabButton(currentTab, setCurrentTab, "Help", "help")}
 
                 </View>
 
@@ -89,51 +91,58 @@ function AppStackNavigator({ navigation }) {
                         translateY: closeButtonOffset
                     }]
                 }}>
-                    <TouchableOpacity onPress={() => {
-                        // Do Actions Here...
-                        // Scaling the view...
-                        Animated.timing(scaleValue, {
-                            toValue: showMenu ? 1 : 0.90,
-                            duration: 300,
-                            useNativeDriver: true
-                        })
-                            .start()
-
-                        Animated.timing(offsetValue, {
-                            toValue: showMenu ? 0 : 250,
-                            duration: 300,
-                            useNativeDriver: true
-                        })
-                            .start()
-
-                        Animated.timing(closeButtonOffset, {
-                            toValue: showMenu ? -30 : 0,
-                            duration: 300,
-                            useNativeDriver: true
-                        })
-                            .start()
-
-                        setShowMenu(!showMenu);
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        paddingVertical: 20,
+                        paddingHorizontal: 20,
+                        backgroundColor: COLORS.white,
                     }}>
-                        <MaterialIcons style={{ color: "black", paddingTop: 30, }} name={showMenu ? "close" : "reorder"} size={24} />
+                        <TouchableOpacity onPress={() => {
+                            // Do Actions Here...
+                            // Scaling the view...
+                            Animated.timing(scaleValue, {
+                                toValue: showMenu ? 1 : 0.90,
+                                duration: 300,
+                                useNativeDriver: true
+                            })
+                                .start()
 
-                    </TouchableOpacity>
-                    <Controler current={currentTab}>
-                        <HomeScreen></HomeScreen>
-                        <TestScreen></TestScreen>
-                        {/* <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', paddingTop: 20, }}> 1 </Text>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', paddingTop: 20, }}> 2 </Text>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black', paddingTop: 20, }}> 3 </Text> */}
-                    </Controler>
+                            Animated.timing(offsetValue, {
+                                toValue: showMenu ? 0 : 250,
+                                duration: 300,
+                                useNativeDriver: true
+                            })
+                                .start()
 
-                    {/* <NavigationContainer>
-                    <Stack.Navigator initialRouteName="HomeScreen">
-                        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-                        <Stack.Screen name="CreateQuizScreen" component={CreateQuizScreen} />
-                        <Stack.Screen name="AddQuestionScreen" component={AddQuestionScreen} />
-                        <Stack.Screen name="PlayQuizScreen" component={PlayQuizScreen} />
-                    </Stack.Navigator>
-                    </NavigationContainer> */}
+                            Animated.timing(closeButtonOffset, {
+                                toValue: showMenu ? -30 : 0,
+                                duration: 300,
+                                useNativeDriver: true
+                            })
+                                .start()
+
+                            setShowMenu(!showMenu);
+                        }}>
+                            <MaterialIcons style={{ color: "black" }} name={showMenu ? "close" : "reorder"} size={30} />
+
+                        </TouchableOpacity>
+                        <Text style={{ color: "black", fontSize: 24, fontWeight: 'bold' }}>Ube</Text>
+                        <TouchableOpacity onPress={() => {
+                            setCurrentTab("Home")
+                        }}>
+                            <MaterialIcons style={{ color: "black" }} name={"home"} size={30} />
+                        </TouchableOpacity>
+
+                    </View>
+                    <View style={{ paddingTop: 10, }}>
+                        <Controler current={currentTab}>
+                            <HomeScreen></HomeScreen>
+                            <TestScreen></TestScreen>
+                            <HelpScreen></HelpScreen>
+                        </Controler>
+                    </View>
 
                 </Animated.View>
 
@@ -148,19 +157,19 @@ const TabButton = (currentTab, setCurrentTab, title, iconName) => {
     return (
         <TouchableOpacity onPress={() => {
             if (title == "logOut") {
-
+                signOut;
             } else {
-                switch (title) {
-                    case 'Home':
-                        setCurrentTab('0')
-                        break;
-                    case 'Test':
-                        setCurrentTab('1')
-                        break;
-                    default:
-                        break;
-                }
-                // setCurrentTab(title)
+                // switch (title) {
+                //     case 'Home':
+                //         setCurrentTab('0')
+                //         break;
+                //     case 'Test':
+                //         setCurrentTab('1')
+                //         break;
+                //     default:
+                //         break;
+                // }
+                setCurrentTab(title)
             }
         }}>
             <View style={{
