@@ -3,16 +3,16 @@ import { Text, View, SafeAreaView, Alert } from 'react-native'
 import FormButton from '../components/shared/FormButton';
 import FormInput from '../components/shared/FormInput';
 import { COLORS } from '../constants/theme';
-import {signIn} from '../utils/auth';
+import { signIn } from '../utils/auth';
 
-const SignInScreen = ({navigation}) => {
+const SignInScreen = ({ navigation }) => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const handleOnSubmit = () => {
         // Alert.alert(email)
-        if(email != '' && password != '') {
+        if (email != '' && password != '') {
             signIn(email, password);
         }
     }
@@ -26,48 +26,62 @@ const SignInScreen = ({navigation}) => {
                 justifyContent: 'flex-start',
                 padding: 20,
             }}>
+
             {/* Header */}
+
             <Text style={{
-                fontSize: 24,
+                fontSize: 35,
                 color: COLORS.black,
                 fontWeight: 'bold',
-                marginVertical: 32,
+                paddingTop: 40,
+                // marginVertical: 32,
             }}>
-                Sign In
+                UBE Data
+            </Text>
+            <Text style={{
+                fontSize: 20,
+                color: COLORS.black,
+                fontWeight: 'bold',
+                paddingTop: 15,
+                marginVertical: 10,
+            }}>
+                Sign in with Email
             </Text>
 
-            {/* Email */}
-            <FormInput
-                labelText="Email"
-                placeholderText="enter your email"
-                onChangeText={value => setEmail(value)}
-                value={email}
-                keyboardType={'email-address'}
-            />
+            <View style={{ paddingTop: 10, width: '90%' }}>
+                {/* Email */}
+                <FormInput
+                    placeholderText="Enter your email address"
+                    onChangeText={value => setEmail(value)}
+                    value={email}
+                    keyboardType={'email-address'}
+                />
+                {/* Password */}
+                <FormInput
+                    placeholderText="Enter your password"
+                    onChangeText={value => setPassword(value)}
+                    value={password}
+                    secureTextEntry={true}
+                />
+            </View>
 
-            {/* Password */}
-            <FormInput
-                labelText="Password"
-                placeholderText="enter your password"
-                onChangeText={value => setPassword(value)}
-                value={password}
-                secureTextEntry={true}
-            />
 
             {/* Submit button */}
-            <FormButton
-                labelText="Submit"
-                handleOnPress={handleOnSubmit}
-                style={{ width: '100%' }}
-            />
+            <View style ={{ width: '85%', paddingTop: 100, }}>
+                <FormButton
+                    labelText="Submit"
+                    handleOnPress={handleOnSubmit}
+                />
+            </View>
+
 
             {/* Footer */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-                <Text>Don't have an account?</Text>
+            <View style={{  alignItems: 'center', marginTop: 30 }}>
+                <Text style={{ fontWeight: 'bold' }}>Not yet have an account?</Text>
                 <Text
-                    style={{ marginLeft: 4, color: COLORS.primary }}
+                    style={{ marginLeft: 4, color: COLORS.green, fontWeight: 'bold' }}
                     onPress={() => navigation.navigate('SignUpScreen')}>
-                    Create account
+                    Sign up here
                 </Text>
             </View>
         </SafeAreaView>

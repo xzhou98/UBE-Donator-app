@@ -157,7 +157,7 @@ const TabButton = (currentTab, setCurrentTab, title, iconName) => {
     return (
         <TouchableOpacity onPress={() => {
             if (title == "logOut") {
-                signOut;
+                signOut();
             } else {
                 // switch (title) {
                 //     case 'Home':

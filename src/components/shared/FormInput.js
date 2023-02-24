@@ -10,16 +10,17 @@ const FormInput = ({
   ...more
 }) => {
   return (
-    <View style={{width: '100%', marginBottom: 20}}>
+    <View style={{width: '100%', marginBottom: 10}}>
       <Text>{labelText}</Text>
       <TextInput
         style={{
-          padding: 10,
-          borderColor: COLORS.black + '20',
+          padding: 9,
+          paddingLeft:20,
+          borderColor: COLORS.black + '50',
           borderWidth: 1,
           width: '100%',
-          borderRadius: 5,
-          marginTop: 10,
+          borderRadius: 8,
+          // marginTop: 10,
         }}
         placeholder={placeholderText}
         onChangeText={onChangeText}
