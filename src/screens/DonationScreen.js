@@ -2,10 +2,10 @@ import React from 'react'
 import { Text, View, StyleSheet} from 'react-native'
 
 
-const HelpScreen = () => {
+const DonationScreen = () => {
     return (
         <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text style={styles.text}>HelpScreen</Text>
+        <Text style={styles.text}>Donation</Text>
       </View>
     )
 }
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
   })
 
 
-export default HelpScreen;
+export default DonationScreen;

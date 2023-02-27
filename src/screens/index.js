@@ -6,5 +6,6 @@ import CreateQuizScreen from "./CreateQuizScreen";
 import PlayQuizScreen from "./PlayQuizScreen";
 import TestScreen from "./test";
 import HelpScreen from "./HelpScreen"
+import DonationScreen from "./DonationScreen"
 
-export { TestScreen, HelpScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };
+export { TestScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };

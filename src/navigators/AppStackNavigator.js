@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { TestScreen, HomeScreen, HelpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
+// import { createStackNavigator } from '@react-navigation/stack';
+import { TestScreen,DonationScreen, HomeScreen, HelpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
 import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../constants/theme';
@@ -8,7 +8,7 @@ import Controler from '../views/Controler';
 import { signOut } from '../utils/auth';
 
 
-const Stack = createStackNavigator();
+// const Stack = createStackNavigator();
 
 
 function AppStackNavigator({ navigation }) {
@@ -22,11 +22,7 @@ function AppStackNavigator({ navigation }) {
     const scaleValue = useRef(new Animated.Value(1)).current;
     const closeButtonOffset = useRef(new Animated.Value(0)).current;
 
-    // useEffect(() => {
-    //     navigation.navigate('PlayQuizScreen', {
-    //            quizId: quiz.id,
-    //          });
-    // }, [currentTab])
+
 
     return (
         // <Stack.Navigator
@@ -49,9 +45,9 @@ function AppStackNavigator({ navigation }) {
                         // Tab Bar Buttons....
                     }
                     {TabButton(currentTab, setCurrentTab, "Home", "home")}
+                    {TabButton(currentTab, setCurrentTab, "Donation", "chat")}
                     {TabButton(currentTab, setCurrentTab, "Test", "reorder")}
                     {TabButton(currentTab, setCurrentTab, "Help", "help")}
-
                 </View>
 
                 <View>
@@ -141,6 +137,7 @@ function AppStackNavigator({ navigation }) {
                             <HomeScreen></HomeScreen>
                             <TestScreen></TestScreen>
                             <HelpScreen></HelpScreen>
+                            <DonationScreen></DonationScreen>
                         </Controler>
                     </View>
 
