@@ -6100,7 +6100,7 @@
   "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-5.0.1.tgz"
   "version" "5.0.1"
 
-"react-native-reanimated@^2.14.4", "react-native-reanimated@>= 1.0.0":
+"react-native-reanimated@>= 1.0.0":
   "integrity" "sha512-DquSbl7P8j4SAmc+kRdd75Ianm8G+IYQ9T4AQ6lrpLVeDkhZmjWI0wkutKWnp6L7c5XNVUrFDUf69dwETLCItQ=="
   "resolved" "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-2.14.4.tgz"
   "version" "2.14.4"
