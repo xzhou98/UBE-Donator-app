@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-// import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { TestScreen,DonationScreen, HomeScreen, HelpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
-import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet, Animated, StatusBar } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../constants/theme';
 import Controler from '../views/Controler';
 import { signOut } from '../utils/auth';
 
 
-// const Stack = createStackNavigator();
+
+const Stack = createStackNavigator();
 
 
 function AppStackNavigator({ navigation }) {
@@ -33,12 +34,10 @@ function AppStackNavigator({ navigation }) {
         //     <Stack.Screen name="CreateQuizScreen" component={CreateQuizScreen} />
         //     <Stack.Screen name="AddQuestionScreen" component={AddQuestionScreen} />
         //     <Stack.Screen name="PlayQuizScreen" component={PlayQuizScreen} />
-
-
-
         // </Stack.Navigator>
 
         <SafeAreaView style={styles.container}>
+            <StatusBar backgroundColor={COLORS.white} barStyle={'dark-content'}/>
             <View style={{ justifyContent: "flex-start", padding: 15 }}>
                 <View style={{ flexGrow: 1, marginTop: 50 }}>
                     {
@@ -46,7 +45,7 @@ function AppStackNavigator({ navigation }) {
                     }
                     {TabButton(currentTab, setCurrentTab, "Home", "home")}
                     {TabButton(currentTab, setCurrentTab, "Donation", "chat")}
-                    {TabButton(currentTab, setCurrentTab, "Test", "reorder")}
+                    {TabButton(currentTab, setCurrentTab, "Test", "menu")}
                     {TabButton(currentTab, setCurrentTab, "Help", "help")}
                 </View>
 
@@ -61,6 +60,7 @@ function AppStackNavigator({ navigation }) {
             }
 
             <Animated.View style={{
+                flexDirection: 'column',
                 flexGrow: 1,
                 backgroundColor: 'white',
                 position: 'absolute',
@@ -69,7 +69,7 @@ function AppStackNavigator({ navigation }) {
                 left: 0,
                 right: 0,
                 paddingHorizontal: 15,
-                paddingVertical: 20,
+                paddingTop: 20,
                 borderRadius: showMenu ? 15 : 0,
                 // Transforming View..
                 transform: [
@@ -77,7 +77,6 @@ function AppStackNavigator({ navigation }) {
                     { translateX: offsetValue }
                 ]
             }}>
-
                 {
                     //Men Button...
                 }
@@ -85,15 +84,19 @@ function AppStackNavigator({ navigation }) {
                 <Animated.View style={{
                     transform: [{
                         translateY: closeButtonOffset
-                    }]
+                    }],
+                    height: '100%',
+                    // backgroundColor: 'red',
                 }}>
                     <View style={{
+                        // position: 'absolute',
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        paddingVertical: 20,
-                        paddingHorizontal: 20,
+                        // paddingVertical: 20,
+                        // paddingHorizontal: 20,
                         backgroundColor: COLORS.white,
+                        flex: 1
                     }}>
                         <TouchableOpacity onPress={() => {
                             // Do Actions Here...
@@ -121,7 +124,7 @@ function AppStackNavigator({ navigation }) {
 
                             setShowMenu(!showMenu);
                         }}>
-                            <MaterialIcons style={{ color: "black" }} name={showMenu ? "close" : "reorder"} size={30} />
+                            <MaterialIcons style={{ color: "black" }} name={showMenu ? "close" : "menu"} size={30} />
 
                         </TouchableOpacity>
                         <Text style={{ color: "black", fontSize: 24, fontWeight: 'bold' }}>Ube</Text>
@@ -132,7 +135,7 @@ function AppStackNavigator({ navigation }) {
                         </TouchableOpacity>
 
                     </View>
-                    <View style={{ paddingTop: 10, }}>
+                    <View style={{ flex: 9}}>
                         <Controler current={currentTab}>
                             <HomeScreen></HomeScreen>
                             <TestScreen></TestScreen>
@@ -156,16 +159,6 @@ const TabButton = (currentTab, setCurrentTab, title, iconName) => {
             if (title == "logOut") {
                 signOut();
             } else {
-                // switch (title) {
-                //     case 'Home':
-                //         setCurrentTab('0')
-                //         break;
-                //     case 'Test':
-                //         setCurrentTab('1')
-                //         break;
-                //     default:
-                //         break;
-                // }
                 setCurrentTab(title)
             }
         }}>

@@ -13,6 +13,15 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <Text style={styles.text}>Home Page</Text>
     </View>
+    // <SafeAreaView
+    //   style={{
+    //     flex: 1,
+    //     backgroundColor: COLORS.background,
+    //     position: 'relative',
+    //   }}>
+    //     {/* <StatusBar backgroundColor={COLORS.white} barStyle={'dark-content'} /> */}
+    //     <View><Text>1</Text></View>
+    //   </SafeAreaView>
   )
 }
 
@@ -62,13 +71,6 @@ const styles = StyleSheet.create({
 //       console.log(error);
 //     }
 //   }
-
-
-//   // const handlePublish = async (quizId, isPublish) => {
-//   //   setRefreshing(true);
-//   //   await PulishQuiz(quizId, isPublish);
-//   //   setRefreshing(false);
-//   // }
 
 //   useEffect(() => {
 //     getUserInfo().then(res => {
