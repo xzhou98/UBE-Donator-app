@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { TestScreen,DonationScreen, HomeScreen, HelpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
+import { ReviewScreen, ContactUsScreen,DonationScreen, HomeScreen, HelpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
 import { Text, View, SafeAreaView, TouchableOpacity, StyleSheet, Animated, StatusBar } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../constants/theme';
@@ -45,7 +45,8 @@ function AppStackNavigator({ navigation }) {
                     }
                     {TabButton(currentTab, setCurrentTab, "Home", "home")}
                     {TabButton(currentTab, setCurrentTab, "Donation", "chat")}
-                    {TabButton(currentTab, setCurrentTab, "Test", "menu")}
+                    {TabButton(currentTab, setCurrentTab, "Review", "explore")}
+                    {TabButton(currentTab, setCurrentTab, "Contact us", "call")}
                     {TabButton(currentTab, setCurrentTab, "Help", "help")}
                 </View>
 
@@ -138,9 +139,10 @@ function AppStackNavigator({ navigation }) {
                     <View style={{ flex: 9}}>
                         <Controler current={currentTab}>
                             <HomeScreen></HomeScreen>
-                            <TestScreen></TestScreen>
+                            <ContactUsScreen></ContactUsScreen>
                             <HelpScreen></HelpScreen>
                             <DonationScreen></DonationScreen>
+                            <ReviewScreen></ReviewScreen>
                         </Controler>
                     </View>
 

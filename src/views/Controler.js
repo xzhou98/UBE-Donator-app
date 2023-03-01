@@ -8,7 +8,7 @@ const Controler = ({ children, current }) => {
         case 'Home':
             idx = '0'
             break;
-        case 'Test':
+        case 'Contact us':
             idx = '1'
             break;
         case 'Help':
@@ -16,6 +16,9 @@ const Controler = ({ children, current }) => {
             break;
         case 'Donation':
             idx = '3'
+            break;
+        case 'Review':
+            idx = '4'
             break;
         default:
             break;

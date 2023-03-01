@@ -4,8 +4,9 @@ import SignUpScreen from "./SignUpScreen";
 import AddQuestionScreen from "./AddQuestionScreen";
 import CreateQuizScreen from "./CreateQuizScreen";
 import PlayQuizScreen from "./PlayQuizScreen";
-import TestScreen from "./test";
+import ContactUsScreen from "./ContactUsScreen";
 import HelpScreen from "./HelpScreen"
 import DonationScreen from "./DonationScreen"
+import ReviewScreen from "./ReviewScreen"
 
-export { TestScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };
+export { ReviewScreen, ContactUsScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };

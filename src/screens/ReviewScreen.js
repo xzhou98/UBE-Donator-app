@@ -5,7 +5,7 @@ import { Text, View, StyleSheet} from 'react-native'
 const TestScreen = () => {
     return (
         <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text style={styles.text}>Test</Text>
+        <Text style={styles.text}>ReviewScreen</Text>
       </View>
     )
 }
