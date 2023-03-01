@@ -4,6 +4,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
 const DonationScreen = () => {
+  const [q0, setQ0] = useState(true);
+  const [v0, setV0] = useState();
   const [q1, setQ1] = useState(true);
   const [v1, setV1] = useState();
   const [q2, setQ2] = useState(true);
@@ -13,6 +15,28 @@ const DonationScreen = () => {
   return (
     <SafeAreaView style={{ position: 'relative', display: 'flex', flexDirection: 'column', backgroundColor: '#f2f5f8', height: '100%', }}>
       <ScrollView style={{}}>
+        <Text style={[styles.leftMessage]}>
+          Welcome back! It is Ube
+        </Text>
+
+        <Text style={[styles.leftMessage]}>
+          Before we start the donation process today. I want to make sure that you would like to continue your participation in our study. 
+        </Text>
+
+        <Text style={[styles.leftMessage]}>
+          Do ypu agrre to participate?
+        </Text>
+
+        {q0 ? <TouchableOpacity onPress={()=>{setQ0(!q0); setV0('Yes, I agree.')}}>
+          <Text style={[styles.leftOption]}>Yes, I agree.</Text>
+        </TouchableOpacity> : <></>}
+        {q0 ? <TouchableOpacity  onPress={()=>{setQ0(!q0); setV0('No，I do not agree.')}}>
+          <Text style={[styles.leftOption]}>No, I do not agree.</Text>
+        </TouchableOpacity>: <></>}
+        {!q0 ? <Text style={[styles.rightMessage]}>
+          {v0}
+        </Text> : <></>}
+
         <Text style={[styles.leftMessage]}>
           Was sexual contact attempted by either partners at any of these in-person meetings?
         </Text>
@@ -97,15 +121,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#95ec69',
   },
   leftOption: {
-    fontSize: 10,
     color: 'black',
     padding: 10,
     borderRadius: 7,
-    marginRight: 250,
+    marginRight: 150,
     marginLeft: 15,
-    marginTop: 5,
-    height: 33,
-    backgroundColor: '#95ec69',
+    marginTop: 15,
+    backgroundColor: '#0CD1CA',
   }
 })
 
