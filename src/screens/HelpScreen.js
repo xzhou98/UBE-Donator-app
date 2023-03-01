@@ -6,10 +6,9 @@ const HelpScreen = () => {
   return (
     <View>
       <View style={{ alignItems: "center"}}>
-        <Text style={styles.title}>HelpScreen</Text>
-        
+        <Text style={styles.title}>Help</Text>
       </View>
-<Text style={styles.basetext}>UBE is an Artificial Intelligent (AI) Robert that can perform some basic tasks through users voice or text input.</Text>
+      <Text style={styles.basetext}>UBE is an Artificial Intelligent (AI) Robert that can perform some basic tasks through users voice or text input.</Text>
         <Text style={styles.basetext}>Below are some basic commends that Ube embeds:</Text>
       <View>
         <Text style={styles.boldtext}>  Skip: <Text style={styles.basetext}>{"("}this question{")"} </Text></Text>
@@ -45,6 +44,7 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   }
 })
+
 
 
 export default HelpScreen;
