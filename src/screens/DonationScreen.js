@@ -15,18 +15,13 @@ const DonationScreen = () => {
             Yes
           </Text>
 
-
           <Text style={[ styles.leftMessage]}>
             Have you interacted with anyone you met on Tinder since the last time you donated data? If yes, select all that apply
           </Text>
 
-
           <Text style={[ styles.rightMessage]}>
             Via phone call, video call, or text message
           </Text>
-
-
-
 
       </ScrollView>
 
@@ -65,20 +60,20 @@ const styles = StyleSheet.create({
     flex: 9
   },
   leftMessage:{
-    color: 'white',
+    color: 'black',
     padding: 10,
     borderRadius: 10,
     marginRight: 150,
     marginTop:15,
-    backgroundColor: '#86bb71',
+    backgroundColor: 'white',
   },
   rightMessage:{
-    color: 'white',
+    color: 'black',
     padding: 10,
     borderRadius: 10,
     marginTop:15,
     marginLeft: 150,
-    backgroundColor: '#94c2ed',
+    backgroundColor: '#95ec69',
   }
 })
 
