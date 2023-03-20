@@ -4,24 +4,28 @@ import { signOut } from '../utils/auth';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FormButton from '../components/shared/FormButton';
 import { COLORS } from '../constants/theme';
-import { getQuizzes, checkQuizFinish, getUserInfoByEmail } from '../utils/database';
+// import { getQuizzes, checkQuizFinish, getUserInfoByEmail } from '../utils/database';
 import auth from "@react-native-firebase/auth";
 // import { AuthContextProvider, AuthContext } from "../context/AuthContext"
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
+  const [user, setUser] = useState();
+
+  function onAuthStateChanged(user) {
+    setUser(user);
+    // console.log(user)
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <Text style={styles.text}>Home Page</Text>
     </View>
-    // <SafeAreaView
-    //   style={{
-    //     flex: 1,
-    //     backgroundColor: COLORS.background,
-    //     position: 'relative',
-    //   }}>
-    //     {/* <StatusBar backgroundColor={COLORS.white} barStyle={'dark-content'} /> */}
-    //     <View><Text>1</Text></View>
-    //   </SafeAreaView>
+
   )
 }
 

@@ -1,15 +1,15 @@
 import firestore from '@react-native-firebase/firestore';
 import { Alert } from 'react-native'
 
-export const createQuiz = (currentQuizId, title, description) => {
-    // Alert.alert(description)
-    return firestore().collection('Quizzes').doc(currentQuizId).set({
-        title,
-        description,
-        isPublish: false,
-        users: [],
-    });
-};
+// export const createQuiz = (currentQuizId, title, description) => {
+//     // Alert.alert(description)
+//     return firestore().collection('Quizzes').doc(currentQuizId).set({
+//         title,
+//         description,
+//         isPublish: false,
+//         users: [],
+//     });
+// };
 
 export const createUser = (email) => {
     return firestore().collection('Users').add({
@@ -19,20 +19,37 @@ export const createUser = (email) => {
 }
 
 // Create new question for current quiz
-export const createQuestion = (currentQuizId, currentQuestionId, question) => {
-    Alert.alert(question.option.toString())
-    return firestore().
-        collection("Quizzes")
-        .doc(currentQuizId)
-        .collection('QNA')
-        .doc(currentQuestionId)
-        .set(question);
+// export const createQuestion = (currentQuizId, currentQuestionId, question) => {
+//     Alert.alert(question.option.toString())
+//     return firestore().
+//         collection("Quizzes")
+//         .doc(currentQuizId)
+//         .collection('QNA')
+//         .doc(currentQuestionId)
+//         .set(question);
+// }
+
+
+
+/**
+ * get all question from firebase
+ */
+export const getAllQuestions = async () => {
+    // return firestore().collection('Questions').get();
+    try {
+        const q = await firestore().collection('Questions').get();
+        let questions =[]
+        await q.docs.forEach(async element => {
+            questions.push(element.data());
+        })
+
+        return questions
+    } catch (error) {
+        return error;
+    }
+
 }
 
-// Get All Quizzes
-export const getQuizzes = () => {
-    return firestore().collection('Quizzes').get();
-};
 
 // Get Quiz Details by id
 export const getQuizById = currentQuizId => {
@@ -64,7 +81,7 @@ export const getUserInfoByEmail = async (email) => {
 
         await q.docs.forEach(async element => {
             if (email == element.data().email)
-                user = { id: element.id, email: element.data().email, isAdmin: element.data().isAdmin }
+                user = { id: element.id, email: element.data().email, isAdmin: element.data().isAdmin, date: element.data().date }
         });
 
         return user;
@@ -75,48 +92,50 @@ export const getUserInfoByEmail = async (email) => {
 }
 
 //submit quiz
-export const submitQuiz = async ( quizId, userId, answers, userEmail ) => {
-    let quiz = null
-    let question = 1;
+// export const submitQuiz = async ( quizId, userId, answers, userEmail ) => {
+//     let quiz = null
+//     let question = 1;
 
-    // user finish
-    await firestore().collection('Quizzes').doc(quizId).get().then(data => {
-        quiz = data.data();
-    });
-    quiz.users.push(userEmail)
-    firestore().collection('Quizzes').doc(quizId).update({
-        users: quiz.users
-    });
+//     // user finish
+//     await firestore().collection('Quizzes').doc(quizId).get().then(data => {
+//         quiz = data.data();
+//     });
+//     quiz.users.push(userEmail)
+//     firestore().collection('Quizzes').doc(quizId).update({
+//         users: quiz.users
+//     });
 
 
-    //update answer
-    for (let i = 0; i < answers.length; i++) {
-        await firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).get().then(data => {
-            question = data.data();
-        });
+//     //update answer
+//     for (let i = 0; i < answers.length; i++) {
+//         await firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).get().then(data => {
+//             question = data.data();
+//         });
 
-        let res = question.answers;
-        res.push({ userId: userId, answer: answers[i].answer });
+//         let res = question.answers;
+//         res.push({ userId: userId, answer: answers[i].answer });
 
-        firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).update({
-            // answers: question.answers.push({userId: userId, answer: answers[i].answer})
-            answers: res
-        })
-    }
-}
+//         firestore().collection('Quizzes').doc(quizId).collection('QNA').doc(answers[i].questionId).update({
+//             // answers: question.answers.push({userId: userId, answer: answers[i].answer})
+//             answers: res
+//         })
+//     }
+// }
+
+
 
 //Check if user finished the quiz
 // true finished, false unfinished
-export const checkQuizFinish = async (quizId, userEmail) => {
-    let finish = false;
+// export const checkQuizFinish = async (quizId, userEmail) => {
+//     let finish = false;
 
-    await firestore().collection('Quizzes').doc(quizId).get().then(data => {
-        data.data().users.forEach(element => {
-            if (element == userEmail) {
-                finish = true;
-            }
-        });
-    });
+//     await firestore().collection('Quizzes').doc(quizId).get().then(data => {
+//         data.data().users.forEach(element => {
+//             if (element == userEmail) {
+//                 finish = true;
+//             }
+//         });
+//     });
 
-    return finish;
-}
+//     return finish;
+// }
