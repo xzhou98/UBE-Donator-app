@@ -6112,6 +6112,11 @@
   dependencies:
     "react-native-image-pan-zoom" "^2.1.12"
 
+"react-native-microphone-stream@^1.0.2":
+  "integrity" "sha512-X8OKB1RGFwYOeSr2YIJsig6Nkl7HIbhFVnJQcGvxrmbqp26XGlf3gzerin0qV5ZETnjtG2SRxOEm4gGnVHIxag=="
+  "resolved" "https://registry.npmjs.org/react-native-microphone-stream/-/react-native-microphone-stream-1.0.2.tgz"
+  "version" "1.0.2"
+
 "react-native-reanimated@>= 1.0.0":
   "integrity" "sha512-DquSbl7P8j4SAmc+kRdd75Ianm8G+IYQ9T4AQ6lrpLVeDkhZmjWI0wkutKWnp6L7c5XNVUrFDUf69dwETLCItQ=="
   "resolved" "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-2.14.4.tgz"
@@ -6146,7 +6151,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@>=0.57", "react-native@0.66.1":
+"react-native@*", "react-native@>=0.47", "react-native@>=0.57", "react-native@0.66.1":
   "integrity" "sha512-BBvytmqlOLL+bRcO0jBiYfg16lYRsYDOC8/5E+bpnhb3EGtU+YCQAYfszw6JL7Hfy0ftnQNP5yj8pt+vqMHXIA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.66.1.tgz"
   "version" "0.66.1"

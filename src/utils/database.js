@@ -40,9 +40,8 @@ export const getAllQuestions = async () => {
         const q = await firestore().collection('Questions').get();
         let questions =[]
         await q.docs.forEach(async element => {
-            questions.push(element.data());
+            questions.push(Object.assign({id: element.id},element.data()));
         })
-
         return questions
     } catch (error) {
         return error;
