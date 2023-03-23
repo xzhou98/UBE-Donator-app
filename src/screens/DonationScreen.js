@@ -28,6 +28,7 @@ const DonationScreen = () => {
   const [currentInput, setCurrentInput] = useState();
   const [currentQuestion, setCurrentQuestion] = useState();
   const [refresh, setRefresh] = useState(false);
+  const [currentOption, setCurrentOption] = useState();
   const [mico, setMico] = useState(false);
 
 
@@ -46,6 +47,7 @@ const DonationScreen = () => {
       let allAnswers = getAnswer();
       let qId = Number(allAnswers[allAnswers.length - 1].nextQuestionId);
       setCurrentQuestion(allQuestions[qId]);
+      // console.log(allQuestions[qId]);
       setAnswers(allAnswers);
       setRender(true);
     } catch (error) {
@@ -90,9 +92,6 @@ const DonationScreen = () => {
         backgroundColor: '#f2f5f8',
         height: '100%',
       }}>
-      {/* <ScrollView > */}
-      {/* <Text>{listener}</Text> */}
-      {/* </ScrollView> */}
 
       <FlatList
         data={answers}
@@ -100,7 +99,7 @@ const DonationScreen = () => {
         renderItem={({ item, index }) => (
           <View>
             {/* check if the answer is the true answer */}
-            {item.questionId.length>0 ? <Text style={[styles.leftMessage]}>{questions[item.questionId].description}</Text> : <></>}
+            {item.questionId.length > 0 ? <Text style={[styles.leftMessage]}>{questions[item.questionId].description}</Text> : <></>}
 
             {/* check if the answer has image */}
             {item.image.length > 0 ? <TouchableOpacity
@@ -129,8 +128,99 @@ const DonationScreen = () => {
             {/* check is it the current question */}
             {index == answers.length - 1 ? <View>
               <Text style={[styles.leftMessage]}> {currentQuestion.description}</Text>
+              {currentQuestion.type == 0 ? currentQuestion.option.map((item, index) => {
+                return (
+                  <TouchableOpacity key={index} onPress={() => {
+                    addAnswers({ isTrueAnswer: true, answer: [item.option], image: "", nextQuestionId: item.nextQuestionId, questionId: currentQuestion.id });
+                    setRefresh(!refresh);
+                  }}>
+                    <Text key={index} style={[styles.leftOption]}> {item.option} </Text>
+                  </TouchableOpacity>
+                );
+              }) : <></>}
+
+              {currentQuestion.type == 1 ? <View style={[styles.leftMCOption]}>
+                <Text style={{ marginLeft: '3%', fontSize: 14, fontStyle: 'italic' }}>Please select all that apply:</Text>
+                {currentQuestion.option.map((item, index) => {
+                  return (
+                    <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} key={index} onPress={() => {
+                      if (currentOption == null || currentOption.length == 0) {
+                        let temp = new Array(currentQuestion.option.length).fill("");
+                        temp[index] = item;
+                        setCurrentOption(temp);
+                      } else {
+                        let temp = currentOption
+                        if (temp[index].length > 0) {
+                          temp[index] = "";
+                          setCurrentOption(temp);
+                        } else {
+                          temp[index] = item;
+                          setCurrentOption(temp);
+                        }
+                      }
+                      setRefresh(!refresh);
+                    }}>
+                      {currentOption != null && currentOption[index].length > 0 ? <Text style={{
+                        fontSize: 16,
+                        width: '100%',
+                        marginVertical: 2,
+                        color: 'black',
+                        padding: 8,
+                        borderRadius: 7,
+                        backgroundColor: '#c7ddff',
+                      }} key={index} > {item} </Text> : <Text style={{
+                        fontSize: 16,
+                        width: '100%',
+                        marginVertical: 2,
+                        color: 'black',
+                        padding: 8,
+                        borderRadius: 7,
+                        backgroundColor: '#aed4d9',
+                      }} key={index} > {item} </Text>}
+                    </TouchableOpacity>
+                  );
+                })}
+                <View style={{
+                  flexDirection: 'row', alignItems: 'center', margin: 10
+                }}>
+                  <View style={{ flex: 1, }}>
+                    <TouchableOpacity>
+                      <Text style={{ fontSize: 18 }}>Skip</Text>
+                    </TouchableOpacity>
+
+                  </View>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <TouchableOpacity onPress={() => {
+                      if (currentOption != null) {
+                        let answer = "";
+                        for (let i = 0; i < currentOption.length; i++) {
+                          if (currentOption[i].length > 0) {
+                            if (answer.length > 0) answer = answer + "," + currentOption[i];
+                            else answer = currentOption[i]
+                          }
+                        }
+                        if (answer.length > 0) {
+                          addAnswers({ isTrueAnswer: true, answer: [answer], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                          setCurrentOption();
+                          setRefresh(!refresh);
+                        } else {
+                          Alert.alert("Please select the option!")
+                        }
+                      } else {
+                        Alert.alert("Please select the option!")
+                      }
+
+                    }}>
+                      <Text style={{ fontSize: 18 }}>Next</Text>
+                    </TouchableOpacity>
+
+                  </View>
+                </View>
+
+              </View> : <></>}
+
               {/* check is it the input text question */}
-              {currentQuestion.type != 3 ? <Text style={[styles.leftOption]}> option</Text> :<></>}
+              {/* {currentQuestion.type != 3 ? <Text style={[styles.leftOption]}> option</Text> : <></>} */}
             </View> : <></>}
           </View>
         )}
@@ -169,7 +259,7 @@ const DonationScreen = () => {
 
         {/* input bar */}
         <View style={[styles.inputSearchStyle]}>
-          <TextInput style={{
+          <TextInput value = {currentInput} style={{
             flex: 9,
             // borderColor: 'red',
             borderRadius: 10,
@@ -182,10 +272,17 @@ const DonationScreen = () => {
           {/* send button */}
           <TouchableOpacity onPress={() => {
             if (currentQuestion.type == 3) {
-
+              if (currentInput.length > 0) {
+                setCurrentInput();
+                addAnswers({ isTrueAnswer: false, answer: [currentInput], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                setRefresh(!refresh);
+              }
             } else {
-              setRefresh(!refresh)
-              addAnswers({isTrueAnswer: false, answer: [currentInput], image:"",nextQuestionId: currentQuestion.id, questionId:""});
+              if (currentInput.length > 0) {
+                setCurrentInput();
+                addAnswers({ isTrueAnswer: false, answer: [currentInput], image: "", nextQuestionId: currentQuestion.id, questionId: "" });
+                setRefresh(!refresh)
+              }
             }
           }}>
             <MaterialIcons
@@ -220,20 +317,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1.3,
     height: 45,
-    // marginVertical: 60,
-    // marginBottom: 20,
     borderColor: 'gray',
     borderRadius: 10,
-    // borderWidth: 0.7,
-    // fontSize: 16,
     flex: 9,
   },
   leftMessage: {
+    fontSize: 16,
     color: 'black',
     padding: 10,
     borderRadius: 7,
     marginRight: '40%',
-    marginLeft: 15,
+    marginLeft: '3%',
     marginTop: 15,
     backgroundColor: 'white',
   },
@@ -255,23 +349,32 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   rightMessage: {
+    fontSize: 16,
     color: 'black',
     padding: 10,
     borderRadius: 7,
     marginTop: 15,
     marginLeft: '45%',
-    marginRight: 15,
+    marginRight: '3%',
     backgroundColor: '#95ec69',
   },
   leftOption: {
+    fontSize: 16,
     color: 'black',
     padding: 10,
     borderRadius: 7,
     marginRight: 150,
-    marginLeft: 15,
+    marginLeft: 45,
     marginTop: 15,
-    backgroundColor: '#0CD1CA',
+    backgroundColor: '#aed4d9',
   },
+  leftMCOption: {
+    // fontSize:16,
+    padding: 10,
+    borderBottomWidth: 1,
+    marginRight: '42%',
+    marginLeft: '5%',
+  }
 });
 
 export default DonationScreen;
