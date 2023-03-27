@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
+  Button,
   Text,
   Image,
   View,
@@ -15,7 +16,8 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { getUserInfoByEmail, getAllQuestions } from '../utils/database';
 import auth from '@react-native-firebase/auth';
-import { getAnswer, getIndex, indexIncrement, addAnswers } from '../views/Global';
+import { Dropdown } from 'react-native-element-dropdown';
+import { getAnswer, getIndex, indexIncrement, addAnswers, removeAll } from '../views/Global';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 const DonationScreen = () => {
@@ -31,6 +33,8 @@ const DonationScreen = () => {
   const [currentOption, setCurrentOption] = useState();
   const [mico, setMico] = useState(false);
 
+  const flatListRef = useRef();
+
 
   /**
    * get user info by user email that got from firebase Auth
@@ -45,37 +49,19 @@ const DonationScreen = () => {
       let allQuestions = await getAllQuestions();
       setQuestions(allQuestions);
       let allAnswers = getAnswer();
-      let qId = Number(allAnswers[allAnswers.length - 1].nextQuestionId);
-      setCurrentQuestion(allQuestions[qId]);
-      // console.log(allQuestions[qId]);
+      if (allAnswers.length > 0) {
+        let qId = Number(allAnswers[allAnswers.length - 1].nextQuestionId);
+        setCurrentQuestion(allQuestions[qId]);
+      } else {
+        setCurrentQuestion(allAnswers[0]);
+      }
       setAnswers(allAnswers);
+
+      // console.log(allQuestions[qId]);
       setRender(true);
     } catch (error) {
       Alert.alert(error);
     }
-  };
-
-  const loadingQna = () => {
-    // let answers = getAnswer();
-    // let index = getIndex();
-    // let questions = []
-    // questions = await getAllQuestion()
-    // console.log(typeof(questions))
-    // if (index == 0 && answers.length == 0) {
-    //   return <ScrollView>
-
-    //   </ScrollView>
-    //   // <FlatList
-    //   // data={answers}>
-
-    //   // </FlatList>
-    // }
-
-    return (
-      <ScrollView>
-        <Text>1</Text>
-      </ScrollView>
-    );
   };
 
   useEffect(() => {
@@ -94,12 +80,18 @@ const DonationScreen = () => {
       }}>
 
       <FlatList
+        ref={flatListRef}
         data={answers}
-        showsVerticalScrollIndicator={false}
+        onContentSizeChange={() => flatListRef.current.scrollToEnd()}
+        showsVerticalScrollIndicator={true}
         renderItem={({ item, index }) => (
           <View>
             {/* check if the answer is the true answer */}
-            {item.questionId.length > 0 ? <Text style={[styles.leftMessage]}>{questions[item.questionId].description}</Text> : <></>}
+            {/* {item.questionId.length > 0 ? <Text style={[styles.leftMessage]}>{questions[item.questionId].description}</Text> : <></>} */}
+
+            {item.questionId.length > 0 ? questions[item.questionId].description.map((description, index) => {
+              return (<Text key={index} style={[styles.leftMessage]}> {description}</Text>)
+            }) : <></>}
 
             {/* check if the answer has image */}
             {item.image.length > 0 ? <TouchableOpacity
@@ -117,20 +109,23 @@ const DonationScreen = () => {
             </TouchableOpacity> : <></>}
 
             {/* check if the user input several answers to a question*/}
-            {item.answer.length > 1 ?
+            {item.answer.length > 0 ?
               (item.answer.map((answer, index) => {
                 return (
                   <Text key={index} style={[styles.rightMessage]}>{answer} </Text>
                 );
-              })) :
-              <Text style={[styles.rightMessage]}>{item.answer[0]}</Text>}
+              })) : <></>}
 
             {/* check is it the current question */}
             {index == answers.length - 1 ? <View>
-              <Text style={[styles.leftMessage]}> {currentQuestion.description}</Text>
+              {/* <Text style={[styles.leftMessage]}> {currentQuestion.description}</Text> */}
+              {currentQuestion.description.map((description, index) => {
+                return (<Text key={index} style={[styles.leftMessage]}> {description}</Text>)
+              })}
               {currentQuestion.type == 0 ? currentQuestion.option.map((item, index) => {
                 return (
                   <TouchableOpacity key={index} onPress={() => {
+                    setCurrentInput();
                     addAnswers({ isTrueAnswer: true, answer: [item.option], image: "", nextQuestionId: item.nextQuestionId, questionId: currentQuestion.id });
                     setRefresh(!refresh);
                   }}>
@@ -184,10 +179,14 @@ const DonationScreen = () => {
                   flexDirection: 'row', alignItems: 'center', margin: 10
                 }}>
                   <View style={{ flex: 1, }}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => {
+                      addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                      setCurrentOption();
+                      setCurrentInput();
+                      setRefresh(!refresh);
+                    }}>
                       <Text style={{ fontSize: 18 }}>Skip</Text>
                     </TouchableOpacity>
-
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <TouchableOpacity onPress={() => {
@@ -202,6 +201,7 @@ const DonationScreen = () => {
                         if (answer.length > 0) {
                           addAnswers({ isTrueAnswer: true, answer: [answer], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
                           setCurrentOption();
+                          setCurrentInput();
                           setRefresh(!refresh);
                         } else {
                           Alert.alert("Please select the option!")
@@ -219,6 +219,83 @@ const DonationScreen = () => {
 
               </View> : <></>}
 
+              {currentQuestion.type == 2 ? <View style={[styles.leftMCOption]}>
+                <Dropdown style={[styles.dropdown]}
+                  placeholderStyle={[styles.placeholderStyle]}
+                  selectedTextStyle={[styles.selectedTextStyle]}
+                  iconStyle={[styles.iconStyle]}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  value={currentOption}
+                  data={currentQuestion.option.map((element, index) => ({ label: `${element}`, value: `${index}` }))}
+                  onChange={item => {
+                    setCurrentOption(item.value);
+                  }}
+                />
+                <View style={{
+                  flexDirection: 'row', alignItems: 'center', margin: 10
+                }}>
+                  <View style={{ flex: 1, }}>
+                    <TouchableOpacity onPress={() => {
+                      addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                      setCurrentOption();
+                      setCurrentInput();
+                      setRefresh(!refresh);
+                    }}>
+                      <Text style={{ fontSize: 18 }}>Skip</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <TouchableOpacity onPress={() => {
+                      if (currentOption != null) {
+                        addAnswers({ isTrueAnswer: true, answer: [currentQuestion.option[currentOption]], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                        setCurrentOption();
+                        setCurrentInput();
+                        setRefresh(!refresh);
+                      } else {
+                        Alert.alert("Please select the option!")
+                      }
+
+                    }}>
+                      <Text style={{ fontSize: 18 }}>Next</Text>
+                    </TouchableOpacity>
+
+                  </View>
+                </View>
+              </View> : <></>}
+
+              {currentQuestion.type == 5 ? <View style={{ alignItems: 'center', marginTop: 10 }}>
+                <View style={{ justifyContent: 'center', borderRadius: 7, height: 40, width: 110, backgroundColor: '#95ec69', }}>
+                  <TouchableOpacity onPress={() => {
+                    setCurrentInput();
+                    removeAll();
+                    addAnswers({isTrueAnswer: false, answer: [], image:"", nextQuestionId: '1', questionId: '0'})
+                    setRefresh(!refresh);
+                  }}>
+                    <Text style={[styles.Restart]}> RESTART</Text>
+                  </TouchableOpacity>
+                </View>
+              </View> : <></>}
+
+              {currentQuestion.type == 6 ? <View>
+                <TouchableOpacity onPress={() => {
+                   removeAll();
+                   addAnswers({isTrueAnswer: false, answer: [], image:"", nextQuestionId: currentQuestion.option[0].nextQuestionId, questionId: ''})
+                   setCurrentInput();
+                   setRefresh(!refresh);
+                }}>
+                  <Text style={[styles.leftOption]}>{currentQuestion.option[0].option}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                  removeAll();
+                  addAnswers({isTrueAnswer: false, answer: [], image:"", nextQuestionId: currentQuestion.option[1].nextQuestionId, questionId: ''})
+                  setCurrentInput();
+                  setRefresh(!refresh);
+                  }}>
+                  <Text style={[styles.leftOption]}>{currentQuestion.option[1].option}</Text>
+                </TouchableOpacity>
+              </View> : <></>}
               {/* check is it the input text question */}
               {/* {currentQuestion.type != 3 ? <Text style={[styles.leftOption]}> option</Text> : <></>} */}
             </View> : <></>}
@@ -238,12 +315,7 @@ const DonationScreen = () => {
         />
       </Modal>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
 
         {/* microphone input */}
         <TouchableOpacity
@@ -259,11 +331,9 @@ const DonationScreen = () => {
 
         {/* input bar */}
         <View style={[styles.inputSearchStyle]}>
-          <TextInput value = {currentInput} style={{
+          <TextInput value={currentInput} style={{
             flex: 9,
-            // borderColor: 'red',
             borderRadius: 10,
-            // borderWidth: 0.7,
             fontSize: 18,
           }} onChangeText={text => {
             setCurrentInput(text);
@@ -273,14 +343,20 @@ const DonationScreen = () => {
           <TouchableOpacity onPress={() => {
             if (currentQuestion.type == 3) {
               if (currentInput.length > 0) {
-                setCurrentInput();
-                addAnswers({ isTrueAnswer: false, answer: [currentInput], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
-                setRefresh(!refresh);
+                if (currentQuestion.nextQuestionId == -1) {
+                  // addAnswers({ isTrueAnswer: false, answer: [currentInput], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                  // setCurrentInput();
+                  // setRefresh(!refresh);
+                } else {
+                  addAnswers({ isTrueAnswer: false, answer: [currentInput], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                  setCurrentInput();
+                  setRefresh(!refresh);
+                }
               }
             } else {
               if (currentInput.length > 0) {
-                setCurrentInput();
                 addAnswers({ isTrueAnswer: false, answer: [currentInput], image: "", nextQuestionId: currentQuestion.id, questionId: "" });
+                setCurrentInput();
                 setRefresh(!refresh)
               }
             }
@@ -307,6 +383,11 @@ const DonationScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  Restart: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: 'black',
+  },
   text: {
     color: '#161924',
     fontSize: 20,
@@ -326,7 +407,7 @@ const styles = StyleSheet.create({
     color: 'black',
     padding: 10,
     borderRadius: 7,
-    marginRight: '40%',
+    marginRight: '30%',
     marginLeft: '3%',
     marginTop: 15,
     backgroundColor: 'white',
@@ -339,8 +420,8 @@ const styles = StyleSheet.create({
   //   borderRadius: 5,
   // },
   rightImage: {
-    marginLeft: '45%',
-    marginRight: 15,
+    marginLeft: '35%',
+    marginRight: '3%',
     padding: 10,
     borderRadius: 7,
     height: 150,
@@ -354,7 +435,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 7,
     marginTop: 15,
-    marginLeft: '45%',
+    marginLeft: '35%',
     marginRight: '3%',
     backgroundColor: '#95ec69',
   },
@@ -363,8 +444,8 @@ const styles = StyleSheet.create({
     color: 'black',
     padding: 10,
     borderRadius: 7,
-    marginRight: 150,
-    marginLeft: 45,
+    marginRight: '30%',
+    marginLeft: '5%',
     marginTop: 15,
     backgroundColor: '#aed4d9',
   },
@@ -372,9 +453,30 @@ const styles = StyleSheet.create({
     // fontSize:16,
     padding: 10,
     borderBottomWidth: 1,
-    marginRight: '42%',
+    marginRight: '30%',
     marginLeft: '5%',
-  }
+  },
+  dropdown: {
+    // marginRight: '42%',
+    // marginLeft: '5%',
+    height: 40,
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius: 7,
+    marginVertical: 10
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    color: 'black',
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    color: 'black'
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
 });
 
 export default DonationScreen;

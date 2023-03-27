@@ -3,11 +3,12 @@ import { getAllQuestions } from '../utils/database';
 
 
 let index = 0;
-let answers = [{isTrueAnswer: true, answer: ['A', 'B'], image:"https://firebasestorage.googleapis.com/v0/b/springbeta-6cb29.appspot.com/o/images%2Fquestions%2F100000_101730?alt=media&token=0ba81b38-3d30-425d-bd3b-09db5ed405fe",
-nextQuestionId: '1', questionId: '0'}, {isTrueAnswer: false, answer: ['A'], image:"",
-nextQuestionId: '1', questionId: '1'}]; 
+let answers = [{isTrueAnswer: false, answer: [], image:"",
+nextQuestionId: '1', questionId: '0'}]; 
 
-
+const removeAll = () => {
+    answers = [];
+}
 
 const indexIncrement = () => {
     index++;
@@ -40,6 +41,7 @@ const addAnswers = (answer) => {
 const global = {
     // questions,
     // getAllQuestion,
+    removeAll,
     getAnswer,
     getIndex,
     indexIncrement,
