@@ -10,6 +10,17 @@ const removeAll = () => {
     answers = [];
 }
 
+const removeLastQuestion = () => {
+    let index = 1;
+    for (let i = 0; i < answers.length; i++) {
+        const element = answers[i];
+        if(element.isTrueAnswer)
+            index = i;
+    }
+
+    answers.splice(index);
+}
+
 const setQId = (id) => {
     qId = id;
 }
@@ -53,6 +64,7 @@ const addAnswers = (answer) => {
 
 
 const global = {
+    removeLastQuestion,
     skipQuestionsById,
     setNextQuestionId,
     addAnswersById,

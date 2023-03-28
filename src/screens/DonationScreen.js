@@ -16,7 +16,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { getUserInfoByEmail, getAllQuestions } from '../utils/database';
 import auth from '@react-native-firebase/auth';
 import { Dropdown } from 'react-native-element-dropdown';
-import { getAnswer, addAnswers, removeAll, setQId, getQId, addAnswersById, setNextQuestionId, skipQuestionsById } from '../views/Global';
+import { getAnswer, addAnswers, removeAll, setQId, getQId, addAnswersById, setNextQuestionId, removeLastQuestion, skipQuestionsById } from '../views/Global';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 const DonationScreen = () => {
@@ -26,7 +26,7 @@ const DonationScreen = () => {
   const [answers, setAnswers] = useState();
   const [imageVisible, setImageVisible] = useState(false);
   const [image, setImage] = useState(false);
-  const [currentInput, setCurrentInput] = useState();
+  const [currentInput, setCurrentInput] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState();
   const [refresh, setRefresh] = useState(false);
   const [currentOption, setCurrentOption] = useState();
@@ -118,7 +118,6 @@ const DonationScreen = () => {
 
             {/* check is it the current question */}
             {index == answers.length - 1 ? <View>
-
               {/* type next question description */}
               {currentQuestion.description.map((description, index) => {
                 if (getQId() == currentQuestion.id)
@@ -342,10 +341,58 @@ const DonationScreen = () => {
               {/* check is it the input text question */}
               {/* {currentQuestion.type != 3 ? <Text style={[styles.leftOption]}> option</Text> : <></>} */}
             </View> : <></>}
+
           </View>
         )}
       />
 
+      {/* shortcut commend */}
+      {shortcut ? <View style={{ flexDirection: 'row', justifyContent: 'flex-end', position: 'absolute', width: "100%", height: "100%" }}>
+        <View style={{ flexDirection: 'column', justifyContent: 'flex-end' }}>
+          <View style={{ borderRadius: 7, borderWidth: 1, borderColor: 'white', width: 150, height: 200, marginBottom: 45, backgroundColor: 'white' }}>
+            {/* Skipping question except type 0 , 5, 6 */}
+            <TouchableOpacity onPress={() => {
+              if (currentQuestion.type == 0 || currentQuestion.type == 5 || currentQuestion.type == 6) {
+                Alert.alert("Please answer this question. It will effect the issue later.")
+              } else {
+                setCurrentInput("");
+                setCurrentOption();
+                addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id })
+                setRefresh(!refresh);
+              }
+            }}>
+              <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>SKIP</Text>
+            </TouchableOpacity>
+
+            {/* back to last question */}
+            <TouchableOpacity onPress={() => {
+              removeLastQuestion();
+              setCurrentInput("");
+              setCurrentOption();
+              setRefresh(!refresh);
+            }}>
+              <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>BACK</Text>
+            </TouchableOpacity>
+
+            {/* Restart donation process */}
+            <TouchableOpacity onPress={() => {
+              setCurrentInput("");
+              setCurrentOption();
+              removeAll();
+              addAnswers({ isTrueAnswer: false, answer: [], image: "", nextQuestionId: '1', questionId: '0' })
+              setRefresh(!refresh);
+            }}>
+              <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>RESTART</Text>
+            </TouchableOpacity>
+
+            {/* End this donation process */}
+            <TouchableOpacity>
+              <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>END</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+      </View> : <></>}
 
 
       {/* enlarge image */}
@@ -412,8 +459,11 @@ const DonationScreen = () => {
           </TouchableOpacity>
         </View>
 
+
         {/* hambuger button */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          setShortcut(!shortcut);
+        }}>
           <MaterialIcons
             style={{ color: 'black', flex: 1, marginRight: 5, marginTop: 4 }}
             name="notes"
