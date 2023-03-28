@@ -1,22 +1,37 @@
 import React from 'react'
-import { Text, View, StyleSheet} from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 
 
-const TestScreen = () => {
-    return (
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text style={styles.text}>ReviewScreen</Text>
+const HelpScreen = () => {
+  return (
+    <View>
+      <View style={{ alignItems: "center"}}>
+        <Text style={styles.title}>Review</Text>
       </View>
-    )
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
-    text: {
-      color: "#161924",
-      fontSize: 20,
-      fontWeight: "500"
-    }
-  })
+  title: {
+    color: "#161924",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  basetext: {
+    color: "#161924",
+    fontSize: 16,
+    fontWeight: "400",
+    paddingTop: 10,
+  },
+  boldtext: {
+    color: "#161924",
+    fontSize: 16,
+    fontWeight: "bold",
+    paddingTop: 15,
+  }
+})
 
 
-export default TestScreen;
+
+export default HelpScreen;
