@@ -279,6 +279,7 @@ const DonationScreen = () => {
                 }}>
                   <View style={{ flex: 1, }}>
                     <TouchableOpacity onPress={() => {
+                      console.log(answers);
                       skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
                       setCurrentInput("");
                       setQId(-1);
@@ -439,7 +440,7 @@ const DonationScreen = () => {
                   setCurrentInput("");
                   setRefresh(!refresh);
                 } else {
-                  addAnswers({ isTrueAnswer: false, answer: [currentInput], image: "", nextQuestionId: currentQuestion.id, questionId: currentQuestion.id });
+                  addAnswers({ isTrueAnswer: true, answer: [currentInput], image: "", nextQuestionId: currentQuestion.id, questionId: currentQuestion.id });
                   setQId(currentQuestion.id)
                   setCurrentInput("");
                   setRefresh(!refresh);

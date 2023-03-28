@@ -17,7 +17,6 @@ const removeLastQuestion = () => {
         if(element.isTrueAnswer)
             index = i;
     }
-
     answers.splice(index);
 }
 
@@ -50,11 +49,16 @@ const setNextQuestionId = (curId, nextId) => {
 }
 
 const skipQuestionsById = (curId, nextId) => {
+    let check = true;
     for (let i = 0; i < answers.length; i++) {
         if(answers[i].questionId == curId){
             answers[i].nextQuestionId = nextId;
             answers[i].answer = ["Skip"];
+            check = false;
         }
+    }
+    if(check){
+        answers.push({ isTrueAnswer: true, answer: ["Skip"], image: "", nextQuestionId: nextId, questionId: curId })
     }
 }
 
