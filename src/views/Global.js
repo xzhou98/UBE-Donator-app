@@ -3,7 +3,7 @@ import { getAllQuestions } from '../utils/database';
 
 
 let qId = 1;
-let answers = [{isTrueAnswer: false, answer: [], image:"", nextQuestionId: '1', questionId: '0'}]; 
+let answers = [{isTrueAnswer: false, answer: [], image:[], nextQuestionId: '1', questionId: '0'}]; 
 // let answers = []
 
 const removeAll = () => {
@@ -58,7 +58,7 @@ const skipQuestionsById = (curId, nextId) => {
         }
     }
     if(check){
-        answers.push({ isTrueAnswer: true, answer: ["Skip"], image: "", nextQuestionId: nextId, questionId: curId })
+        answers.push({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: nextId, questionId: curId })
     }
 }
 

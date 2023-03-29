@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@baronha/react-native-multiple-image-picker": "^0.4.13",
     "@react-native-firebase/app": "^16.5.0",
     "@react-native-firebase/auth": "^16.5.0",
     "@react-native-firebase/firestore": "^16.5.0",

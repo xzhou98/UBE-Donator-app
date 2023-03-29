@@ -12,12 +12,17 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { getUserInfoByEmail, getAllQuestions } from '../utils/database';
 import auth from '@react-native-firebase/auth';
 import { Dropdown } from 'react-native-element-dropdown';
 import { getAnswer, addAnswers, removeAll, setQId, getQId, addAnswersById, setNextQuestionId, removeLastQuestion, skipQuestionsById } from '../views/Global';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import MultipleImagePicker from '@baronha/react-native-multiple-image-picker';
+import { COLORS } from '../constants/theme';
+import { launchImageLibrary } from 'react-native-image-picker';
+
 
 const DonationScreen = () => {
   const [render, setRender] = useState(false);
@@ -32,6 +37,7 @@ const DonationScreen = () => {
   const [currentOption, setCurrentOption] = useState();
   const [mico, setMico] = useState(false);
   const [shortcut, setShortcut] = useState(false);
+  const [imageUrl, setImageUrl] = useState([]);
 
   const flatListRef = useRef();
 
@@ -68,6 +74,20 @@ const DonationScreen = () => {
     return subscriber; // unsubscribe on unmount
   }, [refresh]);
 
+  const selectImage = async () => {
+    try {
+      const response = await MultipleImagePicker.openPicker({ mediaType: 'image' });
+      let temp = [];
+      for (let i = 0; i < response.length; i++) {
+        const element = response[i].path;
+        temp.push(element)
+      }
+      setImageUrl(temp)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   return render ? (
     <SafeAreaView
@@ -86,27 +106,34 @@ const DonationScreen = () => {
         showsVerticalScrollIndicator={true}
         renderItem={({ item, index }) => (
           <View>
-            {/* check if the answer is the true answer */}
-            {/* {item.questionId.length > 0 ? <Text style={[styles.leftMessage]}>{questions[item.questionId].description}</Text> : <></>} */}
-
             {item.questionId.length > 0 ? questions[item.questionId].description.map((description, index) => {
               return (<Text key={index} style={[styles.leftMessage]}> {description}</Text>)
             }) : <></>}
 
             {/* check if the answer has image */}
-            {item.image.length > 0 ? <TouchableOpacity
-              onPress={() => {
-                setImage(item.image);
-                setImageVisible(true);
-              }}>
-              <Image
-                source={{
-                  uri: item.image,
-                }}
-                resizeMode={'contain'}
-                style={[styles.rightImage]}
-              />
-            </TouchableOpacity> : <></>}
+            <View style={{ marginBottom: 20 }}>
+              {item.image.length > 0 ? item.image.map((url, index) => {
+                return (
+                  <View key={index}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setImage(url);
+                        setImageVisible(true);
+                      }}>
+                      <Image
+                        source={{
+                          uri: url,
+                        }}
+                        resizeMode={'contain'}
+                        style={[styles.rightImage]}
+                      />
+                    </TouchableOpacity>
+                  </View>
+
+                )
+              }) : <></>}
+            </View>
+
 
             {/* check if the user input several answers to a question*/}
             {item.answer.length > 0 ?
@@ -131,7 +158,7 @@ const DonationScreen = () => {
                 return (
                   <TouchableOpacity key={index} onPress={() => {
                     setCurrentInput("");
-                    addAnswers({ isTrueAnswer: true, answer: [item.option], image: "", nextQuestionId: item.nextQuestionId, questionId: currentQuestion.id });
+                    addAnswers({ isTrueAnswer: true, answer: [item.option], image: [], nextQuestionId: item.nextQuestionId, questionId: currentQuestion.id });
                     setRefresh(!refresh);
                   }}>
                     <Text key={index} style={[styles.leftOption]}> {item.option} </Text>
@@ -186,7 +213,7 @@ const DonationScreen = () => {
                 }}>
                   <View style={{ flex: 1, }}>
                     <TouchableOpacity onPress={() => {
-                      addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                      addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
                       setCurrentOption();
                       setCurrentInput("");
                       setRefresh(!refresh);
@@ -205,7 +232,7 @@ const DonationScreen = () => {
                           }
                         }
                         if (answer.length > 0) {
-                          addAnswers({ isTrueAnswer: true, answer: [answer], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                          addAnswers({ isTrueAnswer: true, answer: [answer], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
                           setCurrentOption();
                           setCurrentInput("");
                           setRefresh(!refresh);
@@ -245,7 +272,7 @@ const DonationScreen = () => {
                 }}>
                   <View style={{ flex: 1, }}>
                     <TouchableOpacity onPress={() => {
-                      addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                      addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
                       setCurrentOption();
                       setCurrentInput("");
                       setRefresh(!refresh);
@@ -256,7 +283,7 @@ const DonationScreen = () => {
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <TouchableOpacity onPress={() => {
                       if (currentOption != null) {
-                        addAnswers({ isTrueAnswer: true, answer: [currentQuestion.option[currentOption]], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                        addAnswers({ isTrueAnswer: true, answer: [currentQuestion.option[currentOption]], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
                         setCurrentOption();
                         setCurrentInput("");
                         setRefresh(!refresh);
@@ -275,11 +302,10 @@ const DonationScreen = () => {
               {/* textInput */}
               {currentQuestion.type == 3 ? <View>
                 <View style={{
-                  flexDirection: 'row', alignItems: 'center', margin: 30
+                  flexDirection: 'row', alignItems: 'center', marginLeft: '5%', marginRight: '30%', marginVertical: 20,
                 }}>
                   <View style={{ flex: 1, }}>
                     <TouchableOpacity onPress={() => {
-                      console.log(answers);
                       skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
                       setCurrentInput("");
                       setQId(-1);
@@ -307,13 +333,87 @@ const DonationScreen = () => {
                 </View>
               </View> : <></>}
 
+              {/* uploading image */}
+              {currentQuestion.type == 4 ? <View>
+                {imageUrl.map((url, index) => {
+                  return (
+                    <View key={index} style={{ marginLeft: '5%', marginRight: '30%', marginVertical: 20, }}>
+                      <TouchableOpacity onPress={() => {
+                        setImage(url);
+                        setImageVisible(true);
+                      }}>
+                        <Image
+                          source={{
+                            uri: url,
+                          }}
+                          resizeMode={'cover'}
+                          style={{
+                            width: 200,
+                            height: 200,
+                            borderRadius: 5,
+                          }} />
+                      </TouchableOpacity>
+
+                    </View>
+                  )
+                })}
+
+                <TouchableOpacity
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: 10,
+                    borderRadius: 8,
+                    height: 40,
+                    marginRight: '30%',
+                    marginLeft: '5%',
+                    backgroundColor: COLORS.primary + '20',
+                  }}
+                  onPress={selectImage}>
+
+                  <Text style={{ opacity: 0.5, color: COLORS.primary }}>
+                    + add image
+                  </Text>
+                </TouchableOpacity>
+
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 10,
+                  marginRight: '30%',
+                  marginLeft: '5%',
+                }}>
+                  <View style={{ flex: 1, }}>
+                    <TouchableOpacity onPress={() => {
+                      skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
+                      setCurrentInput("");
+                      setImageUrl([]);
+                      setRefresh(!refresh);
+                    }}>
+                      <Text style={{ fontSize: 20 }}>Skip</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <TouchableOpacity onPress={() => {
+                      addAnswers({ isTrueAnswer: true, answer: [], image: imageUrl, nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                      setCurrentInput("");
+                      setImageUrl([]);
+                      setRefresh(!refresh);
+                    }}>
+                      <Text style={{ fontSize: 20 }}>Next</Text>
+                    </TouchableOpacity>
+
+                  </View>
+                </View>
+
+              </View> : <></>}
 
               {currentQuestion.type == 5 ? <View style={{ alignItems: 'center', marginTop: 10 }}>
                 <View style={{ justifyContent: 'center', borderRadius: 7, height: 40, width: 110, backgroundColor: '#95ec69', }}>
                   <TouchableOpacity onPress={() => {
                     setCurrentInput("");
                     removeAll();
-                    addAnswers({ isTrueAnswer: false, answer: [], image: "", nextQuestionId: '1', questionId: '0' })
+                    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: '1', questionId: '0' })
                     setRefresh(!refresh);
                   }}>
                     <Text style={[styles.Restart]}> RESTART</Text>
@@ -324,7 +424,7 @@ const DonationScreen = () => {
               {currentQuestion.type == 6 ? <View>
                 <TouchableOpacity onPress={() => {
                   removeAll();
-                  addAnswers({ isTrueAnswer: false, answer: [], image: "", nextQuestionId: currentQuestion.option[0].nextQuestionId, questionId: '' })
+                  addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: currentQuestion.option[0].nextQuestionId, questionId: '' })
                   setCurrentInput("");
                   setRefresh(!refresh);
                 }}>
@@ -332,7 +432,7 @@ const DonationScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                   removeAll();
-                  addAnswers({ isTrueAnswer: false, answer: [], image: "", nextQuestionId: currentQuestion.option[1].nextQuestionId, questionId: '' })
+                  addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: currentQuestion.option[1].nextQuestionId, questionId: '' })
                   setCurrentInput("");
                   setRefresh(!refresh);
                 }}>
@@ -351,6 +451,7 @@ const DonationScreen = () => {
       {shortcut ? <View style={{ flexDirection: 'row', justifyContent: 'flex-end', position: 'absolute', width: "100%", height: "100%" }}>
         <View style={{ flexDirection: 'column', justifyContent: 'flex-end' }}>
           <View style={{ borderRadius: 7, borderWidth: 1, borderColor: 'white', width: 150, height: 200, marginBottom: 45, backgroundColor: 'white' }}>
+
             {/* Skipping question except type 0 , 5, 6 */}
             <TouchableOpacity onPress={() => {
               if (currentQuestion.type == 0 || currentQuestion.type == 5 || currentQuestion.type == 6) {
@@ -358,7 +459,7 @@ const DonationScreen = () => {
               } else {
                 setCurrentInput("");
                 setCurrentOption();
-                addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: "", nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id })
+                addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id })
                 setRefresh(!refresh);
               }
             }}>
@@ -380,7 +481,7 @@ const DonationScreen = () => {
               setCurrentInput("");
               setCurrentOption();
               removeAll();
-              addAnswers({ isTrueAnswer: false, answer: [], image: "", nextQuestionId: '1', questionId: '0' })
+              addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: '1', questionId: '0' })
               setRefresh(!refresh);
             }}>
               <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>RESTART</Text>
@@ -440,13 +541,13 @@ const DonationScreen = () => {
                   setCurrentInput("");
                   setRefresh(!refresh);
                 } else {
-                  addAnswers({ isTrueAnswer: true, answer: [currentInput], image: "", nextQuestionId: currentQuestion.id, questionId: currentQuestion.id });
+                  addAnswers({ isTrueAnswer: true, answer: [currentInput], image: [], nextQuestionId: currentQuestion.id, questionId: currentQuestion.id });
                   setQId(currentQuestion.id)
                   setCurrentInput("");
                   setRefresh(!refresh);
                 }
               } else {
-                addAnswers({ isTrueAnswer: false, answer: [currentInput], image: "", nextQuestionId: currentQuestion.id, questionId: "" });
+                addAnswers({ isTrueAnswer: false, answer: [currentInput], image: [], nextQuestionId: currentQuestion.id, questionId: "" });
                 setCurrentInput("");
                 setRefresh(!refresh)
               }
@@ -506,22 +607,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
     backgroundColor: 'white',
   },
-  // rightImage: {
-  //   // width: '100%',
-  //   height: 150,
-  //   marginVertical: -10,
-  //   // margin: '5%',
-  //   borderRadius: 5,
-  // },
   rightImage: {
     marginLeft: '35%',
     marginRight: '3%',
-    padding: 10,
     borderRadius: 7,
-    height: 150,
-    marginTop: 15,
-    marginBottom: -15,
-    borderRadius: 5,
+    width: 200,
+    height: 200,
+    marginVertical: -10,
   },
   rightMessage: {
     fontSize: 16,
