@@ -46,7 +46,7 @@ function AppStackNavigator({ navigation }) {
                     {TabButton(currentTab, setCurrentTab, "Home", "home")}
                     {TabButton(currentTab, setCurrentTab, "Donation", "chat")}
                     {TabButton(currentTab, setCurrentTab, "Review", "explore")}
-                    {TabButton(currentTab, setCurrentTab, "Contact us", "call")}
+                    {TabButton(currentTab, setCurrentTab, "Contact Resource", "call")}
                     {TabButton(currentTab, setCurrentTab, "Help", "help")}
                 </View>
 

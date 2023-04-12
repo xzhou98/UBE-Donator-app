@@ -21,7 +21,7 @@ import { getAnswer, addAnswers, removeAll, setQId, getQId, addAnswersById, setNe
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MultipleImagePicker from '@baronha/react-native-multiple-image-picker';
 import { COLORS } from '../constants/theme';
-import { launchImageLibrary } from 'react-native-image-picker';
+// import { launchImageLibrary } from 'react-native-image-picker';
 
 
 const DonationScreen = () => {
@@ -38,6 +38,7 @@ const DonationScreen = () => {
   const [mico, setMico] = useState(false);
   const [shortcut, setShortcut] = useState(false);
   const [imageUrl, setImageUrl] = useState([]);
+  const [restartConfirm, setRestartConfirm] = useState([]);
 
   const flatListRef = useRef();
 
@@ -87,6 +88,26 @@ const DonationScreen = () => {
       console.log(error);
     }
   };
+
+  const restartSession = () => {
+    setCurrentInput("");
+    setCurrentOption();
+    removeAll();
+    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: '1', questionId: '0' })
+    setRefresh(!refresh);
+  }
+
+  const forceAnswer = (item) => {
+    if (currentQuestion.nextQuestionId == undefined || currentQuestion.nextQuestionId.length == 0) {
+      setCurrentInput("");
+      addAnswers({ isTrueAnswer: true, answer: [item.option], image: [], nextQuestionId: item.nextQuestionId, questionId: currentQuestion.id });
+      setRefresh(!refresh);
+    } else {
+      setCurrentInput("");
+      addAnswers({ isTrueAnswer: true, answer: [item.option], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+      setRefresh(!refresh);
+    }
+  }
 
 
   return render ? (
@@ -157,13 +178,11 @@ const DonationScreen = () => {
               {currentQuestion.type == 0 ? currentQuestion.option.map((item, index) => {
                 return (
                   <TouchableOpacity key={index} onPress={() => {
-                    setCurrentInput("");
-                    addAnswers({ isTrueAnswer: true, answer: [item.option], image: [], nextQuestionId: item.nextQuestionId, questionId: currentQuestion.id });
-                    setRefresh(!refresh);
+                    forceAnswer(item);
                   }}>
                     <Text key={index} style={[styles.leftOption]}> {item.option} </Text>
                   </TouchableOpacity>
-                );
+                )
               }) : <></>}
 
               {/* multiple answers */}
@@ -411,10 +430,10 @@ const DonationScreen = () => {
               {currentQuestion.type == 5 ? <View style={{ alignItems: 'center', marginTop: 10 }}>
                 <View style={{ justifyContent: 'center', borderRadius: 7, height: 40, width: 110, backgroundColor: '#95ec69', }}>
                   <TouchableOpacity onPress={() => {
-                    setCurrentInput("");
-                    removeAll();
-                    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: '1', questionId: '0' })
-                    setRefresh(!refresh);
+                    Alert.alert('Restart Donation', 'Are you sure you want to restart this donation session? This will permanently delete all your responses so far and cannot be undone.', [
+                      { text: 'Restart', onPress: () => restartSession() },
+                      { text: 'Cancel', style: 'cancel' }
+                    ])
                   }}>
                     <Text style={[styles.Restart]}> RESTART</Text>
                   </TouchableOpacity>
@@ -454,13 +473,21 @@ const DonationScreen = () => {
 
             {/* Skipping question except type 0 , 5, 6 */}
             <TouchableOpacity onPress={() => {
-              if (currentQuestion.type == 0 || currentQuestion.type == 5 || currentQuestion.type == 6) {
-                Alert.alert("Please answer this question. It will effect the issue later.")
+              if (currentQuestion.type == 5 || currentQuestion.type == 6) {
+                Alert.alert('Skip', 'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.', [
+                  {text: 'Cancel', tyle: 'cancel'}
+                ]);
               } else {
-                setCurrentInput("");
-                setCurrentOption();
-                addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id })
-                setRefresh(!refresh);
+                if (currentQuestion.nextQuestionId.length != 0 && currentQuestion.nextQuestionId != undefined) {
+                  setCurrentInput("");
+                  setCurrentOption();
+                  addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id })
+                  setRefresh(!refresh);
+                } else {
+                  Alert.alert('Skip', 'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.', [
+                    {text: 'Cancel', tyle: 'cancel'}
+                  ]);
+                }
               }
             }}>
               <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>SKIP</Text>
@@ -478,18 +505,17 @@ const DonationScreen = () => {
 
             {/* Restart donation process */}
             <TouchableOpacity onPress={() => {
-              setCurrentInput("");
-              setCurrentOption();
-              removeAll();
-              addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: '1', questionId: '0' })
-              setRefresh(!refresh);
+              Alert.alert('Restart Donation', 'Are you sure you want to restart this donation session? This will permanently delete all your responses so far and cannot be undone.', [
+                { text: 'Restart', onPress: () => restartSession() },
+                { text: 'Cancel', style: 'cancel' }
+              ])
             }}>
               <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>RESTART</Text>
             </TouchableOpacity>
 
             {/* End this donation process */}
             <TouchableOpacity>
-              <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>END</Text>
+              <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>WITHDRAW</Text>
             </TouchableOpacity>
           </View>
         </View>

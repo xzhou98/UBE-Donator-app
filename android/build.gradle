@@ -11,6 +11,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+//        //photo editor
+//        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath("com.android.tools.build:gradle:4.2.2")
@@ -34,6 +36,7 @@ allprojects {
         }
 
         google()
-        maven { url 'https://www.jitpack.io' }
+//        //photo editor
+//        maven { url 'https://www.jitpack.io' }
     }
 }

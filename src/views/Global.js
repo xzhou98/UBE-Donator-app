@@ -2,7 +2,7 @@ import { getAllQuestions } from '../utils/database';
 
 
 
-let qId = 1;
+let qId = 0;
 let answers = [{isTrueAnswer: false, answer: [], image:[], nextQuestionId: '1', questionId: '0'}]; 
 // let answers = []
 
