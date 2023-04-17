@@ -6122,6 +6122,11 @@
   "resolved" "https://registry.npmjs.org/react-native-microphone-stream/-/react-native-microphone-stream-1.0.2.tgz"
   "version" "1.0.2"
 
+"react-native-photo-editor@^1.0.13":
+  "integrity" "sha512-SWrnatVC4H73cEN+6rVlc0M5cGS20K6EwL8u2CmlBlLNEwH6OfayMgOCwpKJdmN2GPZKJ2JraQru8Ga7JL4zaw=="
+  "resolved" "https://registry.npmjs.org/react-native-photo-editor/-/react-native-photo-editor-1.0.13.tgz"
+  "version" "1.0.13"
+
 "react-native-reanimated@>= 1.0.0":
   "integrity" "sha512-DquSbl7P8j4SAmc+kRdd75Ianm8G+IYQ9T4AQ6lrpLVeDkhZmjWI0wkutKWnp6L7c5XNVUrFDUf69dwETLCItQ=="
   "resolved" "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-2.14.4.tgz"

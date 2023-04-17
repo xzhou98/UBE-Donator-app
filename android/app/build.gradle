@@ -198,6 +198,12 @@ android {
 
         }
     }
+
+
+
+    configurations {
+        all*.exclude module: 'ucrop' // This removes all other versions of `ucrop` if gets duplicated from all the artifacts.
+    }
 }
 
 dependencies {

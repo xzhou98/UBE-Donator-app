@@ -22,6 +22,8 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import MultipleImagePicker from '@baronha/react-native-multiple-image-picker';
 import { COLORS } from '../constants/theme';
 // import { launchImageLibrary } from 'react-native-image-picker';
+import PhotoEditor from 'react-native-photo-editor'
+
 
 
 const DonationScreen = () => {
@@ -80,9 +82,13 @@ const DonationScreen = () => {
       const response = await MultipleImagePicker.openPicker({ mediaType: 'image' });
       let temp = [];
       for (let i = 0; i < response.length; i++) {
-        const element = response[i].path;
+        // const element = response[i].path;
+        const element = response[i].realPath;
         temp.push(element)
       }
+      // PhotoEditor.Edit({
+      //   path: temp[0]
+      // });
       setImageUrl(temp)
     } catch (error) {
       console.log(error);
@@ -95,6 +101,7 @@ const DonationScreen = () => {
     removeAll();
     addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: '1', questionId: '0' })
     setRefresh(!refresh);
+    setShortcut(!shortcut);
   }
 
   const forceAnswer = (item) => {
@@ -132,18 +139,18 @@ const DonationScreen = () => {
             }) : <></>}
 
             {/* check if the answer has image */}
-            <View style={{ marginBottom: 20 }}>
+            <View >
               {item.image.length > 0 ? item.image.map((url, index) => {
                 return (
                   <View key={index}>
                     <TouchableOpacity
                       onPress={() => {
-                        setImage(url);
+                        setImage(`file://${url}`);
                         setImageVisible(true);
                       }}>
                       <Image
                         source={{
-                          uri: url,
+                          uri: `file://${url}`,
                         }}
                         resizeMode={'contain'}
                         style={[styles.rightImage]}
@@ -358,12 +365,22 @@ const DonationScreen = () => {
                   return (
                     <View key={index} style={{ marginLeft: '5%', marginRight: '30%', marginVertical: 20, }}>
                       <TouchableOpacity onPress={() => {
-                        setImage(url);
-                        setImageVisible(true);
+                        // setImage(url);
+                        // setImageVisible(true);
+                        PhotoEditor.Edit({
+                          path: imageUrl[index],
+                          hiddenControls: [ "share","sticker","text"],
+                          onDone: (data)=>{
+                            let temp = imageUrl
+                            temp[index] = data
+                            setImageUrl(temp);
+                            setRefresh(!refresh);
+                          }
+                        });
                       }}>
                         <Image
                           source={{
-                            uri: url,
+                            uri: `file://${url}`,
                           }}
                           resizeMode={'cover'}
                           style={{
@@ -372,7 +389,6 @@ const DonationScreen = () => {
                             borderRadius: 5,
                           }} />
                       </TouchableOpacity>
-
                     </View>
                   )
                 })}
@@ -475,7 +491,7 @@ const DonationScreen = () => {
             <TouchableOpacity onPress={() => {
               if (currentQuestion.type == 5 || currentQuestion.type == 6) {
                 Alert.alert('Skip', 'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.', [
-                  {text: 'Cancel', tyle: 'cancel'}
+                  { text: 'Cancel', tyle: 'cancel' }
                 ]);
               } else {
                 if (currentQuestion.nextQuestionId.length != 0 && currentQuestion.nextQuestionId != undefined) {
@@ -483,9 +499,10 @@ const DonationScreen = () => {
                   setCurrentOption();
                   addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id })
                   setRefresh(!refresh);
+                  setShortcut(!shortcut);
                 } else {
                   Alert.alert('Skip', 'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.', [
-                    {text: 'Cancel', tyle: 'cancel'}
+                    { text: 'Cancel', tyle: 'cancel' }
                   ]);
                 }
               }
@@ -499,6 +516,7 @@ const DonationScreen = () => {
               setCurrentInput("");
               setCurrentOption();
               setRefresh(!refresh);
+              setShortcut(!shortcut);
             }}>
               <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>BACK</Text>
             </TouchableOpacity>
@@ -639,7 +657,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     width: 200,
     height: 200,
-    marginVertical: -10,
+    marginVertical: 10,
   },
   rightMessage: {
     fontSize: 16,
