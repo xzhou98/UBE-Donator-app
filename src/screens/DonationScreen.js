@@ -136,8 +136,8 @@ const DonationScreen = () => {
         showsVerticalScrollIndicator={true}
         renderItem={({ item, index }) => (
           <View>
+            {console.log(item)}
             {item.questionId > 0 ? questions[item.questionId].description.map((description, index) => {
-              // {console.log(description)}
               return (<Text key={index} style={[styles.leftMessage]}> {description}</Text>)
             }) : <></>}
 

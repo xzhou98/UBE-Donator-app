@@ -5,6 +5,7 @@ import AuthStackNavigator from './navigators/AuthStackNavigator';
 import auth from '@react-native-firebase/auth'
 import AppStackNavigator from './navigators/AppStackNavigator';
 
+
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true)

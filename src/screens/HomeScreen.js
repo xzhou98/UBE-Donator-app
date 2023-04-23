@@ -6,14 +6,17 @@ import FormButton from '../components/shared/FormButton';
 import { COLORS } from '../constants/theme';
 // import { getQuizzes, checkQuizFinish, getUserInfoByEmail } from '../utils/database';
 import auth from "@react-native-firebase/auth";
-// import { AuthContextProvider, AuthContext } from "../context/AuthContext"
+import {showNotification, handle5SecNotification, handleCancel, handleScheduleNotification} from '../views/notification.android'
+
+
+
+
 
 const HomeScreen = () => {
   const [user, setUser] = useState();
 
   function onAuthStateChanged(user) {
     setUser(user);
-    // console.log(user)
   }
 
   useEffect(() => {
@@ -24,8 +27,24 @@ const HomeScreen = () => {
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <Text style={styles.text}>Home Page</Text>
-    </View>
 
+      {console.log(new Date(Date.now()))}
+      <TouchableOpacity activeOpacity={0.6} onPress={() => showNotification('hello', 'message')}>
+        <View style={styles.notificationButton}>
+          <Text style={styles.ButtonTitle}>Click me to get notification</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity activeOpacity={0.6} onPress={() => handle5SecNotification('Hi', 'showed after 5 sec')}>
+        <View style={styles.notificationButton}>
+          <Text style={styles.ButtonTitle}>Click me to get notification after 5 sec.</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity activeOpacity={0.6} onPress={handleCancel}>
+        <View style={styles.notificationButton}>
+          <Text style={styles.ButtonTitle}>Click me to cancel notification</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
   )
 }
 
@@ -34,6 +53,15 @@ const styles = StyleSheet.create({
     color: "#161924",
     fontSize: 20,
     fontWeight: "500"
+  },
+  notificationButton: {
+    margin:10,
+    padding: 16,
+    backgroundColor: '#aed4d9',
+    borderRadius: 24,
+  },
+  ButtonTitle:{
+    // color: 'white',
   }
 })
 
