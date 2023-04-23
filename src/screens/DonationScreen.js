@@ -55,6 +55,7 @@ const DonationScreen = () => {
       setUser(userInfo);
 
       let allQuestions = await getAllQuestions();
+      allQuestions = allQuestions[1];
       setQuestions(allQuestions);
       let allAnswers = getAnswer();
       if (allAnswers.length > 0) {
@@ -101,7 +102,8 @@ const DonationScreen = () => {
     removeAll();
     addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: '1', questionId: '0' })
     setRefresh(!refresh);
-    setShortcut(!shortcut);
+    if(shortcut)
+      setShortcut(!shortcut);
   }
 
   const forceAnswer = (item) => {
@@ -134,7 +136,8 @@ const DonationScreen = () => {
         showsVerticalScrollIndicator={true}
         renderItem={({ item, index }) => (
           <View>
-            {item.questionId.length > 0 ? questions[item.questionId].description.map((description, index) => {
+            {item.questionId > 0 ? questions[item.questionId].description.map((description, index) => {
+              // {console.log(description)}
               return (<Text key={index} style={[styles.leftMessage]}> {description}</Text>)
             }) : <></>}
 

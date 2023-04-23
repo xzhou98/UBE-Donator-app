@@ -1,5 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import { Alert } from 'react-native'
+import moment from 'moment';
 
 // export const createQuiz = (currentQuizId, title, description) => {
 //     // Alert.alert(description)
@@ -38,15 +39,53 @@ export const getAllQuestions = async () => {
     // return firestore().collection('Questions').get();
     try {
         const q = await firestore().collection('Questions').get();
-        let questions =[]
+        let questions = []
         await q.docs.forEach(async element => {
-            questions.push(Object.assign({id: element.id},element.data()));
+            let temp =[]
+            element.data().questions.forEach((x, index) => {
+                temp.push(Object.assign({ id: `${index}` }, x));
+            })
+            // questions.push(Object.assign({ id: element.id }, element.data()));
+            questions.push(temp)
         })
+
+        // console.log(questions[1]);
         return questions
     } catch (error) {
         return error;
     }
+}
 
+/**
+ * get all sessions from database
+ */
+export const getAllSessions = async (userId) => {
+    try {
+        let id = "";
+        let answers = [];
+        let date = new Date();
+        const data = await firestore().collection('DonationData').get();
+        
+        await data.docs.forEach(async element => {
+            if (userId == element.data().userId)
+                id = element.id;
+        })
+
+        const temp = await firestore().collection('DonationData').doc(id).collection('Answers').get();
+
+        await temp.docs.forEach(async element => {
+            answers.push(element.data());
+        })
+
+        answers = answers.map((item) => {
+            let date = moment(item.date._seconds * 1000)
+            return { answer: item.answer, date: date.format('MMMM Do YYYY, h:mm:ss a')};
+        })
+        // console.log(answers);
+        return answers
+    } catch (error) {
+        return error;
+    }
 }
 
 
