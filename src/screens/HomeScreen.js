@@ -52,7 +52,7 @@ const HomeScreen = () => {
         <Text>Notification Date: {user.date}</Text>
         <TouchableOpacity activeOpacity={0.6} onPress={() => { setPickerVisible(true) }}>
           <View style={styles.notificationButton}>
-            <Text style={styles.ButtonTitle}>Click me to set the notification date</Text>
+            <Text style={styles.ButtonTitle}>Click me to schedule the notification</Text>
           </View>
         </TouchableOpacity>
       </View>

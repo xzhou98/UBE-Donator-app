@@ -39,18 +39,16 @@ export const getAllQuestions = async () => {
     // return firestore().collection('Questions').get();
     try {
         const q = await firestore().collection('Questions').get();
-        let questions = []
+        let sessions = []
         await q.docs.forEach(async element => {
             let temp =[]
             element.data().questions.forEach((x, index) => {
                 temp.push(Object.assign({ id: `${index}` }, x));
             })
             // questions.push(Object.assign({ id: element.id }, element.data()));
-            questions.push(temp)
+            sessions.push({date: moment(element.data().date._seconds * 1000).format('MMMM Do YYYY, h:mm:ss a'), questions: temp, session: element.data().session})
         })
-
-        // console.log(questions[1]);
-        return questions
+        return sessions
     } catch (error) {
         return error;
     }

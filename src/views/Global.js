@@ -4,7 +4,15 @@ import { getAllQuestions } from '../utils/database';
 
 let qId = 0;
 let answers = [{isTrueAnswer: false, answer: [], image:[], nextQuestionId: '1', questionId: '0'}]; 
-// let answers = []
+let session = -1;
+
+const getSession = () => {
+    return session;
+}
+
+const changeSession = (num) => {
+    session = num;
+}
 
 const removeAll = () => {
     answers = [];
@@ -76,7 +84,9 @@ const global = {
     getAnswer,
     getQId,
     setQId,
+    getSession,
     addAnswers,
+    changeSession
 };
 
 module.exports = global;
