@@ -6103,6 +6103,11 @@
   dependencies:
     "prop-types" "^15.8.1"
 
+"react-native-dialog@^9.3.0":
+  "integrity" "sha512-JEOJY/0AzTM9grIl0BL8o/IJPIJru7k5MPj9POTE9RRezUEtgn0YSvCpTlBtG0obWgOdzg2otMz1OQvMXS0wMQ=="
+  "resolved" "https://registry.npmjs.org/react-native-dialog/-/react-native-dialog-9.3.0.tgz"
+  "version" "9.3.0"
+
 "react-native-element-dropdown@^2.5.3":
   "integrity" "sha512-Os4UtvGlqccV3lsiP5Qy4RPzqqyx7E6lYcn2/IRQZHwBA4NAQA2dul/BrQSwy3bhicCqmWtir7T1GeFmOZPPrQ=="
   "resolved" "https://registry.npmjs.org/react-native-element-dropdown/-/react-native-element-dropdown-2.5.3.tgz"
@@ -6185,7 +6190,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@>= 0.64.3", "react-native@>=0.33", "react-native@>=0.47", "react-native@>=0.57", "react-native@>=0.58.4", "react-native@0.66.1":
+"react-native@*", "react-native@>= 0.64.3", "react-native@>=0.33", "react-native@>=0.47", "react-native@>=0.57", "react-native@>=0.58.4", "react-native@>=0.63.0", "react-native@0.66.1":
   "integrity" "sha512-BBvytmqlOLL+bRcO0jBiYfg16lYRsYDOC8/5E+bpnhb3EGtU+YCQAYfszw6JL7Hfy0ftnQNP5yj8pt+vqMHXIA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.66.1.tgz"
   "version" "0.66.1"

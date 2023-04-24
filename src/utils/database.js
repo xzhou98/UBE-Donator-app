@@ -118,8 +118,10 @@ export const getUserInfoByEmail = async (email) => {
         const q = await firestore().collection("Users").get()
 
         await q.docs.forEach(async element => {
-            if (email == element.data().email)
-                user = { id: element.id, email: element.data().email, isAdmin: element.data().isAdmin, date: element.data().date }
+            if (email == element.data().email){
+                let date = moment(element.data().date._seconds * 1000).format('MMMM Do YYYY, h:mm:ss a');
+                user = { id: element.id, email: element.data().email, isAdmin: element.data().isAdmin, date: date }
+            }
         });
 
         return user;
@@ -127,6 +129,14 @@ export const getUserInfoByEmail = async (email) => {
         console.log(error);
     }
 
+}
+
+export const setUserInfo = (user) => {
+    return firestore().collection('Users').doc(user.id).update({
+        email: user.email,
+        isAdmin: user.isAdmin,
+        date: user.date,
+    })
 }
 
 //submit quiz

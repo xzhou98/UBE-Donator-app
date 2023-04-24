@@ -1,41 +1,63 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Text, View, Platform,Modal, TouchableOpacity, Alert, StyleSheet } from 'react-native'
+import { Text, View, Platform, Modal, TouchableOpacity, Alert, StyleSheet } from 'react-native'
 import { signOut } from '../utils/auth';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FormButton from '../components/shared/FormButton';
 import { COLORS } from '../constants/theme';
-// import { getQuizzes, checkQuizFinish, getUserInfoByEmail } from '../utils/database';
-import auth from "@react-native-firebase/auth";
+import { getQuizzes, checkQuizFinish, setUserInfo, getUserInfoByEmail } from '../utils/database';
+import auth, { firebase } from "@react-native-firebase/auth";
 import { showNotification, handle5SecNotification, handleCancel, handleScheduleNotification } from '../views/notification.android'
 import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
+import Dialog from "react-native-dialog";
 
 
 
 const HomeScreen = () => {
   const [user, setUser] = useState();
   const [date, setDate] = useState(new Date());
-  const [datePicker, setDatePicker] = useState(false);
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [render, setRender] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
-  function onAuthStateChanged(user) {
-    setUser(user);
+  const onAuthStateChanged = async user => {
+    try {
+      let userInfo = await getUserInfoByEmail(user.email);
+      setUser(userInfo)
+      setRender(true);
+    } catch (error) {
+      Alert.alert(error);
+    }
+  }
+
+  const datePicker = () => {
+    handleScheduleNotification('Hi', '111', date);
+    let userInfo = {id: user.id, email: user.email, isAdmin: user.isAdmin, date: user.date};
+    userInfo.date = firebase.firestore.Timestamp.fromDate(date)
+    setUserInfo(userInfo);
+    setPickerVisible(false);
+    setRefresh(!refresh);
   }
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
-  }, []);
+  }, [refresh]);
 
-  return (
+
+  return render?(
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <Text style={styles.text}>Home Page</Text>
       <View>
-        {/* <Text>Current date: {(date.getMonth()+1).toString()} - {date.getDate().toString()} - {date.getFullYear().toString()}  {date.getHours().toString()}:{date.getMinutes().toString()}</Text> */}
-      <Text>{date.toString()}</Text>
+        <Text>Notification Date: {user.date}</Text>
+        <TouchableOpacity activeOpacity={0.6} onPress={() => { setPickerVisible(true) }}>
+          <View style={styles.notificationButton}>
+            <Text style={styles.ButtonTitle}>Click me to set the notification date</Text>
+          </View>
+        </TouchableOpacity>
       </View>
-      {console.log(new Date().toISOString())}
 
-      {/* {console.log(new Date(Date.now()))} */}
-      <TouchableOpacity activeOpacity={0.6} onPress={() => showNotification('hello', 'message')}>
+      <TouchableOpacity activeOpacity={0.6} onPress={() => showNotification('Hello', 'message')}>
         <View style={styles.notificationButton}>
           <Text style={styles.ButtonTitle}>Click me to get notification</Text>
         </View>
@@ -51,13 +73,20 @@ const HomeScreen = () => {
         </View>
       </TouchableOpacity>
 
-      <Modal animationType={'fade'} visible={datePicker} transparent={true}>
-      <DatePicker date={date} onDateChange={setDate} />
-      </Modal>
+      <Dialog.Container visible={pickerVisible}>
+        <Dialog.Title>Please select a date</Dialog.Title>
+        <Dialog.Description>
+          <View>
+            <DatePicker date={date} onDateChange={setDate} />
+          </View>
+        </Dialog.Description>
+        <Dialog.Button label="Cancel" onPress={() => { setPickerVisible(false) }} />
+        <Dialog.Button label="Confirm" onPress={datePicker} />
+      </Dialog.Container>
 
     </View>
 
-  )
+  ):null
 }
 
 const styles = StyleSheet.create({
@@ -74,7 +103,7 @@ const styles = StyleSheet.create({
   },
   ButtonTitle: {
     // color: 'white',
-  }
+  },
 })
 
 
