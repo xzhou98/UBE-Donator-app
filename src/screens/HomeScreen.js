@@ -1,19 +1,20 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Text, View, SafeAreaView, StatusBar, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native'
+import { Text, View, Platform,Modal, TouchableOpacity, Alert, StyleSheet } from 'react-native'
 import { signOut } from '../utils/auth';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FormButton from '../components/shared/FormButton';
 import { COLORS } from '../constants/theme';
 // import { getQuizzes, checkQuizFinish, getUserInfoByEmail } from '../utils/database';
 import auth from "@react-native-firebase/auth";
-import {showNotification, handle5SecNotification, handleCancel, handleScheduleNotification} from '../views/notification.android'
-
-
+import { showNotification, handle5SecNotification, handleCancel, handleScheduleNotification } from '../views/notification.android'
+import DatePicker from 'react-native-date-picker';
 
 
 
 const HomeScreen = () => {
   const [user, setUser] = useState();
+  const [date, setDate] = useState(new Date());
+  const [datePicker, setDatePicker] = useState(false);
 
   function onAuthStateChanged(user) {
     setUser(user);
@@ -27,8 +28,13 @@ const HomeScreen = () => {
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <Text style={styles.text}>Home Page</Text>
+      <View>
+        {/* <Text>Current date: {(date.getMonth()+1).toString()} - {date.getDate().toString()} - {date.getFullYear().toString()}  {date.getHours().toString()}:{date.getMinutes().toString()}</Text> */}
+      <Text>{date.toString()}</Text>
+      </View>
+      {console.log(new Date().toISOString())}
 
-      {console.log(new Date(Date.now()))}
+      {/* {console.log(new Date(Date.now()))} */}
       <TouchableOpacity activeOpacity={0.6} onPress={() => showNotification('hello', 'message')}>
         <View style={styles.notificationButton}>
           <Text style={styles.ButtonTitle}>Click me to get notification</Text>
@@ -44,7 +50,13 @@ const HomeScreen = () => {
           <Text style={styles.ButtonTitle}>Click me to cancel notification</Text>
         </View>
       </TouchableOpacity>
+
+      <Modal animationType={'fade'} visible={datePicker} transparent={true}>
+      <DatePicker date={date} onDateChange={setDate} />
+      </Modal>
+
     </View>
+
   )
 }
 
@@ -55,12 +67,12 @@ const styles = StyleSheet.create({
     fontWeight: "500"
   },
   notificationButton: {
-    margin:10,
+    margin: 10,
     padding: 16,
     backgroundColor: '#aed4d9',
     borderRadius: 24,
   },
-  ButtonTitle:{
+  ButtonTitle: {
     // color: 'white',
   }
 })
