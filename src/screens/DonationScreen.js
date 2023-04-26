@@ -97,9 +97,6 @@ const DonationScreen = () => {
         const element = response[i].realPath;
         temp.push(element)
       }
-      // PhotoEditor.Edit({
-      //   path: temp[0]
-      // });
       setImageUrl(temp)
     } catch (error) {
       console.log(error);
@@ -401,10 +398,14 @@ const DonationScreen = () => {
                           // setImageVisible(true);
                           PhotoEditor.Edit({
                             path: imageUrl[index],
-                            hiddenControls: ["share", "sticker", "text"],
+                            hiddenControls: ["share","crop", "text"],
+                            // stickers: ["Pixelated.png"],
+                            colors:["#ff0000"],
                             onDone: (data) => {
+                              console.log(imageUrl[index]);
                               let temp = imageUrl
                               temp[index] = data
+                              console.log(temp[index]);
                               setImageUrl(temp);
                               setRefresh(!refresh);
                             }
@@ -662,9 +663,6 @@ const DonationScreen = () => {
           alignItems: "center",
         }}>
 
-        {console.log(moment(new Date).format('MMMM Do YYYY, h:mm:ss a'))}
-        {console.log(allSession[1])}
-        {console.log(moment(new Date).format('MMMM Do YYYY, h:mm:ss a') > allSession[1])}
         <View style={{ flex: 1, justifyContent: 'center', alignItems: "center", }}>
           <Text style={styles.text}>Please select a session to start</Text>
           <Text style={{ paddingHorizontal: '10%', marginTop: 10, fontSize: 18, }}>You can change the session at any time during the donation process </Text>
@@ -675,11 +673,11 @@ const DonationScreen = () => {
           </TouchableOpacity> : <></>}
 
           {moment(new Date).format('MMMM Do YYYY, h:mm:ss a') > allSession[1] ? <TouchableOpacity style={{ marginTop: 30, }} onPress={() => { modifySession(1) }}>
-            <Text style={styles.sessionButton}>Session 2</Text>
+            <Text style={styles.sessionButton}>Session 3</Text>
           </TouchableOpacity> : <></>}
 
           {moment(new Date).format('MMMM Do YYYY, h:mm:ss a') > allSession[2] ? <TouchableOpacity style={{ marginTop: 30, }} onPress={() => { modifySession(2) }}>
-            <Text style={styles.sessionButton}>Session 3</Text>
+            <Text style={styles.sessionButton}>Session 2</Text>
           </TouchableOpacity> : <></>}
 
         </View>

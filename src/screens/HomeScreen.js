@@ -31,7 +31,7 @@ const HomeScreen = () => {
   }
 
   const datePicker = () => {
-    handleScheduleNotification('Hi', '111', date);
+    handleScheduleNotification('UBE data', "It's time to donate time", date);
     let userInfo = {id: user.id, email: user.email, isAdmin: user.isAdmin, date: user.date};
     userInfo.date = firebase.firestore.Timestamp.fromDate(date)
     setUserInfo(userInfo);
@@ -62,7 +62,7 @@ const HomeScreen = () => {
           <Text style={styles.ButtonTitle}>Click me to get notification</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.6} onPress={() => handle5SecNotification('Hi', 'showed after 5 sec')}>
+      <TouchableOpacity activeOpacity={0.6} onPress={() => handle5SecNotification('UBE data', "IT'S TIME TO DONATE DATA")}>
         <View style={styles.notificationButton}>
           <Text style={styles.ButtonTitle}>Click me to get notification after 5 sec.</Text>
         </View>
