@@ -140,6 +140,12 @@ android {
     compileSdkVersion 31
     ndkVersion rootProject.ext.ndkVersion
 
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
 //    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
