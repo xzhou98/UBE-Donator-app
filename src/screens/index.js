@@ -8,5 +8,6 @@ import ContactUsScreen from "./ContactUsScreen";
 import HelpScreen from "./HelpScreen"
 import DonationScreen from "./DonationScreen"
 import ReviewScreen from "./ReviewScreen"
+import EditScreen from "./EditScreen"
 
-export { ReviewScreen, ContactUsScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };
+export { EditScreen, ReviewScreen, ContactUsScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };

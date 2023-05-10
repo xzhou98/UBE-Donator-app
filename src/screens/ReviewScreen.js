@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native'
+import { Text, View, StyleSheet, Alert, TouchableOpacity } from 'react-native'
 import auth from '@react-native-firebase/auth';
 import { getUserInfoByEmail, getAllQuestions, getAllSessions } from '../utils/database';
+import { EditScreen } from '../screens';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
 const HelpScreen = () => {
@@ -10,6 +12,7 @@ const HelpScreen = () => {
   const [questions, setQuestions] = useState();
   const [render, setRender] = useState(false);
   const [sessions, setSessions] = useState(false);
+  const [controler, setControler] = useState(true);
 
   const onAuthStateChanged = async user => {
     try {
@@ -34,22 +37,47 @@ const HelpScreen = () => {
 
 
   return render ? (
-    <View style={{  }}>
-      {sessions == undefined || sessions.lengeh == 0 ? <></> :
-        <View style={{alignItems: 'center',}}>
-          {sessions.map((item, index) => {
-            return(
-              <View key={index} style={styles.session}>
+    <View style={{}}>
+      {controler ? <View style={{ alignItems: 'center', }}>
+        {sessions.length == 0 || sessions == [] || sessions == undefined ? <Text>Please complete one session first</Text> : <></>}
+        {sessions.map((item, index) => {
+          return (
+            <View key={index} style={styles.session}>
+              <View>
                 <Text style={styles.bold}>
-                  Data Donation {index+1}
+                  Data Donation {index + 1}
                 </Text>
                 <Text style={styles.slim}>
                   {item.date}
                 </Text>
               </View>
-            )
-          })}
-        </View>}
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <TouchableOpacity onPress={() => { setControler(!controler) }}>
+                  <Text style={styles.button}>
+                    Review
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.button}>
+                    Delete
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+          )
+        })}
+      </View > : <View style={{ flexDirection: 'row', }}>
+        <TouchableOpacity style={{ flex: 1 }} onPress={() => {setControler(!controler)}}>
+          <MaterialIcons style={{ color: 'black' }} name="arrow-back" size={30} />
+        </TouchableOpacity>
+
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <Text style={styles.title}>EditScreen</Text>
+        </View>
+        <Text style={{ flex: 1 }}></Text>
+      </View>
+      }
 
     </View>) : (<View style={{ alignItems: "center" }}>
       <Text style={styles.title}>Please login first</Text>
@@ -59,7 +87,12 @@ const HelpScreen = () => {
 const styles = StyleSheet.create({
   title: {
     color: "#161924",
-    fontSize: 20,
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  back: {
+    color: "#161924",
+    fontSize: 18,
     fontWeight: "bold",
   },
   basetext: {
@@ -76,7 +109,7 @@ const styles = StyleSheet.create({
   },
   session: {
     width: '90%',
-    height: 70,
+    height: 90,
 
     shadowColor: "#000",
     shadowOffset: {
@@ -86,21 +119,46 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
     elevation: 10,
-    
+
     borderRadius: 5,
     marginVertical: 20,
+    flexDirection: 'row',
     backgroundColor: '#aed4d9',
   },
-  bold:{
-    marginTop: 5,
+  bold: {
+    marginTop: 20,
     marginHorizontal: 10,
     color: 'black',
     fontWeight: 'bold',
+    fontSize: 16,
   },
-  slim:{
+  slim: {
     marginTop: 5,
     marginHorizontal: 10,
-  }
+  },
+  button: {
+    paddingLeft: 15,
+    paddingTop: 10,
+    marginLeft: 20,
+
+
+    color: 'black',
+    fontWeight: 'bold',
+    height: 40,
+    width: 70,
+    marginVertical: 25,
+    borderRadius: 10,
+    backgroundColor: 'white',
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+  },
 })
 
 

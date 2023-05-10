@@ -31,12 +31,16 @@ const HomeScreen = () => {
   }
 
   const datePicker = () => {
-    handleScheduleNotification('UBE data', "It's time to donate time", date);
-    let userInfo = {id: user.id, email: user.email, isAdmin: user.isAdmin, date: user.date};
-    userInfo.date = firebase.firestore.Timestamp.fromDate(date)
-    setUserInfo(userInfo);
-    setPickerVisible(false);
-    setRefresh(!refresh);
+    if(date > new Date()){  
+      handleScheduleNotification('UBE data', "It's time to donate time", date);
+      let userInfo = {id: user.id, email: user.email, isAdmin: user.isAdmin, date: user.date};
+      userInfo.date = firebase.firestore.Timestamp.fromDate(date)
+      setUserInfo(userInfo);
+      setPickerVisible(false);
+      setRefresh(!refresh);
+    }else{
+      Alert.alert("You can't schedule a date in the past")
+    }
   }
 
   useEffect(() => {
@@ -49,7 +53,7 @@ const HomeScreen = () => {
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       <Text style={styles.text}>Home Page</Text>
       <View>
-        <Text>Notification Date: {user.date}</Text>
+        <Text style={{marginVertical: 50}}>Notification Date: {user.date}</Text>
         <TouchableOpacity activeOpacity={0.6} onPress={() => { setPickerVisible(true) }}>
           <View style={styles.notificationButton}>
             <Text style={styles.ButtonTitle}>Click me to schedule the notification</Text>

@@ -39,16 +39,21 @@ export const getAllQuestions = async () => {
     // return firestore().collection('Questions').get();
     try {
         const q = await firestore().collection('Questions').get();
-        let sessions = []
+        let session = null
         await q.docs.forEach(async element => {
-            let temp =[]
-            element.data().questions.forEach((x, index) => {
-                temp.push(Object.assign({ id: `${index}` }, x));
-            })
-            // questions.push(Object.assign({ id: element.id }, element.data()));
-            sessions.push({date: moment(element.data().date._seconds * 1000).format('MMMM Do YYYY, h:mm:ss a'), questions: temp, session: element.data().session})
+            let temp = []
+            let startDate = new Date(element.data().startDate._seconds * 1000)
+            let endDate = new Date(element.data().endDate._seconds * 1000)
+            let newDate = new Date()
+            if (startDate <= newDate && newDate <= endDate) {
+                element.data().questions.forEach((x, index) => {
+                    temp.push(Object.assign({ id: `${index}` }, x));
+                })
+                // session.push({date: moment(element.data().date._seconds * 1000).format('MMMM Do YYYY, h:mm:ss a'), questions: temp, session: element.data().session})
+                session = {id: element.id, questions: temp, session: element.data().session}
+            }
         })
-        return sessions
+        return session
     } catch (error) {
         return error;
     }
@@ -63,7 +68,7 @@ export const getAllSessions = async (userId) => {
         let answers = [];
         let date = new Date();
         const data = await firestore().collection('DonationData').get();
-        
+
         await data.docs.forEach(async element => {
             if (userId == element.data().userId)
                 id = element.id;
@@ -75,9 +80,11 @@ export const getAllSessions = async (userId) => {
             answers.push(element.data());
         })
 
+        answers.sort(function(a, b){return a.date._seconds-b.date._seconds});
+
         answers = answers.map((item) => {
             let date = moment(item.date._seconds * 1000)
-            return { answer: item.answer, date: date.format('MMMM Do YYYY, h:mm:ss a')};
+            return { answer: item.answer, date: date.format('MMMM Do YYYY') };
         })
         // console.log(answers);
         return answers
@@ -116,7 +123,7 @@ export const getUserInfoByEmail = async (email) => {
         const q = await firestore().collection("Users").get()
 
         await q.docs.forEach(async element => {
-            if (email == element.data().email){
+            if (email == element.data().email) {
                 let date = moment(element.data().date._seconds * 1000).format('MMMM Do YYYY, h:mm:ss a');
                 user = { id: element.id, email: element.data().email, isAdmin: element.data().isAdmin, date: date }
             }

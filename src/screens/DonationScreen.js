@@ -40,9 +40,7 @@ const DonationScreen = () => {
   const [mico, setMico] = useState(false);
   const [shortcut, setShortcut] = useState(false);
   const [imageUrl, setImageUrl] = useState([]);
-  const [restartConfirm, setRestartConfirm] = useState([]);
-  const [session, setSession] = useState(getSession());
-  const [allSession, setAllSession] = useState()
+  const [sessionId, setSessionId] = useState()
 
   const flatListRef = useRef();
 
@@ -57,15 +55,17 @@ const DonationScreen = () => {
       setUser(userInfo);
 
       let allQuestions = await getAllQuestions();
-      let temp = allQuestions.map((element) => {
-        return element.date;
-      })
-      // console.log(temp);
-      setAllSession(temp)
-      if (session >= 0) {
-        allQuestions = allQuestions[session].questions;
+      // let temp = allQuestions.map((element) => {
+      //   return element.date;
+      // })
+      // setAllSession(temp)
+
+      if (allQuestions != null) {
+        setSessionId(allQuestions.id)
+        allQuestions = allQuestions.questions;
         setQuestions(allQuestions);
         let allAnswers = getAnswer();
+
         if (allAnswers.length > 0) {
           let qId = Number(allAnswers[allAnswers.length - 1].nextQuestionId);
           setCurrentQuestion(allQuestions[qId]);
@@ -74,7 +74,6 @@ const DonationScreen = () => {
         }
         setAnswers(allAnswers);
       }
-
 
       // console.log(allQuestions[qId]);
       setRender(true);
@@ -125,16 +124,8 @@ const DonationScreen = () => {
     }
   }
 
-  const modifySession = (num) => {
-    changeSession(num);
-    setSession(num)
-    setRender(false);
-    setRefresh(!refresh)
-  }
-
   const restartWholeProcess = () => {
     changeSession(-1);
-    setSession(-1)
     setRender(false);
     setCurrentInput("");
     setCurrentOption();
@@ -146,9 +137,11 @@ const DonationScreen = () => {
   }
 
 
-  return render ? (
+  return render ? (sessionId == null || sessionId == undefined ? <View>
+    <Text>Thank you for submission. Your next donation session will open in one week on XX/XX/XXXX.</Text>
+  </View> :
     <View>
-      {session >= 0 ? <SafeAreaView
+      <SafeAreaView
         style={{
           position: 'relative',
           display: 'flex',
@@ -398,14 +391,12 @@ const DonationScreen = () => {
                           // setImageVisible(true);
                           PhotoEditor.Edit({
                             path: imageUrl[index],
-                            hiddenControls: ["share","crop", "text"],
+                            hiddenControls: ["share", "crop", "text"],
                             // stickers: ["Pixelated.png"],
-                            colors:["#ff0000"],
+                            colors: ["#ff0000"],
                             onDone: (data) => {
-                              console.log(imageUrl[index]);
                               let temp = imageUrl
                               temp[index] = data
-                              console.log(temp[index]);
                               setImageUrl(temp);
                               setRefresh(!refresh);
                             }
@@ -653,39 +644,8 @@ const DonationScreen = () => {
             />
           </TouchableOpacity>
         </View>
-      </SafeAreaView> : <SafeAreaView
-        style={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: '#f2f5f8',
-          height: '100%',
-          alignItems: "center",
-        }}>
-
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: "center", }}>
-          <Text style={styles.text}>Please select a session to start</Text>
-          <Text style={{ paddingHorizontal: '10%', marginTop: 10, fontSize: 18, }}>You can change the session at any time during the donation process </Text>
-        </View>
-        <View style={{ flex: 2, }}>
-          {moment(new Date).format('MMMM Do YYYY, h:mm:ss a') > allSession[0] ? <TouchableOpacity onPress={() => { modifySession(0) }}>
-            <Text style={styles.sessionButton}>Session 1</Text>
-          </TouchableOpacity> : <></>}
-
-          {moment(new Date).format('MMMM Do YYYY, h:mm:ss a') > allSession[1] ? <TouchableOpacity style={{ marginTop: 30, }} onPress={() => { modifySession(1) }}>
-            <Text style={styles.sessionButton}>Session 3</Text>
-          </TouchableOpacity> : <></>}
-
-          {moment(new Date).format('MMMM Do YYYY, h:mm:ss a') > allSession[2] ? <TouchableOpacity style={{ marginTop: 30, }} onPress={() => { modifySession(2) }}>
-            <Text style={styles.sessionButton}>Session 2</Text>
-          </TouchableOpacity> : <></>}
-
-        </View>
-      </SafeAreaView>}
-
+      </SafeAreaView>
     </View>
-
-
   ) : null;
 };
 
