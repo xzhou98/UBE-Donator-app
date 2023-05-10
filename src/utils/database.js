@@ -77,16 +77,16 @@ export const getAllSessions = async (userId) => {
         const temp = await firestore().collection('DonationData').doc(id).collection('Answers').get();
 
         await temp.docs.forEach(async element => {
-            answers.push(element.data());
+            let a = Object.assign({id: element.id}, element.data())
+            answers.push(a);
         })
 
         answers.sort(function(a, b){return a.date._seconds-b.date._seconds});
 
         answers = answers.map((item) => {
             let date = moment(item.date._seconds * 1000)
-            return { answer: item.answer, date: date.format('MMMM Do YYYY') };
+            return { id: item.id, sessionId: item.sessionId, date: date.format('MMMM Do YYYY'),  };
         })
-        // console.log(answers);
         return answers
     } catch (error) {
         return error;

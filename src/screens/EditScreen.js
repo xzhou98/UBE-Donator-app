@@ -2,12 +2,10 @@ import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 
 
-const HelpScreen = () => {
+const HelpScreen = ({answerId}) => {
   return (
     <View>
-      <View style={{ alignItems: "center"}}>
-        <Text style={styles.title}>Edit</Text>
-      </View>
+        <Text style={styles.title}>{answerId}</Text>
     </View>
   )
 }

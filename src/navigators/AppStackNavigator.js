@@ -26,16 +26,6 @@ function AppStackNavigator({ navigation }) {
 
 
     return (
-        // <Stack.Navigator
-        // screenOptions={{
-        //     headerShown: false,
-        // }}>
-        //     <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        //     <Stack.Screen name="CreateQuizScreen" component={CreateQuizScreen} />
-        //     <Stack.Screen name="AddQuestionScreen" component={AddQuestionScreen} />
-        //     <Stack.Screen name="PlayQuizScreen" component={PlayQuizScreen} />
-        // </Stack.Navigator>
-
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor={COLORS.white} barStyle={'dark-content'}/>
             <View style={{ justifyContent: "flex-start", padding: 15 }}>

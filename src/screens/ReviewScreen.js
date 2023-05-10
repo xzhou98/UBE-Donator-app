@@ -13,6 +13,8 @@ const HelpScreen = () => {
   const [render, setRender] = useState(false);
   const [sessions, setSessions] = useState(false);
   const [controler, setControler] = useState(true);
+  const [sessionId, setSessionId] = useState();
+  const [answerId, setAnswersId] = useState();
 
   const onAuthStateChanged = async user => {
     try {
@@ -52,7 +54,7 @@ const HelpScreen = () => {
                 </Text>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={() => { setControler(!controler) }}>
+                <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(item.id) }}>
                   <Text style={styles.button}>
                     Review
                   </Text>
@@ -67,16 +69,22 @@ const HelpScreen = () => {
 
           )
         })}
-      </View > : <View style={{ flexDirection: 'row', }}>
-        <TouchableOpacity style={{ flex: 1 }} onPress={() => {setControler(!controler)}}>
-          <MaterialIcons style={{ color: 'black' }} name="arrow-back" size={30} />
-        </TouchableOpacity>
+      </View > :
+        <View>
+          <View style={{ flexDirection: 'row', }}>
+            <TouchableOpacity style={{ flex: 1 }} onPress={() => { setControler(!controler) }}>
+              <MaterialIcons style={{ color: 'black' }} name="arrow-back" size={30} />
+            </TouchableOpacity>
 
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <Text style={styles.title}>EditScreen</Text>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+              <Text style={styles.title}>EditScreen</Text>
+            </View>
+            <Text style={{ flex: 1 }}></Text>
+
+          </View>
+          <EditScreen answerId={answerId} ></EditScreen>
         </View>
-        <Text style={{ flex: 1 }}></Text>
-      </View>
+
       }
 
     </View>) : (<View style={{ alignItems: "center" }}>
