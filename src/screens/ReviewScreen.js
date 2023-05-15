@@ -9,7 +9,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const HelpScreen = () => {
   const [user, setUser] = useState();
   const [refresh, setRefresh] = useState(false);
-  const [questions, setQuestions] = useState();
+  // const [questions, setQuestions] = useState();
   const [render, setRender] = useState(false);
   const [sessions, setSessions] = useState(false);
   const [controler, setControler] = useState(true);
@@ -22,15 +22,15 @@ const HelpScreen = () => {
       setUser(userInfo);
       let allSessions = await getAllSessions(userInfo.id)
       setSessions(allSessions);
-
-      let allQuestions = await getAllQuestions();
-      setQuestions(allQuestions);
+      // let allQuestions = await getAllQuestions();
+      // setQuestions(allQuestions);
 
       setRender(true);
     } catch (error) {
       Alert.alert(error);
     }
   };
+
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
@@ -54,7 +54,7 @@ const HelpScreen = () => {
                 </Text>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(item.id) }}>
+                <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(item.id); setSessionId(item.sessionId)}}>
                   <Text style={styles.button}>
                     Review
                   </Text>
@@ -82,7 +82,7 @@ const HelpScreen = () => {
             <Text style={{ flex: 1 }}></Text>
 
           </View>
-          <EditScreen answerId={answerId} ></EditScreen>
+          <EditScreen answerId={answerId} sessionId={sessionId} ></EditScreen>
         </View>
 
       }

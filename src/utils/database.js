@@ -30,6 +30,47 @@ export const createUser = (email) => {
 //         .set(question);
 // }
 
+/**
+ * get all questions by session Id
+ */
+export const getQuestionsBySessionId = async (id) => {
+    try {
+        let result = []
+        let questions = await firestore().collection('Questions').doc(id).get();
+        await questions.data().questions.forEach(async (element, index) => {
+
+            result.push(Object.assign({ id: `${index}` }, element));
+        })
+        return result
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getAnswersByAnswerId = async (userId, answersId) => {
+    try {
+        //get all users donation data
+        let allUsers = await firestore().collection('DonationData').get();
+        let answers = []
+        let id = null
+
+        await allUsers.docs.forEach(async (element) => {
+            if (element.data().userId == userId) {
+                id = element.id;
+            }
+        })
+
+        const temp = await firestore().collection('DonationData').doc(id).collection('Answers').get();
+        temp.forEach((element) => {
+            if (element.id == answersId)
+                answers = Object.assign({documentId: id}, element.data())
+        })
+
+        return answers
+    } catch (error) {
+        return error;
+    }
+}
 
 
 /**
@@ -50,7 +91,7 @@ export const getAllQuestions = async () => {
                     temp.push(Object.assign({ id: `${index}` }, x));
                 })
                 // session.push({date: moment(element.data().date._seconds * 1000).format('MMMM Do YYYY, h:mm:ss a'), questions: temp, session: element.data().session})
-                session = {id: element.id, questions: temp, session: element.data().session}
+                session = { id: element.id, questions: temp, session: element.data().session }
             }
         })
         return session
@@ -77,15 +118,15 @@ export const getAllSessions = async (userId) => {
         const temp = await firestore().collection('DonationData').doc(id).collection('Answers').get();
 
         await temp.docs.forEach(async element => {
-            let a = Object.assign({id: element.id}, element.data())
+            let a = Object.assign({ id: element.id }, element.data())
             answers.push(a);
         })
 
-        answers.sort(function(a, b){return a.date._seconds-b.date._seconds});
+        answers.sort(function (a, b) { return a.date._seconds - b.date._seconds });
 
         answers = answers.map((item) => {
             let date = moment(item.date._seconds * 1000)
-            return { id: item.id, sessionId: item.sessionId, date: date.format('MMMM Do YYYY'),  };
+            return { id: item.id, sessionId: item.sessionId, date: date.format('MMMM Do YYYY'), };
         })
         return answers
     } catch (error) {
@@ -95,25 +136,25 @@ export const getAllSessions = async (userId) => {
 
 
 // Get Quiz Details by id
-export const getQuizById = currentQuizId => {
-    return firestore().collection('Quizzes').doc(currentQuizId).get();
-};
+// export const getQuizById = currentQuizId => {
+//     return firestore().collection('Quizzes').doc(currentQuizId).get();
+// };
 
 // Get Questions by currentQuizId
-export const getQuestionsByQuizId = currentQuizId => {
-    return firestore()
-        .collection('Quizzes')
-        .doc(currentQuizId)
-        .collection('QNA')
-        .get();
-};
+// export const getQuestionsByQuizId = currentQuizId => {
+//     return firestore()
+//         .collection('Quizzes')
+//         .doc(currentQuizId)
+//         .collection('QNA')
+//         .get();
+// };
 
 // Update quiz publishing state
-export const PulishQuiz = (quizId, isPublish) => {
-    return firestore().collection('Quizzes').doc(quizId).update({
-        isPublish: isPublish,
-    })
-};
+// export const PulishQuiz = (quizId, isPublish) => {
+//     return firestore().collection('Quizzes').doc(quizId).update({
+//         isPublish: isPublish,
+//     })
+// };
 
 // Get User info by email
 export const getUserInfoByEmail = async (email) => {
