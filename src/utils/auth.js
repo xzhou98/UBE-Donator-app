@@ -31,12 +31,11 @@ export const resetPassword = (email) => {
 }
 
 export const signUp = (email, password) => {
-  let success = false
   auth()
     .createUserWithEmailAndPassword(email, password)
     .then(() => {
       // ToastAndroid.show('Signed up', ToastAndroid.SHORT);
-      success =  true
+      return true
     })
     .catch(err => {
       if (err.code === 'auth/email-already-in-use') {
@@ -45,10 +44,9 @@ export const signUp = (email, password) => {
       if (err.code === 'auth/invalid-email') {
         Alert.alert('That email address is invalid!');
       }
-      success = false
     });
 
-    return success
+    return true
 };
 
 export const signOut = () => {

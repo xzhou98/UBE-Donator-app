@@ -7,6 +7,7 @@ export const createUser = (email) => {
     return firestore().collection('Users').add({
         email: email,
         isAdmin: false,
+        date: firestore.Timestamp.fromDate(new Date())
     });
 }
 

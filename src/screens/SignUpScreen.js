@@ -15,6 +15,7 @@ const SignUpScreen = ({ navigation }) => {
         if (email != '' && password != '' && confirmPassword != '') {
             if (password == confirmPassword) {
                 let success = signUp(email, password);
+                console.log(success);
                 if(success)
                     createUser(email);
             } else {

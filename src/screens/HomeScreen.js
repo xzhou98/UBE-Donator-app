@@ -28,7 +28,7 @@ const HomeScreen = () => {
       let allSessions = await getAllSessions(userInfo.id)
       setSessions(allSessions);
       let a = await getAllSessionsByUserId(userInfo.id)
-      // let allQuestions = await getAllQuestions();
+      let allQuestions = await getAllQuestions();
       // setQuestions(allQuestions);
 
       setRender(true);
@@ -43,7 +43,7 @@ const HomeScreen = () => {
     return subscriber; // unsubscribe on unmount
   }, [refresh]);
 
-
+  // return <></>
   return render ? (
     <View style={{}}>
       {controler ? <View style={{ alignItems: 'center', }}>
