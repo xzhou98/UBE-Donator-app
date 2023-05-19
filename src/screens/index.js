@@ -9,5 +9,6 @@ import HelpScreen from "./HelpScreen"
 import DonationScreen from "./DonationScreen"
 import ReviewScreen from "./ReviewScreen"
 import EditScreen from "./EditScreen"
+import ResetPasswordScreen from "./ResetPasswordScreen";
 
-export { EditScreen, ReviewScreen, ContactUsScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };
+export {  EditScreen,ResetPasswordScreen, ReviewScreen, ContactUsScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };

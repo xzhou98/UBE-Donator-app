@@ -1,19 +1,22 @@
-import React, { Component, useState } from 'react'
+import React, {  useState } from 'react'
 import { Text, View, SafeAreaView, Alert } from 'react-native'
 import FormButton from '../components/shared/FormButton';
 import FormInput from '../components/shared/FormInput';
 import { COLORS } from '../constants/theme';
-import { signIn,  } from '../utils/auth';
+import { resetPassword } from '../utils/auth';
 
-const SignInScreen = ({ navigation }) => {
+const ResetPasswordScreen = ({ navigation }) => {
 
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [confirmEmail, setConfirmEmail] = useState('')
 
     const handleOnSubmit = () => {
-        // Alert.alert(email)
-        if (email != '' && password != '') {
-            signIn(email, password);
+
+        if (email != '' ) {
+            resetPassword(email);
+            Alert.alert("Password reset email was sent to you. Please check your email box.")
+        }else {
+            Alert.alert("Please enter your address.")
         }
     }
 
@@ -33,7 +36,7 @@ const SignInScreen = ({ navigation }) => {
                 fontSize: 35,
                 color: COLORS.black,
                 fontWeight: 'bold',
-                paddingTop: 40,
+                paddingTop: 100,
                 // marginVertical: 32,
             }}>
                 UBE Data
@@ -43,12 +46,12 @@ const SignInScreen = ({ navigation }) => {
                 color: COLORS.black,
                 fontWeight: 'bold',
                 paddingTop: 15,
-                marginVertical: 10,
+                marginVertical: 20,
             }}>
-                Sign in with Email
+                Please enter your address.
             </Text>
 
-            <View style={{ paddingTop: 10, width: '90%' }}>
+            <View style={{ paddingTop: 20, width: '85%' }}>
                 {/* Email */}
                 <FormInput
                     placeholderText="Enter your email address"
@@ -56,23 +59,19 @@ const SignInScreen = ({ navigation }) => {
                     value={email}
                     keyboardType={'email-address'}
                 />
-                {/* Password */}
+                {/* Password
                 <FormInput
-                    placeholderText="Enter your password"
-                    onChangeText={value => setPassword(value)}
-                    value={password}
+                    placeholderText="Confirm your email address"
+                    onChangeText={value => setConfirmEmail(value)}
+                    value={confirmEmail}
                     secureTextEntry={true}
-                />
-                <Text
-                    style={{ marginLeft: 4, color: COLORS.green, fontWeight: 'bold' }}
-                    onPress={() => navigation.navigate('ResetPasswordScreen')}>
-                    Forgot your password?
-                </Text>
+                /> */}
+
             </View>
 
 
             {/* Submit button */}
-            <View style={{ width: '85%', paddingTop: 70, }}>
+            <View style={{ width: '85%', paddingTop: 30, }}>
                 <FormButton
                     labelText="Submit"
                     handleOnPress={handleOnSubmit}
@@ -82,16 +81,17 @@ const SignInScreen = ({ navigation }) => {
 
             {/* Footer */}
             <View style={{ alignItems: 'center', marginTop: 30 }}>
-                <Text style={{ fontWeight: 'bold' }}>Not yet have an account?</Text>
+                <Text style={{ fontWeight: 'bold' }}>Already have an account?</Text>
                 <Text
                     style={{ marginLeft: 4, color: COLORS.green, fontWeight: 'bold' }}
-                    onPress={() => navigation.navigate('SignUpScreen')}>
-                    Sign up here
+                    onPress={() => navigation.navigate('SignInScreen')}>
+                    Sign in here
                 </Text>
             </View>
         </SafeAreaView>
-
     );
 };
 
-export default SignInScreen;
+export default ResetPasswordScreen;
+
+

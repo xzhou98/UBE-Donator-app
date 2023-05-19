@@ -6,7 +6,7 @@ import { EditScreen } from '../screens';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
-const HelpScreen = () => {
+const ReviewScreen = () => {
   const [user, setUser] = useState();
   const [refresh, setRefresh] = useState(false);
   // const [questions, setQuestions] = useState();
@@ -171,4 +171,4 @@ const styles = StyleSheet.create({
 
 
 
-export default HelpScreen;
+export default ReviewScreen;

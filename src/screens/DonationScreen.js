@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { getUserInfoByEmail, getAllQuestions, getAllSessions } from '../utils/database';
+import { getUserInfoByEmail, getAllQuestions } from '../utils/database';
 import auth from '@react-native-firebase/auth';
 import { Dropdown } from 'react-native-element-dropdown';
 import { getAnswer, getSession, changeSession, addAnswers, removeAll, setQId, getQId, addAnswersById, setNextQuestionId, removeLastQuestion, skipQuestionsById } from '../views/Global';

@@ -2,15 +2,6 @@ import firestore from '@react-native-firebase/firestore';
 import { Alert } from 'react-native'
 import moment from 'moment';
 
-// export const createQuiz = (currentQuizId, title, description) => {
-//     // Alert.alert(description)
-//     return firestore().collection('Quizzes').doc(currentQuizId).set({
-//         title,
-//         description,
-//         isPublish: false,
-//         users: [],
-//     });
-// };
 
 export const createUser = (email) => {
     return firestore().collection('Users').add({
@@ -18,17 +9,6 @@ export const createUser = (email) => {
         isAdmin: false,
     });
 }
-
-// Create new question for current quiz
-// export const createQuestion = (currentQuizId, currentQuestionId, question) => {
-//     Alert.alert(question.option.toString())
-//     return firestore().
-//         collection("Quizzes")
-//         .doc(currentQuizId)
-//         .collection('QNA')
-//         .doc(currentQuestionId)
-//         .set(question);
-// }
 
 /**
  * get all questions by session Id
@@ -71,7 +51,6 @@ export const getAnswersByAnswerId = async (userId, answersId) => {
         return error;
     }
 }
-
 
 /**
  * get all question from firebase
@@ -134,28 +113,6 @@ export const getAllSessions = async (userId) => {
     }
 }
 
-
-// Get Quiz Details by id
-// export const getQuizById = currentQuizId => {
-//     return firestore().collection('Quizzes').doc(currentQuizId).get();
-// };
-
-// Get Questions by currentQuizId
-// export const getQuestionsByQuizId = currentQuizId => {
-//     return firestore()
-//         .collection('Quizzes')
-//         .doc(currentQuizId)
-//         .collection('QNA')
-//         .get();
-// };
-
-// Update quiz publishing state
-// export const PulishQuiz = (quizId, isPublish) => {
-//     return firestore().collection('Quizzes').doc(quizId).update({
-//         isPublish: isPublish,
-//     })
-// };
-
 // Get User info by email
 export const getUserInfoByEmail = async (email) => {
 
@@ -183,6 +140,34 @@ export const setUserInfo = (user) => {
         isAdmin: user.isAdmin,
         date: user.date,
     })
+}
+
+/**
+ * get all donated sessions by userId
+ */
+export const getAllSessionsByUserId = async (userId) => {
+    try {
+        let result = [];
+        const sessions = await firestore().collection("Questions").get()
+        await sessions.docs.forEach(async element => {
+            result.push({id: element.id, endDate: element.data().endDate, startDate: element.data().startDate, donationData: []})
+        })
+        result.sort(function (a, b) { return a.startDate._seconds - b.startDate._seconds });
+
+    } catch (error) {
+        
+    }
+}
+
+export const getDonationDateBySessionId = async (userId, sessionId) => {
+    try {
+        let donationData = []
+        const datas = await firestore().collection('DonationData').get();
+        // datas.docs.forEach
+
+    } catch (error) {
+        
+    }
 }
 
 //submit quiz
@@ -233,3 +218,46 @@ export const setUserInfo = (user) => {
 
 //     return finish;
 // }
+
+
+// export const createQuiz = (currentQuizId, title, description) => {
+//     // Alert.alert(description)
+//     return firestore().collection('Quizzes').doc(currentQuizId).set({
+//         title,
+//         description,
+//         isPublish: false,
+//         users: [],
+//     });
+// };
+
+// Create new question for current quiz
+// export const createQuestion = (currentQuizId, currentQuestionId, question) => {
+//     Alert.alert(question.option.toString())
+//     return firestore().
+//         collection("Quizzes")
+//         .doc(currentQuizId)
+//         .collection('QNA')
+//         .doc(currentQuestionId)
+//         .set(question);
+// }
+
+// Get Quiz Details by id
+// export const getQuizById = currentQuizId => {
+//     return firestore().collection('Quizzes').doc(currentQuizId).get();
+// };
+
+// Get Questions by currentQuizId
+// export const getQuestionsByQuizId = currentQuizId => {
+//     return firestore()
+//         .collection('Quizzes')
+//         .doc(currentQuizId)
+//         .collection('QNA')
+//         .get();
+// };
+
+// Update quiz publishing state
+// export const PulishQuiz = (quizId, isPublish) => {
+//     return firestore().collection('Quizzes').doc(quizId).update({
+//         isPublish: isPublish,
+//     })
+// };

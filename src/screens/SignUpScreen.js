@@ -14,8 +14,9 @@ const SignUpScreen = ({ navigation }) => {
     const handleOnSubmit = () => {
         if (email != '' && password != '' && confirmPassword != '') {
             if (password == confirmPassword) {
-                signUp(email, password);
-                createUser(email);
+                let success = signUp(email, password);
+                if(success)
+                    createUser(email);
             } else {
                 Alert.alert('password did not match');
             }

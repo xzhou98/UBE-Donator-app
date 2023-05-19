@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 
 
-const TestScreen = () => {
+const ContactUsScreen = () => {
   return (
     <View>
       <View style={{ alignItems: "center" }}>
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default TestScreen;
+export default ContactUsScreen;

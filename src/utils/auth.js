@@ -1,5 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import { ToastAndroid, Alert } from 'react-native';
+// import { sendPasswordResetEmail } from "@react-native-firebase/auth";
 
 export const signIn = (email, password) => {
   // Alert.alert(password);
@@ -21,11 +22,21 @@ export const signIn = (email, password) => {
     });
 };
 
+export const resetPassword = (email) => {
+  auth().sendPasswordResetEmail(email).then(() => {
+  })
+  .catch(err => {
+    Alert.alert(err.code)
+  })
+}
+
 export const signUp = (email, password) => {
+  let success = false
   auth()
     .createUserWithEmailAndPassword(email, password)
     .then(() => {
       // ToastAndroid.show('Signed up', ToastAndroid.SHORT);
+      success =  true
     })
     .catch(err => {
       if (err.code === 'auth/email-already-in-use') {
@@ -34,7 +45,10 @@ export const signUp = (email, password) => {
       if (err.code === 'auth/invalid-email') {
         Alert.alert('That email address is invalid!');
       }
+      success = false
     });
+
+    return success
 };
 
 export const signOut = () => {
