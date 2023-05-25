@@ -22,7 +22,7 @@ const ReviewScreen = () => {
       setUser(userInfo);
       let allSessions = await getAllSessions(userInfo.id)
       setSessions(allSessions);
-      // let allQuestions = await getAllQuestions();
+      let allQuestions = await getAllQuestions();
       // setQuestions(allQuestions);
 
       setRender(true);

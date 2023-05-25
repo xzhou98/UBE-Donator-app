@@ -44,7 +44,7 @@ export const getAnswersByAnswerId = async (userId, answersId) => {
         const temp = await firestore().collection('DonationData').doc(id).collection('Answers').get();
         temp.forEach((element) => {
             if (element.id == answersId)
-                answers = Object.assign({documentId: id}, element.data())
+                answers = Object.assign({ documentId: id }, element.data())
         })
 
         return answers
@@ -85,28 +85,28 @@ export const getAllQuestions = async () => {
  */
 export const getAllSessions = async (userId) => {
     try {
-        let id = "";
         let answers = [];
         let date = new Date();
-        const data = await firestore().collection('DonationData').get();
+        const allAnswers = await firestore().collection('Questions').get();
 
-        await data.docs.forEach(async element => {
-            if (userId == element.data().userId)
-                id = element.id;
-        })
-
-        const temp = await firestore().collection('DonationData').doc(id).collection('Answers').get();
-
-        await temp.docs.forEach(async element => {
-            let a = Object.assign({ id: element.id }, element.data())
+        await allAnswers.docs.forEach(async (element) => {
+            let startDate = new Date(element.data().startDate._seconds * 1000)
+            let endDate = new Date(element.data().endDate._seconds * 1000)
+            let newDate = new Date()
+            let type = 0
+            if(newDate > endDate) type = 0
+            else if(newDate >= startDate && newDate <= endDate) type = 1
+            else type = 2
+            let a = { id: element.id, endDate: element.data().endDate, startDate: element.data().startDate, dateType: type};
             answers.push(a);
         })
 
-        answers.sort(function (a, b) { return a.date._seconds - b.date._seconds });
+        answers.sort(function (a, b) { return a.startDate._seconds - b.startDate._seconds });
 
         answers = answers.map((item) => {
-            let date = moment(item.date._seconds * 1000)
-            return { id: item.id, sessionId: item.sessionId, date: date.format('MMMM Do YYYY'), };
+            let startDate = moment(item.startDate._seconds * 1000)
+            let endDate = moment(item.endDate._seconds * 1000)
+            return { id: item.id, startDate: startDate.format('MM/DD/YYYY'), endDate: endDate.format('MM/DD/YYYY'), dateType: item.dateType };
         })
         return answers
     } catch (error) {
@@ -148,15 +148,35 @@ export const setUserInfo = (user) => {
  */
 export const getAllSessionsByUserId = async (userId) => {
     try {
-        let result = [];
-        const sessions = await firestore().collection("Questions").get()
-        await sessions.docs.forEach(async element => {
-            result.push({id: element.id, endDate: element.data().endDate, startDate: element.data().startDate, donationData: []})
+        let result = []
+        let answersId = 0;
+        let allSessions = await getAllSessions()
+        for (let i = 0; i < allSessions.length; i++) {
+            allSessions[i] = [];
+        }
+        const allAnswers = await firestore().collection("DonationData").get()
+        await allAnswers.docs.forEach(async element => {
+            if (element.data().userId = userId)
+                answersId = element.id
         })
-        result.sort(function (a, b) { return a.startDate._seconds - b.startDate._seconds });
-
-    } catch (error) {
+        const answers = await firestore().collection("DonationData").doc(answersId).collection('Answers').get();
+        await answers.docs.forEach(async element => {
+            result.push({id: element.id, sessionId: element.data().sessionId, session: element.data().session, date: element.data().date})
+        })
         
+        result.sort(function (a, b) { return a.date._seconds - b.date._seconds });
+
+        result = result.map((item) => {
+            let date = moment(item.date._seconds * 1000)
+            return { id: item.id, sessionId: item.sessionId, session: item.session, date: date.format('MM/DD/YYYY')};
+        })
+
+        for (let i = 0; i < result.length; i++) {
+            allSessions[result[i].session - 1].push(result[i])
+        }
+        return allSessions
+    } catch (error) {
+
     }
 }
 
@@ -167,7 +187,7 @@ export const getDonationDateBySessionId = async (userId, sessionId) => {
         // datas.docs.forEach
 
     } catch (error) {
-        
+
     }
 }
 

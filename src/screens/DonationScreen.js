@@ -59,7 +59,6 @@ const DonationScreen = () => {
       //   return element.date;
       // })
       // setAllSession(temp)
-
       if (allQuestions != null) {
         setSessionId(allQuestions.id)
         allQuestions = allQuestions.questions;
