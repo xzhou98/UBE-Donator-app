@@ -11,7 +11,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
 
-const HomeScreen = () => {
+const HomeScreen = ()  => {
   const [user, setUser] = useState();
   const [refresh, setRefresh] = useState(false);
   // const [questions, setQuestions] = useState();
@@ -92,7 +92,8 @@ const HomeScreen = () => {
                         <Text style={styles.answerDate}>{element.date}</Text>
                       </View>
                       <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center' }}>
-                        <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(item.id); setSessionId(item.sessionId) }}>
+                        <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(element.id); setSessionId(item.id) }}>
+                        {/* <TouchableOpacity onPress={() => { console.log(element.id); console.log(item.id); }}> */}
                           <Text style={styles.button}>
                             Review
                           </Text>
@@ -106,29 +107,29 @@ const HomeScreen = () => {
         />
         {sessions.map((item, index) => {
           // return (
-            // <View key={index} style={{ flexDirection: 'column', }}>
-            //   <View style={{ alignItems: 'center' }}>
-            //     {type(index, item)}
-            //     {allAnswers[index].map((element, index) => {
-            //       if (element.sessionId == item.id)
-            //         return (<View key={index} style={styles.answer}>
-            //           <View style={{ flexDirection: 'column', flex: 3 }}>
-            //             <Text style={styles.answerTitle}>{index + 1}st submission</Text>
-            //             <Text style={styles.answerDate}>{element.date}</Text>
-            //           </View>
-            //           <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center' }}>
-            //             <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(item.id); setSessionId(item.sessionId) }}>
-            //               <Text style={styles.button}>
-            //                 Review
-            //               </Text>
-            //             </TouchableOpacity>
-            //           </View>
-            //         </View>)
-            //     })}
+          //   <View key={index} style={{ flexDirection: 'column', }}>
+          //     <View style={{ alignItems: 'center' }}>
+          //       {type(index, item)}
+          //       {allAnswers[index].map((element, index) => {
+          //         if (element.sessionId == item.id)
+          //           return (<View key={index} style={styles.answer}>
+          //             <View style={{ flexDirection: 'column', flex: 3 }}>
+          //               <Text style={styles.answerTitle}>{index + 1}st submission</Text>
+          //               <Text style={styles.answerDate}>{element.date}</Text>
+          //             </View>
+          //             <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center' }}>
+          //               <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(item.id); setSessionId(item.sessionId) }}>
+          //                 <Text style={styles.button}>
+          //                   Review
+          //                 </Text>
+          //               </TouchableOpacity>
+          //             </View>
+          //           </View>)
+          //       })}
 
-            //   </View>
+          //     </View>
 
-            // </View>
+          //   </View>
           // )
         })}
       </View > :

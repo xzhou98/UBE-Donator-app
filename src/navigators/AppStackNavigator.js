@@ -141,7 +141,6 @@ function AppStackNavigator({ navigation }) {
             </Animated.View>
 
         </SafeAreaView>
-
     );
 }
 

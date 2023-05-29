@@ -265,7 +265,7 @@ const DonationScreen = () => {
                         setCurrentInput("");
                         setRefresh(!refresh);
                       }}>
-                        <Text style={{ fontSize: 18 }}>Skip</Text>
+                        <Text style={styles.skipNext}>Skip</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -291,7 +291,7 @@ const DonationScreen = () => {
                         }
 
                       }}>
-                        <Text style={{ fontSize: 18 }}>Next</Text>
+                        <Text style={styles.skipNext}>Next</Text>
                       </TouchableOpacity>
 
                     </View>
@@ -304,6 +304,7 @@ const DonationScreen = () => {
                   <Dropdown style={[styles.dropdown]}
                     placeholderStyle={[styles.placeholderStyle]}
                     selectedTextStyle={[styles.selectedTextStyle]}
+                    itemTextStyle={{color: 'black'}}
                     iconStyle={[styles.iconStyle]}
                     maxHeight={300}
                     labelField="label"
@@ -324,7 +325,7 @@ const DonationScreen = () => {
                         setCurrentInput("");
                         setRefresh(!refresh);
                       }}>
-                        <Text style={{ fontSize: 18 }}>Skip</Text>
+                        <Text style={styles.skipNext}>Skip</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -339,7 +340,7 @@ const DonationScreen = () => {
                         }
 
                       }}>
-                        <Text style={{ fontSize: 18 }}>Next</Text>
+                        <Text style={styles.skipNext}>Next</Text>
                       </TouchableOpacity>
 
                     </View>
@@ -358,7 +359,7 @@ const DonationScreen = () => {
                         setQId(-1);
                         setRefresh(!refresh);
                       }}>
-                        <Text style={{ fontSize: 20 }}>Skip</Text>
+                        <Text style={styles.skipNext}>Skip</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -373,7 +374,7 @@ const DonationScreen = () => {
                         }
 
                       }}>
-                        <Text style={{ fontSize: 20 }}>Next</Text>
+                        <Text style={styles.skipNext}>Next</Text>
                       </TouchableOpacity>
 
                     </View>
@@ -448,7 +449,7 @@ const DonationScreen = () => {
                         setImageUrl([]);
                         setRefresh(!refresh);
                       }}>
-                        <Text style={{ fontSize: 20 }}>Skip</Text>
+                        <Text style={styles.skipNext}>Skip</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -458,7 +459,7 @@ const DonationScreen = () => {
                         setImageUrl([]);
                         setRefresh(!refresh);
                       }}>
-                        <Text style={{ fontSize: 20 }}>Next</Text>
+                        <Text style={styles.skipNext}>Next</Text>
                       </TouchableOpacity>
 
                     </View>
@@ -649,6 +650,10 @@ const DonationScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  skipNext: {
+    fontSize: 18,
+    color: 'black'
+  },
   Restart: {
     textAlign: 'center',
     fontSize: 18,
