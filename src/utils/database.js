@@ -191,6 +191,18 @@ export const getDonationDateBySessionId = async (userId, sessionId) => {
     }
 }
 
+
+/**
+ * save user answers to firebase (include image)
+ */
+export const saveAnswersToFirebase = async (sessionId, userId, date, sessionNum, answers) => {
+    answers.forEach(element => {
+        if(element.image[0].length != 0){
+            console.log(1);
+        }
+    });
+}
+
 //submit quiz
 // export const submitQuiz = async ( quizId, userId, answers, userEmail ) => {
 //     let quiz = null

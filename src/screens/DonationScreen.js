@@ -17,12 +17,13 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { getUserInfoByEmail, getAllQuestions } from '../utils/database';
 import auth from '@react-native-firebase/auth';
 import { Dropdown } from 'react-native-element-dropdown';
-import { getAnswer, getSession, changeSession, addAnswers, removeAll, setQId, getQId, addAnswersById, setNextQuestionId, removeLastQuestion, skipQuestionsById } from '../views/Global';
+import { getAnswer, saveData, addAnswers, removeAll, setQId, getQId, addAnswersById, setNextQuestionId, removeLastQuestion, skipQuestionsById } from '../views/Global';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import MultipleImagePicker from '@baronha/react-native-multiple-image-picker';
 import { COLORS } from '../constants/theme';
 // import { launchImageLibrary } from 'react-native-image-picker';
 import PhotoEditor from 'react-native-photo-editor'
+import firestore from '@react-native-firebase/firestore';
 
 
 
@@ -41,6 +42,7 @@ const DonationScreen = () => {
   const [shortcut, setShortcut] = useState(false);
   const [imageUrl, setImageUrl] = useState([]);
   const [sessionId, setSessionId] = useState()
+  const [sessionNum, setSessionNum] = useState()
 
   const flatListRef = useRef();
 
@@ -61,6 +63,7 @@ const DonationScreen = () => {
       // setAllSession(temp)
       if (allQuestions != null) {
         setSessionId(allQuestions.id)
+        setSessionNum(allQuestions.session)
         allQuestions = allQuestions.questions;
         setQuestions(allQuestions);
         let allAnswers = getAnswer();
@@ -124,7 +127,6 @@ const DonationScreen = () => {
   }
 
   const restartWholeProcess = () => {
-    changeSession(-1);
     setRender(false);
     setCurrentInput("");
     setCurrentOption();
@@ -135,6 +137,14 @@ const DonationScreen = () => {
       setShortcut(!shortcut);
   }
 
+  const saveDatatoFirebase = (sessionId, userId, sessionNum) => {
+    let date = firestore.Timestamp.fromDate(new Date())
+    try {
+      saveData(sessionId, userId, date, sessionNum);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return render ? (sessionId == null || sessionId == undefined ? <View>
     <Text>Thank you for submission. Your next donation session will open in one week on XX/XX/XXXX.</Text>
@@ -392,7 +402,6 @@ const DonationScreen = () => {
                           PhotoEditor.Edit({
                             path: imageUrl[index],
                             hiddenControls: ["share", "crop", "text"],
-                            // stickers: ["Pixelated.png"],
                             colors: ["#ff0000"],
                             onDone: (data) => {
                               let temp = imageUrl
@@ -481,12 +490,7 @@ const DonationScreen = () => {
                 </View> : <></>}
 
                 {currentQuestion.type == 6 ? <View>
-                  <TouchableOpacity onPress={() => {
-                    removeAll();
-                    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: currentQuestion.option[0].nextQuestionId, questionId: '' })
-                    setCurrentInput("");
-                    setRefresh(!refresh);
-                  }}>
+                  <TouchableOpacity onPress={() => saveDatatoFirebase(sessionId, user.id, sessionNum)}>
                     <Text style={[styles.leftOption]}>{currentQuestion.option[0].option}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
@@ -555,15 +559,6 @@ const DonationScreen = () => {
                 <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>RESTART</Text>
               </TouchableOpacity>
 
-              {/* End this donation process */}
-              <TouchableOpacity onPress={() => {
-                Alert.alert('Confirmation', 'Are you sure you want to navigate to another session? This will permanently delete all your responses so far and cannot be undone.', [
-                  { text: 'Confirm', onPress: () => restartWholeProcess() },
-                  { text: 'Cancel', style: 'cancel' }
-                ])
-              }}>
-                <Text style={{ fontSize: 20, color: 'black', marginVertical: 10 }}>CHANGESESSION</Text>
-              </TouchableOpacity>
             </View>
           </View>
 

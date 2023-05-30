@@ -1,9 +1,9 @@
-import { getAllQuestions } from '../utils/database';
+import { saveAnswersToFirebase } from '../utils/database';
 
 
 
 let qId = 0;
-let answers = [{isTrueAnswer: false, answer: [], image:[], nextQuestionId: '1', questionId: '0'}]; 
+let answers = [{isTrueAnswer: true, answer: [], image:[], nextQuestionId: '1', questionId: '0'}]; 
 let session = -1;
 
 const getSession = () => {
@@ -70,6 +70,21 @@ const skipQuestionsById = (curId, nextId) => {
     }
 }
 
+const saveData = (sessionId, userId, date, sessionNum) => {
+    let answerFilter = []
+    answers.forEach(element => {
+        if(element.isTrueAnswer){
+            delete element.isTrueAnswer
+            answerFilter.push(element)
+        }
+    });
+    try {
+        saveAnswersToFirebase(sessionId, userId, date, sessionNum, answerFilter)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const addAnswers = (answer) => {
     answers.push(answer);
 }
@@ -86,7 +101,8 @@ const global = {
     setQId,
     getSession,
     addAnswers,
-    changeSession
+    changeSession,
+    saveData,
 };
 
 module.exports = global;
