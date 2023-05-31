@@ -137,10 +137,9 @@ const DonationScreen = () => {
       setShortcut(!shortcut);
   }
 
-  const saveDatatoFirebase = (sessionId, userId, sessionNum) => {
-    let date = firestore.Timestamp.fromDate(new Date())
+  const saveDatatoFirebase = (sessionId, userId, userEmail, sessionNum) => {
     try {
-      saveData(sessionId, userId, date, sessionNum);
+      saveData(sessionId, userId, userEmail, sessionNum);
     } catch (error) {
       console.log(error);
     }
@@ -490,7 +489,7 @@ const DonationScreen = () => {
                 </View> : <></>}
 
                 {currentQuestion.type == 6 ? <View>
-                  <TouchableOpacity onPress={() => saveDatatoFirebase(sessionId, user.id, sessionNum)}>
+                  <TouchableOpacity onPress={() => saveDatatoFirebase(sessionId, user.id, user.email, sessionNum)}>
                     <Text style={[styles.leftOption]}>{currentQuestion.option[0].option}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {

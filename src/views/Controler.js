@@ -2,13 +2,13 @@ import React from 'react';
 import { View } from "react-native"
 
 const Controler = ({ children, current }) => {
-    // console.log(children.length);
+    // console.log(current);
     let idx = '0'
     switch (current) {
         case 'Home':
             idx = '0'
             break;
-        case 'Contact us':
+        case 'Contact Resource':
             idx = '1'
             break;
         case 'Help':

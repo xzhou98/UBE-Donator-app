@@ -1,4 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import { Alert } from 'react-native'
 import moment from 'moment';
 
@@ -94,10 +95,10 @@ export const getAllSessions = async (userId) => {
             let endDate = new Date(element.data().endDate._seconds * 1000)
             let newDate = new Date()
             let type = 0
-            if(newDate > endDate) type = 0
-            else if(newDate >= startDate && newDate <= endDate) type = 1
+            if (newDate > endDate) type = 0
+            else if (newDate >= startDate && newDate <= endDate) type = 1
             else type = 2
-            let a = { id: element.id, endDate: element.data().endDate, startDate: element.data().startDate, dateType: type};
+            let a = { id: element.id, endDate: element.data().endDate, startDate: element.data().startDate, dateType: type };
             answers.push(a);
         })
 
@@ -156,19 +157,19 @@ export const getAllSessionsByUserId = async (userId) => {
         }
         const allAnswers = await firestore().collection("DonationData").get()
         await allAnswers.docs.forEach(async element => {
-            if (element.data().userId = userId)
+            if (element.data().userId == userId)
                 answersId = element.id
         })
         const answers = await firestore().collection("DonationData").doc(answersId).collection('Answers').get();
         await answers.docs.forEach(async element => {
-            result.push({id: element.id, sessionId: element.data().sessionId, session: element.data().session, date: element.data().date})
+            result.push({ id: element.id, sessionId: element.data().sessionId, session: element.data().session, date: element.data().date })
         })
-        
+
         result.sort(function (a, b) { return a.date._seconds - b.date._seconds });
 
         result = result.map((item) => {
             let date = moment(item.date._seconds * 1000)
-            return { id: item.id, sessionId: item.sessionId, session: item.session, date: date.format('MM/DD/YYYY')};
+            return { id: item.id, sessionId: item.sessionId, session: item.session, date: date.format('MM/DD/YYYY') };
         })
 
         for (let i = 0; i < result.length; i++) {
@@ -195,12 +196,40 @@ export const getDonationDateBySessionId = async (userId, sessionId) => {
 /**
  * save user answers to firebase (include image)
  */
-export const saveAnswersToFirebase = async (sessionId, userId, date, sessionNum, answers) => {
-    answers.forEach(element => {
-        if(element.image[0].length != 0){
-            console.log(1);
+export const saveAnswersToFirebase = async (sessionId, userId, userEmail, sessionNum, answers) => {
+    let date = new Date();
+
+    //upload image to firebase storage and get the Url
+    for (let i = 0; i < answers.length; i++) {
+        const element = answers[i];
+        if (element.image.length != 0) {
+            for (let j = 0; j < element.image.length; j++) {
+                const image = element.image[j];
+                let momentDate = moment(date).format('MM-DD-YYYY-h:mm:ssa')
+
+                const reference = storage().ref(`/images/${userEmail}/${sessionNum}/${momentDate}-question${element.questionId}-${j}.png`)
+                await reference.putFile(image).then(() => {
+                    console.log('Image Uploaded');
+                });
+                let imageUrl = await reference.getDownloadURL();
+                answers[i].image[j] = imageUrl
+            }
         }
-    });
+    }
+
+    //integrate all information
+    let finalData = {answer: answers, date: date, session: sessionNum, sessionId: sessionId}
+    
+
+    let answersId = 0;
+    const allAnswers = await firestore().collection("DonationData").get()
+    await allAnswers.docs.forEach(async element => {
+        if (element.data().userId = userId)
+            answersId = element.id
+    })
+    
+    await firestore().collection("DonationData").doc(answersId).collection('Answers').add(finalData)
+
 }
 
 //submit quiz
