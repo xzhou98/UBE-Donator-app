@@ -221,15 +221,19 @@ export const saveAnswersToFirebase = async (sessionId, userId, userEmail, sessio
     let finalData = {answer: answers, date: date, session: sessionNum, sessionId: sessionId}
     
 
-    let answersId = 0;
+    let answersId = undefined;
     const allAnswers = await firestore().collection("DonationData").get()
     await allAnswers.docs.forEach(async element => {
-        if (element.data().userId = userId)
+        if (element.data().userId == userId)
             answersId = element.id
     })
     
+    if (answersId == undefined){
+        await firestore().collection("DonationData").add({userId: userId}).then((data) => {
+            answersId = data._documentPath._parts[1]
+        })
+    }
     await firestore().collection("DonationData").doc(answersId).collection('Answers').add(finalData)
-
 }
 
 //submit quiz

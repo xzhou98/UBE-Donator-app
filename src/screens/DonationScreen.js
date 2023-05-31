@@ -137,7 +137,11 @@ const DonationScreen = () => {
       setShortcut(!shortcut);
   }
 
-  const saveDatatoFirebase = (sessionId, userId, userEmail, sessionNum) => {
+  const saveDatatoFirebase = (sessionId, userId, userEmail, sessionNum, nextQuestionId, currentQuestionId) => {
+    removeAll();
+    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: nextQuestionId, questionId: currentQuestionId})
+    setCurrentInput("");
+    setRefresh(!refresh);
     try {
       saveData(sessionId, userId, userEmail, sessionNum);
     } catch (error) {
@@ -489,7 +493,7 @@ const DonationScreen = () => {
                 </View> : <></>}
 
                 {currentQuestion.type == 6 ? <View>
-                  <TouchableOpacity onPress={() => saveDatatoFirebase(sessionId, user.id, user.email, sessionNum)}>
+                  <TouchableOpacity onPress={() => saveDatatoFirebase(sessionId, user.id, user.email, sessionNum, currentQuestion.option[0].nextQuestionId, '')}>
                     <Text style={[styles.leftOption]}>{currentQuestion.option[0].option}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
