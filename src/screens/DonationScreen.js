@@ -466,10 +466,15 @@ const DonationScreen = () => {
                     </View>
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
                       <TouchableOpacity onPress={() => {
-                        addAnswers({ isTrueAnswer: true, answer: [], image: imageUrl, nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
-                        setCurrentInput("");
-                        setImageUrl([]);
-                        setRefresh(!refresh);
+                        if(imageUrl.length > 0){
+                          addAnswers({ isTrueAnswer: true, answer: [], image: imageUrl, nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                          setCurrentInput("");
+                          setImageUrl([]);
+                          setRefresh(!refresh);
+                        }else{
+                          Alert.alert("Please upload a image!")
+                        }
+
                       }}>
                         <Text style={styles.skipNext}>Next</Text>
                       </TouchableOpacity>
