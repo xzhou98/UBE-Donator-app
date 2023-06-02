@@ -138,15 +138,15 @@ const DonationScreen = () => {
   }
 
   const saveDatatoFirebase = (sessionId, userId, userEmail, sessionNum, nextQuestionId, currentQuestionId) => {
-    removeAll();
-    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: nextQuestionId, questionId: currentQuestionId})
-    setCurrentInput("");
-    setRefresh(!refresh);
     try {
       saveData(sessionId, userId, userEmail, sessionNum);
     } catch (error) {
       console.log(error);
     }
+    removeAll();
+    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: nextQuestionId, questionId: currentQuestionId})
+    setCurrentInput("");
+    setRefresh(!refresh);
   }
 
   return render ? (sessionId == null || sessionId == undefined ? <View>

@@ -218,8 +218,8 @@ export const saveAnswersToFirebase = async (sessionId, userId, userEmail, sessio
     }
 
     //integrate all information
-    let finalData = {answer: answers, date: date, session: sessionNum, sessionId: sessionId}
-    
+    let finalData = { answer: answers, date: date, session: sessionNum, sessionId: sessionId }
+
 
     let answersId = undefined;
     const allAnswers = await firestore().collection("DonationData").get()
@@ -227,9 +227,10 @@ export const saveAnswersToFirebase = async (sessionId, userId, userEmail, sessio
         if (element.data().userId == userId)
             answersId = element.id
     })
-    
-    if (answersId == undefined){
-        await firestore().collection("DonationData").add({userId: userId}).then((data) => {
+
+
+    if (answersId == undefined) {
+        await firestore().collection("DonationData").add({ userId: userId }).then((data) => {
             answersId = data._documentPath._parts[1]
         })
     }

@@ -50,7 +50,7 @@ const EditScreen = ({ answerId, sessionId }) => {
             display: 'flex',
             flexDirection: 'column',
             backgroundColor: '#f2f5f8',
-            height: '100%',
+            height: '95%',
           }}>
           <FlatList
             ref={flatListRef}
