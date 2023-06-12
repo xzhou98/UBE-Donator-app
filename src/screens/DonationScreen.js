@@ -43,6 +43,7 @@ const DonationScreen = () => {
   const [imageUrl, setImageUrl] = useState([]);
   const [sessionId, setSessionId] = useState()
   const [sessionNum, setSessionNum] = useState()
+  const [imagepath, setImagepath] = useState()
 
   const flatListRef = useRef();
 
@@ -95,6 +96,7 @@ const DonationScreen = () => {
       let temp = [];
       for (let i = 0; i < response.length; i++) {
         // const element = response[i].path;
+        setImagepath(response[i].path)
         const element = response[i].realPath;
         temp.push(element)
       }
@@ -400,10 +402,11 @@ const DonationScreen = () => {
                     return (
                       <View key={index} style={{ marginLeft: '5%', marginRight: '30%', marginVertical: 20, }}>
                         <TouchableOpacity onPress={() => {
-                          // setImage(url);
+                          // setImage(`file://${imageUrl[index]}`);
                           // setImageVisible(true);
                           PhotoEditor.Edit({
-                            path: imageUrl[index],
+                            path: `file://${imageUrl[index]}`,
+                            // path: `${imageUrl[index]}`,
                             hiddenControls: ["share", "crop", "text"],
                             colors: ["#ff0000"],
                             onDone: (data) => {

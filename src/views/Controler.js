@@ -17,7 +17,7 @@ const Controler = ({ children, current }) => {
         case 'Donation':
             idx = '3'
             break;
-        case 'Review':
+        case 'AddSeed':
             idx = '4'
             break;
         default:

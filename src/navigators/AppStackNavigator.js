@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ReviewScreen, ContactUsScreen,DonationScreen, HomeScreen, HelpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
+import { AddSeedScreen, ContactUsScreen,DonationScreen, HomeScreen, HelpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen } from '../screens';
 import { Text, Alert, View, SafeAreaView, TouchableOpacity, StyleSheet, Animated, StatusBar } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../constants/theme';
@@ -35,7 +35,7 @@ function AppStackNavigator({ navigation }) {
                     }
                     {TabButton(currentTab, setCurrentTab, "Home", "home")}
                     {TabButton(currentTab, setCurrentTab, "Donation", "chat")}
-                    {TabButton(currentTab, setCurrentTab, "Review", "explore")}
+                    {TabButton(currentTab, setCurrentTab, "AddSeed", "explore")}
                     {TabButton(currentTab, setCurrentTab, "Contact Resource", "call")}
                     {TabButton(currentTab, setCurrentTab, "Help", "help")}
                 </View>
@@ -132,7 +132,7 @@ function AppStackNavigator({ navigation }) {
                             <ContactUsScreen></ContactUsScreen>
                             <HelpScreen></HelpScreen>
                             <DonationScreen></DonationScreen>
-                            <ReviewScreen></ReviewScreen>
+                            <AddSeedScreen></AddSeedScreen>
                         </Controler>
                     </View>
 

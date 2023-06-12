@@ -2,7 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { Alert } from 'react-native'
 import moment from 'moment';
-
+import seed from '../seed/seed.json';
 
 export const createUser = (email) => {
     return firestore().collection('Users').add({
@@ -246,6 +246,22 @@ export const removeDonationSession = async (documentId, answerId) => {
     firestore().collection('DonationData').doc(documentId).collection('Answers').doc(answerId).delete().then(() => {
         console.log('Doantion session deleted!');
     });
+}
+
+/**
+ * run seed
+ */
+export const runSeed = async(startDate, endDate) => {
+    try {
+        seed.startDate = startDate
+        seed.endDate = endDate
+        // console.log(seed);
+
+        await firestore().collection("Questions").add(seed)
+    } catch (error) {
+        
+    }
+
 }
 
 //submit quiz
