@@ -237,6 +237,17 @@ export const saveAnswersToFirebase = async (sessionId, userId, userEmail, sessio
     await firestore().collection("DonationData").doc(answersId).collection('Answers').add(finalData)
 }
 
+
+/**
+ * remove donation session
+ */
+
+export const removeDonationSession = async (documentId, answerId) => {
+    firestore().collection('DonationData').doc(documentId).collection('Answers').doc(answerId).delete().then(() => {
+        console.log('Doantion session deleted!');
+    });
+}
+
 //submit quiz
 // export const submitQuiz = async ( quizId, userId, answers, userEmail ) => {
 //     let quiz = null

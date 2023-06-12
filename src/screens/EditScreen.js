@@ -1,16 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Text, View, StyleSheet, Alert, TouchableOpacity, SafeAreaView, FlatList, Image } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { getUserInfoByEmail, getQuestionsBySessionId, getAnswersByAnswerId } from '../utils/database';
+import { getUserInfoByEmail, removeDonationSession, getQuestionsBySessionId, getAnswersByAnswerId } from '../utils/database';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
-const EditScreen = ({ answerId, sessionId }) => {
+const EditScreen = ({ route, navigation }) => {
   const [user, setUser] = useState();
   const [refresh, setRefresh] = useState(false);
   const [questions, setQuestions] = useState();
   const [answers, setAnswers] = useState();
   const [render, setRender] = useState(false);
-  // const [answerId, setAnswersId] = useState();
+  const [answerId, setAnswersId] = useState(route.params.answerId)
+  const [sessionId, setSessionId] = useState(route.params.sessionId)
 
   const flatListRef = useRef();
 
@@ -36,6 +38,11 @@ const EditScreen = ({ answerId, sessionId }) => {
     return questions[questionId]
   }
 
+  const deleteSession = (answers) => {
+    removeDonationSession(answers.documentId, answerId)
+    navigation.navigate('ReviewScreen')
+  }
+
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
@@ -44,13 +51,33 @@ const EditScreen = ({ answerId, sessionId }) => {
   return (
     !render ? <></> :
       <View>
+        <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => { navigation.goBack() }}>
+            <MaterialIcons style={{ color: 'black' }} name="arrow-back" size={30} />
+          </TouchableOpacity>
+
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <Text style={styles.title}>EditScreen</Text>
+          </View>
+          {/* <Text style={{ flex: 1 }}></Text> */}
+          <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <TouchableOpacity onPress={() => {
+              Alert.alert('Delete Donation', 'Are you sure you want to delete this donation session? This will permanently delete all your responses so far and cannot be undone.', [
+                { text: 'Delete', onPress: () => deleteSession(answers) },
+                { text: 'Cancel', style: 'cancel' }
+              ])
+            }}>
+              <Text style={[styles.Restart]}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <SafeAreaView
           style={{
             position: 'relative',
             display: 'flex',
             flexDirection: 'column',
-            backgroundColor: '#f2f5f8',
-            height: '95%',
+            // backgroundColor: 'balck',
+            height: '92%',
           }}>
           <FlatList
             ref={flatListRef}
@@ -59,6 +86,7 @@ const EditScreen = ({ answerId, sessionId }) => {
             showsVerticalScrollIndicator={true}
             renderItem={({ item, index }) => (
               <View>
+                {/* iterate question and answers */}
                 <Text style={styles.leftOption}>
                   {getQuestionById(item.questionId).description}
                 </Text>
@@ -67,6 +95,7 @@ const EditScreen = ({ answerId, sessionId }) => {
                     return <Text key={index} style={styles.rightMessage}>{element}</Text>
                   }
                 })}
+                {/* iterate image */}
                 {item.image.map((url, index) => {
                   if (url.length > 0) {
                     return (
@@ -88,16 +117,30 @@ const EditScreen = ({ answerId, sessionId }) => {
                     )
                   }
                 })}
+                {/* delete button
+                {index == (answers.answer.length - 1) ?
+                
+                  : <></>} */}
               </View>
             )}
           />
-
         </SafeAreaView>
       </View>
   )
 }
 
 const styles = StyleSheet.create({
+  Restart: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 18,
+    color: 'white',
+    borderRadius: 7,
+    height: 30,
+    width: 80,
+    // backgroundColor: '#95ec69',
+    backgroundColor: 'red',
+  },
   title: {
     color: "#161924",
     fontSize: 20,

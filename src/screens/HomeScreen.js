@@ -2,8 +2,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Text, View, StyleSheet, Alert, TouchableOpacity, FlatList } from 'react-native'
 import auth from '@react-native-firebase/auth';
 import { getUserInfoByEmail, getAllQuestions, getAllSessions, getAllSessionsByUserId } from '../utils/database';
-import { EditScreen } from '../screens';
+// import { EditScreen } from '../screens';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { createStackNavigator } from '@react-navigation/stack';
+import { ReviewScreen, EditScreen, } from '../screens';
 // import { showNotification, handle5SecNotification, handleCancel, handleScheduleNotification } from '../views/notification.android'
 // import DatePicker from 'react-native-date-picker';
 // import moment from 'moment';
@@ -11,7 +13,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
 
-const HomeScreen = ()  => {
+const HomeScreen = () => {
   const [user, setUser] = useState();
   const [refresh, setRefresh] = useState(false);
   // const [questions, setQuestions] = useState();
@@ -21,6 +23,9 @@ const HomeScreen = ()  => {
   const [sessionId, setSessionId] = useState();
   const [answerId, setAnswersId] = useState();
   const [allAnswers, setAllAnswers] = useState();
+
+
+  const Stack = createStackNavigator();
 
   const flatListRef = useRef();
 
@@ -72,85 +77,14 @@ const HomeScreen = ()  => {
   }, [refresh]);
 
   return render ? (
-    <View style={{}}>
-      {controler ? <View style={{ alignItems: 'center', }}>
-
-        <FlatList
-          ref={flatListRef}
-          data={sessions}
-          onContentSizeChange={() => flatListRef.current.scrollToEnd()}
-          showsVerticalScrollIndicator={true}
-          renderItem={({ item, index }) => (
-            <View key={index} style={{ flexDirection: 'column', }}>
-              <View style={{ alignItems: 'center' }}>
-                {type(index, item)}
-                {allAnswers[index].map((element, index) => {
-                  if (element.sessionId == item.id)
-                    return (<View key={index} style={styles.answer}>
-                      <View style={{ flexDirection: 'column', flex: 3 }}>
-                        <Text style={styles.answerTitle}>{index + 1}st submission</Text>
-                        <Text style={styles.answerDate}>{element.date}</Text>
-                      </View>
-                      <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center' }}>
-                        <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(element.id); setSessionId(item.id) }}>
-                        {/* <TouchableOpacity onPress={() => { console.log(element.id); console.log(item.id); }}> */}
-                          <Text style={styles.button}>
-                            Review
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>)
-                })}
-              </View>
-            </View>
-          )}
-        />
-        {sessions.map((item, index) => {
-          // return (
-          //   <View key={index} style={{ flexDirection: 'column', }}>
-          //     <View style={{ alignItems: 'center' }}>
-          //       {type(index, item)}
-          //       {allAnswers[index].map((element, index) => {
-          //         if (element.sessionId == item.id)
-          //           return (<View key={index} style={styles.answer}>
-          //             <View style={{ flexDirection: 'column', flex: 3 }}>
-          //               <Text style={styles.answerTitle}>{index + 1}st submission</Text>
-          //               <Text style={styles.answerDate}>{element.date}</Text>
-          //             </View>
-          //             <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center' }}>
-          //               <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(item.id); setSessionId(item.sessionId) }}>
-          //                 <Text style={styles.button}>
-          //                   Review
-          //                 </Text>
-          //               </TouchableOpacity>
-          //             </View>
-          //           </View>)
-          //       })}
-
-          //     </View>
-
-          //   </View>
-          // )
-        })}
-      </View > :
-        <View>
-          <View style={{ flexDirection: 'row', }}>
-            <TouchableOpacity style={{ flex: 1 }} onPress={() => { setControler(!controler) }}>
-              <MaterialIcons style={{ color: 'black' }} name="arrow-back" size={30} />
-            </TouchableOpacity>
-
-            <View style={{ flex: 1, alignItems: 'center' }}>
-              <Text style={styles.title}>EditScreen</Text>
-            </View>
-            <Text style={{ flex: 1 }}></Text>
-
-          </View>
-          <EditScreen answerId={answerId} sessionId={sessionId} ></EditScreen>
-        </View>
-
-      }
-
-    </View>) : (<View style={{ alignItems: "center" }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
+      <Stack.Screen name="EditScreen" component={EditScreen} />
+    </Stack.Navigator>)
+    : (<View style={{ alignItems: "center" }}>
       <Text style={styles.title}>Please login first</Text>
     </View>)
 }
@@ -300,56 +234,3 @@ const styles = StyleSheet.create({
 
 
 export default HomeScreen;
-
-// const datePicker = () => {
-//   if(date > new Date()){
-//     handleScheduleNotification('UBE data', "It's time to donate time", date);
-//     let userInfo = {id: user.id, email: user.email, isAdmin: user.isAdmin, date: user.date};
-//     userInfo.date = firebase.firestore.Timestamp.fromDate(date)
-//     setUserInfo(userInfo);
-//     setPickerVisible(false);
-//     setRefresh(!refresh);
-//   }else{
-//     Alert.alert("You can't schedule a date in the past")
-//   }
-// }
-
-// <View style={{ alignItems: "center", justifyContent: "center" }}>
-// <Text style={styles.text}>Home Page</Text>
-// <View>
-//   <Text style={{marginVertical: 50}}>Notification Date: {user.date}</Text>
-//   <TouchableOpacity activeOpacity={0.6} onPress={() => { setPickerVisible(true) }}>
-//     <View style={styles.notificationButton}>
-//       <Text style={styles.ButtonTitle}>Click me to schedule the notification</Text>
-//     </View>
-//   </TouchableOpacity>
-// </View>
-
-// <TouchableOpacity activeOpacity={0.6} onPress={() => showNotification('Hello', 'message')}>
-//   <View style={styles.notificationButton}>
-//     <Text style={styles.ButtonTitle}>Click me to get notification</Text>
-//   </View>
-// </TouchableOpacity>
-// <TouchableOpacity activeOpacity={0.6} onPress={() => handle5SecNotification('UBE data', "IT'S TIME TO DONATE DATA")}>
-//   <View style={styles.notificationButton}>
-//     <Text style={styles.ButtonTitle}>Click me to get notification after 5 sec.</Text>
-//   </View>
-// </TouchableOpacity>
-// <TouchableOpacity activeOpacity={0.6} onPress={handleCancel}>
-//   <View style={styles.notificationButton}>
-//     <Text style={styles.ButtonTitle}>Click me to cancel notification</Text>
-//   </View>
-// </TouchableOpacity>
-
-// <Dialog.Container visible={pickerVisible}>
-//   <Dialog.Title>Please select a date</Dialog.Title>
-//   <Dialog.Description>
-//     <View>
-//       <DatePicker date={date} onDateChange={setDate} />
-//     </View>
-//   </Dialog.Description>
-//   <Dialog.Button label="Cancel" onPress={() => { setPickerVisible(false) }} />
-//   <Dialog.Button label="Confirm" onPress={datePicker} />
-// </Dialog.Container>
-
-// </View>
