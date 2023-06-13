@@ -188,7 +188,7 @@ const DonationScreen = () => {
                           source={{
                             uri: `file://${url}`,
                           }}
-                          resizeMode={'contain'}
+                          resizeMode={'cover'}
                           style={[styles.rightImage]}
                         />
                       </TouchableOpacity>
@@ -400,22 +400,22 @@ const DonationScreen = () => {
                 {currentQuestion.type == 4 ? <View>
                   {imageUrl.map((url, index) => {
                     return (
-                      <View key={index} style={{ marginLeft: '5%', marginRight: '30%', marginVertical: 20, }}>
+                      <View key={index} style={{ marginLeft: '5%', marginRight: '50%', marginVertical: 10, }}>
                         <TouchableOpacity onPress={() => {
-                          // setImage(`file://${imageUrl[index]}`);
-                          // setImageVisible(true);
-                          PhotoEditor.Edit({
-                            path: `file://${imageUrl[index]}`,
-                            // path: `${imageUrl[index]}`,
-                            hiddenControls: ["share", "crop", "text"],
-                            colors: ["#ff0000"],
-                            onDone: (data) => {
-                              let temp = imageUrl
-                              temp[index] = data
-                              setImageUrl(temp);
-                              setRefresh(!refresh);
-                            }
-                          });
+                          setImage(`file://${imageUrl[index]}`);
+                          setImageVisible(true);
+                          // PhotoEditor.Edit({
+                          //   path: `file://${imageUrl[index]}`,
+                          //   // path: `${imageUrl[index]}`,
+                          //   hiddenControls: ["share", "crop", "text"],
+                          //   colors: ["#ff0000"],
+                          //   onDone: (data) => {
+                          //     let temp = imageUrl
+                          //     temp[index] = data
+                          //     setImageUrl(temp);
+                          //     setRefresh(!refresh);
+                          //   }
+                          // });
                         }}>
                           <Image
                             source={{
@@ -423,8 +423,8 @@ const DonationScreen = () => {
                             }}
                             resizeMode={'cover'}
                             style={{
-                              width: 200,
-                              height: 200,
+                              width: 150,
+                              height: 150,
                               borderRadius: 5,
                             }} />
                         </TouchableOpacity>
@@ -513,8 +513,34 @@ const DonationScreen = () => {
                     <Text style={[styles.leftOption]}>{currentQuestion.option[1].option}</Text>
                   </TouchableOpacity>
                 </View> : <></>}
-                {/* check is it the input text question */}
-                {/* {currentQuestion.type != 3 ? <Text style={[styles.leftOption]}> option</Text> : <></>} */}
+
+                {/* mark on image */}
+                {currentQuestion.type == 7 ?  <View>
+                  {answers[index].image.map((url, index)=>{
+                    return ( 
+                      <TouchableOpacity onPress={() => {               
+                          PhotoEditor.Edit({
+                            path: `file://${url}`,
+                            // path: `${imageUrl[index]}`,
+                            hiddenControls: ["share", "crop", "text"],
+                            colors: ["#ff0000"],
+                            onDone: (data) => {
+                              let temp = imageUrl
+                              temp[index] = data
+                              setImageUrl(temp);
+                              setRefresh(!refresh);
+                            }
+                          });
+                      }}>
+                        <Image source={{uri: `file://${url}`,}}
+                          resizeMode={'cover'}
+                          style={[styles.leftImage]}/>
+                      </TouchableOpacity>
+                    )
+                  })}
+                </View>: <></>}
+                {console.log(item[index])}
+
               </View> : <></>}
 
             </View>
@@ -690,11 +716,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   rightImage: {
-    marginLeft: '35%',
-    marginRight: '3%',
+    marginLeft: '50%',
+    // marginRight: '3%',
     borderRadius: 7,
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
+    marginVertical: 10,
+  },
+  leftImage: {
+    marginRight: '50%',
+    marginLeft: '3%',
+    borderRadius: 7,
+    width: 150,
+    height: 150,
     marginVertical: 10,
   },
   rightMessage: {
