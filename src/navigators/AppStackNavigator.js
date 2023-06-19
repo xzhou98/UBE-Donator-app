@@ -6,6 +6,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../constants/theme';
 import Controler from '../views/Controler';
 import { signOut } from '../utils/auth';
+import auth from '@react-native-firebase/auth'
+
 
 
 
@@ -22,8 +24,21 @@ function AppStackNavigator({ navigation }) {
     // Scale initially must be One...
     const scaleValue = useRef(new Animated.Value(1)).current;
     const closeButtonOffset = useRef(new Animated.Value(0)).current;
+    const [currentUser, setCurrentUser] = useState(null);
+    const [render, setRebder] = useState(false);
+  
+    const onAuthStateChanged = async user => {
+      await setCurrentUser(user)
+      setRebder(true)
+    }
+  
+    useEffect(() => {
+      const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+      return subscriber;
+    }, [])
 
     return (
+        render?
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor={COLORS.white} barStyle={'dark-content'}/>
             <View style={{ justifyContent: "flex-start", padding: 15 }}>
@@ -33,7 +48,7 @@ function AppStackNavigator({ navigation }) {
                     }
                     {TabButton(currentTab, setCurrentTab, "Home", "home")}
                     {TabButton(currentTab, setCurrentTab, "Donation", "chat")}
-                    {TabButton(currentTab, setCurrentTab, "AddSeed", "explore")}
+                    {currentUser.email == 'zxy357038667@gmail.com' ? TabButton(currentTab, setCurrentTab, "AddSeed", "explore"):<></>}
                     {TabButton(currentTab, setCurrentTab, "Contact Resource", "call")}
                     {TabButton(currentTab, setCurrentTab, "Help", "help")}
                 </View>
@@ -139,6 +154,7 @@ function AppStackNavigator({ navigation }) {
             </Animated.View>
 
         </SafeAreaView>
+        :<></>
     );
 }
 
