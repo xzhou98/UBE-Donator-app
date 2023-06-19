@@ -9,7 +9,7 @@ import { signOut } from '../utils/auth';
 
 
 
-const Stack = createStackNavigator();
+// const Stack = createStackNavigator();
 
 
 function AppStackNavigator({ navigation }) {
@@ -22,8 +22,6 @@ function AppStackNavigator({ navigation }) {
     // Scale initially must be One...
     const scaleValue = useRef(new Animated.Value(1)).current;
     const closeButtonOffset = useRef(new Animated.Value(0)).current;
-
-
 
     return (
         <SafeAreaView style={styles.container}>

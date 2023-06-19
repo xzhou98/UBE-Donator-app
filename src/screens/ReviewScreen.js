@@ -19,14 +19,18 @@ const ReviewScreen = ({ navigation }) => {
 
   const onAuthStateChanged = async user => {
     try {
-      let userInfo = await getUserInfoByEmail(user.email);
-      setUser(userInfo);
-      let allSessions = await getAllSessions(userInfo.id)
-      setSessions(allSessions);
-      let allAnswers = await getAllSessionsByUserId(userInfo.id)
-      setAllAnswers(allAnswers)
+      if (user == null) {
+        setRender(false);
+      } else {
+        let userInfo = await getUserInfoByEmail(user.email);
+        setUser(userInfo);
+        let allSessions = await getAllSessions(userInfo.id)
+        setSessions(allSessions);
+        let allAnswers = await getAllSessionsByUserId(userInfo.id)
+        setAllAnswers(allAnswers)
 
-      setRender(true);
+        setRender(true);
+      }
     } catch (error) {
       Alert.alert(error);
     }
@@ -59,11 +63,11 @@ const ReviewScreen = ({ navigation }) => {
     }
   }
 
-  React.useEffect(() => {
-    const focusHandler = navigation.addListener('focus', () => {
-      const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-      return subscriber
-    });
+  useEffect(() => {
+    // const focusHandler = navigation.addListener('focus', () => {
+    //   const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    //   return subscriber
+    // });
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, [refresh, navigation]);

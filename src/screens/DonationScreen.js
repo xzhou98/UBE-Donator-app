@@ -146,7 +146,7 @@ const DonationScreen = () => {
       console.log(error);
     }
     removeAll();
-    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: nextQuestionId, questionId: currentQuestionId})
+    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: nextQuestionId, questionId: currentQuestionId })
     setCurrentInput("");
     setRefresh(!refresh);
   }
@@ -319,7 +319,7 @@ const DonationScreen = () => {
                   <Dropdown style={[styles.dropdown]}
                     placeholderStyle={[styles.placeholderStyle]}
                     selectedTextStyle={[styles.selectedTextStyle]}
-                    itemTextStyle={{color: 'black'}}
+                    itemTextStyle={{ color: 'black' }}
                     iconStyle={[styles.iconStyle]}
                     maxHeight={300}
                     labelField="label"
@@ -402,6 +402,7 @@ const DonationScreen = () => {
                     return (
                       <View key={index} style={{ marginLeft: '5%', marginRight: '50%', marginVertical: 10, }}>
                         <TouchableOpacity onPress={() => {
+                          console.log(imageUrl[index]);
                           setImage(`file://${imageUrl[index]}`);
                           setImageVisible(true);
                           // PhotoEditor.Edit({
@@ -469,12 +470,12 @@ const DonationScreen = () => {
                     </View>
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
                       <TouchableOpacity onPress={() => {
-                        if(imageUrl.length > 0){
+                        if (imageUrl.length > 0) {
                           addAnswers({ isTrueAnswer: true, answer: [], image: imageUrl, nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
                           setCurrentInput("");
                           setImageUrl([]);
                           setRefresh(!refresh);
-                        }else{
+                        } else {
                           Alert.alert("Please upload a image!")
                         }
 
@@ -515,31 +516,68 @@ const DonationScreen = () => {
                 </View> : <></>}
 
                 {/* mark on image */}
-                {currentQuestion.type == 7 ?  <View>
-                  {answers[index].image.map((url, index)=>{
-                    return ( 
-                      <TouchableOpacity onPress={() => {               
-                          PhotoEditor.Edit({
-                            path: `file://${url}`,
-                            // path: `${imageUrl[index]}`,
-                            hiddenControls: ["share", "crop", "text"],
-                            colors: ["#ff0000"],
-                            onDone: (data) => {
-                              let temp = imageUrl
-                              temp[index] = data
-                              setImageUrl(temp);
-                              setRefresh(!refresh);
-                            }
-                          });
+                {currentQuestion.type == 7 ? <View>
+                  {answers[index].image.map((url, index) => {
+                    return (
+                      <TouchableOpacity key={index} onPress={() => {
+                        PhotoEditor.Edit({
+                          path: `${url}`,
+                          // path: `${imageUrl[index]}`,
+                          hiddenControls: ["share", "crop", "text"],
+                          colors: ["#ff0000"],
+                          onDone: (data) => {
+                            let temp = []
+                            if(imageUrl.length == 0)
+                              temp = answers[answers.length -1].image
+                            else temp = imageUrl
+                            temp[index] = data
+                            setImageUrl(temp);
+                            setRefresh(!refresh);
+                          }
+                        });
                       }}>
-                        <Image source={{uri: `file://${url}`,}}
+                        <Image source={{ uri: `file://${url}`, }}
                           resizeMode={'cover'}
-                          style={[styles.leftImage]}/>
+                          style={[styles.leftImage]} />
                       </TouchableOpacity>
                     )
                   })}
-                </View>: <></>}
-                {console.log(item[index])}
+
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginVertical: 10,
+                    marginRight: '30%',
+                    marginLeft: '5%',
+                  }}>
+                    <View style={{ flex: 1, }}>
+                      <TouchableOpacity onPress={() => {
+                        addAnswers({ isTrueAnswer: true, answer: [], image: answers[index].image, nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                        setCurrentInput("");
+                        setImageUrl([]);
+                        setRefresh(!refresh);
+                      }}>
+                        <Text style={styles.skipNext}>Skip</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                      <TouchableOpacity onPress={() => {
+                        if (imageUrl.length > 0) {
+                          addAnswers({ isTrueAnswer: true, answer: [], image: imageUrl, nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                          setCurrentInput("");
+                          setImageUrl([]);
+                          setRefresh(!refresh);
+                        } else {
+                          Alert.alert("Please edit the image, otherwise press skip!")
+                        }
+
+                      }}>
+                        <Text style={styles.skipNext}>Next</Text>
+                      </TouchableOpacity>
+
+                    </View>
+                  </View>
+                </View> : <></>}
 
               </View> : <></>}
 

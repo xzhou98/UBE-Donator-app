@@ -27,16 +27,15 @@ const HomeScreen = () => {
 
   const Stack = createStackNavigator();
 
-  const flatListRef = useRef();
 
   const onAuthStateChanged = async user => {
     try {
       let userInfo = await getUserInfoByEmail(user.email);
       setUser(userInfo);
-      let allSessions = await getAllSessions(userInfo.id)
-      setSessions(allSessions);
-      let allAnswers = await getAllSessionsByUserId(userInfo.id)
-      setAllAnswers(allAnswers)
+      // let allSessions = await getAllSessions(userInfo.id)
+      // setSessions(allSessions);
+      // let allAnswers = await getAllSessionsByUserId(userInfo.id)
+      // setAllAnswers(allAnswers)
 
       setRender(true);
     } catch (error) {
@@ -44,32 +43,6 @@ const HomeScreen = () => {
     }
   };
 
-  const type = (index, item) => {
-    if (item.dateType == 0) {
-      return (<View style={styles.session}>
-        <Text style={styles.bold}>
-          Session {index + 1}
-        </Text>
-        <Text style={styles.slim}>        {item.startDate} to {item.endDate}</Text>
-      </View>)
-    }
-    else if (item.dateType == 1) {
-      return (<View style={styles.session1}>
-        <Text style={styles.bold}>
-          Session {index + 1}
-        </Text>
-        <Text style={styles.slim}>        {item.startDate} to {item.endDate}</Text>
-      </View>)
-    }
-    else {
-      return (<View style={styles.session2}>
-        <Text style={styles.bold}>
-          Session {index + 1}
-        </Text>
-        <Text style={styles.slim}>        {item.startDate} to {item.endDate}</Text>
-      </View>)
-    }
-  }
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
