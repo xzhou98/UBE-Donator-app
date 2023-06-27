@@ -24,6 +24,7 @@ import { COLORS } from '../constants/theme';
 // import { launchImageLibrary } from 'react-native-image-picker';
 import PhotoEditor from 'react-native-photo-editor'
 import firestore from '@react-native-firebase/firestore';
+import { ContactUsScreen } from '../screens';
 
 
 
@@ -139,14 +140,28 @@ const DonationScreen = () => {
       setShortcut(!shortcut);
   }
 
-  const saveDatatoFirebase = (sessionId, userId, userEmail, sessionNum, nextQuestionId, currentQuestionId) => {
+  const skipQuestion = (currentQuestion) => {
+    if(currentQuestion.forceAnswer == undefined || currentQuestion.forceAnswer == false){
+      addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+      setCurrentOption();
+      setCurrentInput("");
+      setRefresh(!refresh);
+      setImageUrl([])
+    }
+    else
+      Alert.alert('Skip', 'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.', [
+        { text: 'Cancel', tyle: 'cancel' }
+      ]);
+  }
+
+  const saveDatatoFirebase = (option, sessionId, userId, userEmail, sessionNum, nextQuestionId, currentQuestionId) => {
     try {
       saveData(sessionId, userId, userEmail, sessionNum);
     } catch (error) {
       console.log(error);
     }
-    removeAll();
-    addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: nextQuestionId, questionId: currentQuestionId })
+    // removeAll();
+    addAnswers({ isTrueAnswer: false, answer: [option], image: [], nextQuestionId: nextQuestionId, questionId: currentQuestionId })
     setCurrentInput("");
     setRefresh(!refresh);
   }
@@ -275,10 +290,7 @@ const DonationScreen = () => {
                   }}>
                     <View style={{ flex: 1, }}>
                       <TouchableOpacity onPress={() => {
-                        addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
-                        setCurrentOption();
-                        setCurrentInput("");
-                        setRefresh(!refresh);
+                        skipQuestion(currentQuestion)
                       }}>
                         <Text style={styles.skipNext}>Skip</Text>
                       </TouchableOpacity>
@@ -335,10 +347,7 @@ const DonationScreen = () => {
                   }}>
                     <View style={{ flex: 1, }}>
                       <TouchableOpacity onPress={() => {
-                        addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
-                        setCurrentOption();
-                        setCurrentInput("");
-                        setRefresh(!refresh);
+                        skipQuestion(currentQuestion)
                       }}>
                         <Text style={styles.skipNext}>Skip</Text>
                       </TouchableOpacity>
@@ -369,10 +378,12 @@ const DonationScreen = () => {
                   }}>
                     <View style={{ flex: 1, }}>
                       <TouchableOpacity onPress={() => {
-                        skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
-                        setCurrentInput("");
-                        setQId(-1);
-                        setRefresh(!refresh);
+                        // skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
+                        // setCurrentInput("");
+                        // setQId(-1);
+                        // setRefresh(!refresh);
+                        skipQuestion(currentQuestion)
+
                       }}>
                         <Text style={styles.skipNext}>Skip</Text>
                       </TouchableOpacity>
@@ -460,10 +471,12 @@ const DonationScreen = () => {
                   }}>
                     <View style={{ flex: 1, }}>
                       <TouchableOpacity onPress={() => {
-                        skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
-                        setCurrentInput("");
-                        setImageUrl([]);
-                        setRefresh(!refresh);
+                        // skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
+                        // setCurrentInput("");
+                        // setImageUrl([]);
+                        // setRefresh(!refresh);
+                        skipQuestion(currentQuestion)
+
                       }}>
                         <Text style={styles.skipNext}>Skip</Text>
                       </TouchableOpacity>
@@ -489,6 +502,10 @@ const DonationScreen = () => {
                 </View> : <></>}
 
                 {currentQuestion.type == 5 ? <View style={{ alignItems: 'center', marginTop: 10 }}>
+                  {currentQuestion.id==questions.length-1 ? <View style={{width:'80%'}}>
+                    <ContactUsScreen></ContactUsScreen>
+                  </View>:<></>}
+
                   <View style={{ justifyContent: 'center', borderRadius: 7, height: 40, width: 110, backgroundColor: '#95ec69', }}>
                     <TouchableOpacity onPress={() => {
                       Alert.alert('Restart Donation', 'Are you sure you want to restart this donation session? This will permanently delete all your responses so far and cannot be undone.', [
@@ -502,7 +519,12 @@ const DonationScreen = () => {
                 </View> : <></>}
 
                 {currentQuestion.type == 6 ? <View>
-                  <TouchableOpacity onPress={() => saveDatatoFirebase(sessionId, user.id, user.email, sessionNum, currentQuestion.option[0].nextQuestionId, '')}>
+                  <TouchableOpacity onPress={() => {
+                    Alert.alert('Submit Donation', 'Are you sure you want to restart?', [
+                      { text: 'Confirm', onPress: () => saveDatatoFirebase(currentQuestion.option[0].option,sessionId, user.id, user.email, sessionNum, currentQuestion.option[0].nextQuestionId, '') },
+                      { text: 'Cancel', style: 'cancel' }
+                    ])
+                  }}>
                     <Text style={[styles.leftOption]}>{currentQuestion.option[0].option}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
@@ -523,7 +545,7 @@ const DonationScreen = () => {
                         PhotoEditor.Edit({
                           path: `${url}`,
                           // path: `${imageUrl[index]}`,
-                          hiddenControls: ["share", "crop", "text"],
+                          hiddenControls: ["share", "crop", "text", ],
                           colors: ["#ff0000"],
                           onDone: (data) => {
                             let temp = []
@@ -552,10 +574,11 @@ const DonationScreen = () => {
                   }}>
                     <View style={{ flex: 1, }}>
                       <TouchableOpacity onPress={() => {
-                        addAnswers({ isTrueAnswer: true, answer: [], image: answers[index].image, nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
-                        setCurrentInput("");
-                        setImageUrl([]);
-                        setRefresh(!refresh);
+                        // addAnswers({ isTrueAnswer: true, answer: [], image: answers[index].image, nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id });
+                        // setCurrentInput("");
+                        // setImageUrl([]);
+                        // setRefresh(!refresh);
+                        skipQuestion(currentQuestion)
                       }}>
                         <Text style={styles.skipNext}>Skip</Text>
                       </TouchableOpacity>
@@ -598,15 +621,23 @@ const DonationScreen = () => {
                   ]);
                 } else {
                   if (currentQuestion.nextQuestionId.length != 0 && currentQuestion.nextQuestionId != undefined) {
-                    setCurrentInput("");
-                    setCurrentOption();
-                    addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id })
-                    setRefresh(!refresh);
-                    setShortcut(!shortcut);
+                    if(currentQuestion.forceAnswer == undefined || currentQuestion.forceAnswer == false){
+                      setCurrentInput("");
+                      setCurrentOption();
+                      addAnswers({ isTrueAnswer: true, answer: ["Skip"], image: [], nextQuestionId: currentQuestion.nextQuestionId, questionId: currentQuestion.id })
+                      setRefresh(!refresh);
+                      setShortcut(!shortcut);
+                    }else {
+                      Alert.alert('Skip', 'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.', [
+                        { text: 'Cancel', tyle: 'cancel' }
+                      ]);
+                      setShortcut(!shortcut);
+                    }
                   } else {
                     Alert.alert('Skip', 'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.', [
                       { text: 'Cancel', tyle: 'cancel' }
                     ]);
+                    setShortcut(!shortcut);
                   }
                 }
               }}>

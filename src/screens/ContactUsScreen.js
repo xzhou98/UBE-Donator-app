@@ -1,20 +1,20 @@
 import React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, ScrollView } from 'react-native'
 
 
 const ContactUsScreen = () => {
   return (
-    <View>
-      <View style={{ alignItems: "center" }}>
+    <ScrollView>
+      {/* <View style={{ alignItems: "center" }}>
         <Text style={styles.title}>ContactUs</Text>
-      </View>
+      </View> */}
 
-
+      <Text style={styles.basetext2}>Thank you so much for your participation</Text>
       <Text style={styles.basetext2}>If you have any question about this study, please contact our Principle Investigator:</Text>
 
 
       <View style={styles.marginStyle}>
-        <Text style={styles.boldtext}> Dr.Douglas Zykto </Text>
+        <Text style={styles.boldtext}>Dr.Douglas Zykto</Text>
         <Text style={styles.basetext}>
           {'Assistant Professor\nDepartment of Computer Science and Engineering\nzytko@oakland.edu\n(609)-313-8009'}
         </Text>
@@ -27,10 +27,22 @@ const ContactUsScreen = () => {
 
 
       <View style={styles.marginStyle}>
-        <Text style={styles.boldtext}> HAVEN <Text style={styles.basetext}>
-          {"\n"} 801 Vanguard Dr., Pontiac, MI 48341
-          {"\n"} (248)-334-1284
-        </Text></Text>
+        <Text style={styles.boldtext}>HAVEN </Text>
+        <Text style={styles.basetext}>801 Vanguard Dr., Pontiac, MI 48341
+          (248)-334-1284
+        </Text>
+        <Text style={styles.boldtext}>Pawley Hall Counseling Center </Text>
+        <Text style={styles.basetext}>Oakland University
+          Pawley Hall
+        </Text>
+        <Text style={styles.boldtext}>Oakland Family Services </Text>
+        <Text style={styles.basetext}>Rochester Hills
+          (866) 903-8955
+        </Text>
+        <Text style={styles.boldtext}>Community Health and Social services </Text>
+        <Text style={styles.basetext}>5635 West Fort St., Detroit, MI 48209 
+          (313) 849-3920
+        </Text>
       </View>
 
       <Text style={styles.basetext2}>If there is any emergency, please click to dial:</Text>
@@ -39,7 +51,7 @@ const ContactUsScreen = () => {
       <View style={styles.marginStyle}>
         <Text style={styles.boldtext}>911</Text>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
