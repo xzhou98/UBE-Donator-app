@@ -44,7 +44,7 @@ const DonationScreen = () => {
   const [imageUrl, setImageUrl] = useState([]);
   const [sessionId, setSessionId] = useState()
   const [sessionNum, setSessionNum] = useState()
-  const [imagepath, setImagepath] = useState()
+  const [contactUsScreen, setContactUsScreen] = useState(false)
 
   const flatListRef = useRef();
 
@@ -97,7 +97,6 @@ const DonationScreen = () => {
       let temp = [];
       for (let i = 0; i < response.length; i++) {
         // const element = response[i].path;
-        setImagepath(response[i].path)
         const element = response[i].realPath;
         temp.push(element)
       }
@@ -108,6 +107,7 @@ const DonationScreen = () => {
   };
 
   const restartSession = () => {
+    setContactUsScreen(false)
     setCurrentInput("");
     setCurrentOption();
     removeAll();
@@ -161,6 +161,7 @@ const DonationScreen = () => {
       console.log(error);
     }
     // removeAll();
+    setContactUsScreen(true)
     addAnswers({ isTrueAnswer: false, answer: [option], image: [], nextQuestionId: nextQuestionId, questionId: currentQuestionId })
     setCurrentInput("");
     setRefresh(!refresh);
@@ -502,7 +503,7 @@ const DonationScreen = () => {
                 </View> : <></>}
 
                 {currentQuestion.type == 5 ? <View style={{ alignItems: 'center', marginTop: 10 }}>
-                  {currentQuestion.id==questions.length-1 ? <View style={{width:'80%'}}>
+                  {contactUsScreen? <View style={{width:'80%'}}>
                     <ContactUsScreen></ContactUsScreen>
                   </View>:<></>}
 
@@ -520,7 +521,7 @@ const DonationScreen = () => {
 
                 {currentQuestion.type == 6 ? <View>
                   <TouchableOpacity onPress={() => {
-                    Alert.alert('Submit Donation', 'Are you sure you want to restart?', [
+                    Alert.alert('Submit Donation', 'Are you sure you want to sumit your donation data?', [
                       { text: 'Confirm', onPress: () => saveDatatoFirebase(currentQuestion.option[0].option,sessionId, user.id, user.email, sessionNum, currentQuestion.option[0].nextQuestionId, '') },
                       { text: 'Cancel', style: 'cancel' }
                     ])
@@ -528,6 +529,7 @@ const DonationScreen = () => {
                     <Text style={[styles.leftOption]}>{currentQuestion.option[0].option}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
+                    setContactUsScreen(true)
                     removeAll();
                     addAnswers({ isTrueAnswer: false, answer: [], image: [], nextQuestionId: currentQuestion.option[1].nextQuestionId, questionId: '' })
                     setCurrentInput("");
