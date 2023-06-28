@@ -4,7 +4,8 @@ import { Alert } from 'react-native'
 import moment from 'moment';
 import seed from '../seed/seed.json';
 
-export const createUser = (email) => {
+export const createUser = async (email) => {
+    console.log(11);
     return firestore().collection('Users').add({
         email: email,
         isAdmin: false,
