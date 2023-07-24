@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Alert, TouchableOpacity, SafeAreaView, FlatList
 import auth from '@react-native-firebase/auth';
 import { getUserInfoByEmail, removeDonationSession, getQuestionsBySessionId, getAnswersByAnswerId } from '../utils/database';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ReviewScreen from './ReviewScreen';
 
 
 const EditScreen = ({ route, navigation }) => {
@@ -56,9 +57,6 @@ const EditScreen = ({ route, navigation }) => {
             <MaterialIcons style={{ color: 'black' }} name="arrow-back" size={30} />
           </TouchableOpacity>
 
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <Text style={styles.title}>EditScreen</Text>
-          </View>
           {/* <Text style={{ flex: 1 }}></Text> */}
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
             <TouchableOpacity onPress={() => {

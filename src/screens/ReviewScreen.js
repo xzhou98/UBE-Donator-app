@@ -64,12 +64,12 @@ const ReviewScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-    const focusHandler = navigation.addListener('focus', () => {
-      const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-      return subscriber
-    });
-    // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    // return subscriber; // unsubscribe on unmount
+    // const focusHandler = navigation.addListener('focus', () => {
+    //   const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    //   return subscriber
+    // });
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
   }, [refresh, navigation]);
 
   return render ? (

@@ -11,5 +11,6 @@ import ReviewScreen from "./ReviewScreen"
 import EditScreen from "./EditScreen"
 import ResetPasswordScreen from "./ResetPasswordScreen";
 import AddSeedScreen from "./AddSeedScreen";
+import SubStackNavigator from "./SubStackNavigator";
 
-export {  AddSeedScreen,EditScreen,ResetPasswordScreen, ReviewScreen, ContactUsScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };
+export {  SubStackNavigator, AddSeedScreen,EditScreen,ResetPasswordScreen, ReviewScreen, ContactUsScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, CreateQuizScreen, AddQuestionScreen, PlayQuizScreen };
