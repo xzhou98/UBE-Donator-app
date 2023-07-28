@@ -60,12 +60,18 @@ const HomeScreen = ({navigation}) => {
       <Text style={styles.mainTitle}>Welcome back to UBE</Text>
       <Text style={styles.secondTitle}>Before you begin data donation, please proceed to the Help section.</Text>
       <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={() =>{navigation.navigate('Help')}}>
+          <Text style={styles.buttonText}>Help Screen</Text>
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.secondTitle}>Please start the session, when you feel comfortable.</Text>
+      <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={() =>{navigation.navigate('Donation')}}>
           <Text style={styles.buttonText}>Start donating</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.secondTitle}>If you want to review your donation data, please go to review Screen or click the button here</Text>
+      <Text style={styles.secondTitle}>If you want to review your donation data, please navigate to the review Screen.</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={() =>{navigation.navigate('Review')}}>
           <Text style={styles.buttonText}>Review</Text>

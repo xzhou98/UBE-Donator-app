@@ -42,11 +42,10 @@ export const getAnswersByAnswerId = async (userId, answersId) => {
                 id = element.id;
             }
         })
-
         const temp = await firestore().collection('DonationData').doc(id).collection('Answers').get();
         temp.forEach((element) => {
             if (element.id == answersId)
-                answers = Object.assign({ documentId: id }, element.data())
+                answers = Object.assign({ documentId: id, answersId: answersId}, element.data())
         })
 
         return answers
@@ -145,6 +144,12 @@ export const setUserInfo = (user) => {
     })
 }
 
+export const updateAnswer = async (answers) => {
+    let newdata = {sessionId: answers.sessionId, session:answers.session , answer: answers.answer, date: answers.date}
+    console.log(newdata);
+    return await firestore().collection('DonationData').doc(answers.documentId).collection('Answers').doc(answers.answersId).update(newdata)
+}
+
 /**
  * get all donated sessions by userId
  */
@@ -235,7 +240,13 @@ export const saveAnswersToFirebase = async (sessionId, userId, userEmail, sessio
             answersId = data._documentPath._parts[1]
         })
     }
+
     await firestore().collection("DonationData").doc(answersId).collection('Answers').add(finalData)
+
+    findalData = { answer: answers, date: date, session: sessionNum, sessionId: sessionId, userId: userId}
+    // console.log(finalData);
+    // await firestore().collection("AllDonationData").add(finalData)
+
 }
 
 

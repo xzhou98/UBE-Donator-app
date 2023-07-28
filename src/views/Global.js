@@ -70,7 +70,7 @@ const skipQuestionsById = (curId, nextId) => {
     }
 }
 
-const saveData = (sessionId, userId, userEmail, sessionNum) => {
+const saveData = async (sessionId, userId, userEmail, sessionNum) => {
     let answerFilter = []
     answers.forEach(element => {
         if(element.isTrueAnswer){
@@ -79,7 +79,7 @@ const saveData = (sessionId, userId, userEmail, sessionNum) => {
         }
     });
     try {
-        saveAnswersToFirebase(sessionId, userId, userEmail, sessionNum, answerFilter)
+        await saveAnswersToFirebase(sessionId, userId, userEmail, sessionNum, answerFilter)
     } catch (error) {
         console.log(error);
     }
