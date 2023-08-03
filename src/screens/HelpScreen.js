@@ -7,8 +7,8 @@ const HelpScreen = () => {
     <View style={{ padding: '3%'}}>
       <View style={{ alignItems: "center"}}>
       </View>
-      <Text style={styles.basetext}>UBE is an Artificial Intelligent (AI) Robert that can perform some basic tasks through users voice or text input.</Text>
-      <Text style={styles.basetext}>Below are some basic commends that Ube embeds:</Text>
+      <Text style={styles.basetext}>UBE is an Artificial Intelligent (AI) Robot that can perform some basic tasks through users voice or text input.</Text>
+      <Text style={styles.basetext}>Below are some basic buttons that Ube embeds:</Text>
       <View>
         <Text style={styles.boldtext}>  Skip: <Text style={styles.basetext}>{"("}this question{")"} </Text></Text>
         <Text style={styles.boldtext}>  Back: <Text style={styles.basetext}>{"("}to the last question{")"} </Text></Text>

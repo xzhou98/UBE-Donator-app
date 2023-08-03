@@ -121,7 +121,7 @@ const DonationScreen = () => {
   };
 
   const restartSession = () => {
-    setWellnessCheckWindow(false)
+    setWellnessCheckWindow(false);
     setContactUsScreen(false);
     setCurrentInput('');
     setCurrentOption();
@@ -199,7 +199,7 @@ const DonationScreen = () => {
     } else
       Alert.alert(
         'Skip',
-        'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.',
+        'Skipping this question will end the session - are you sure you want to proceed?',
         [{text: 'Cancel', tyle: 'cancel'}],
       );
   };
@@ -214,7 +214,7 @@ const DonationScreen = () => {
     currentQuestionId,
   ) => {
     try {
-       await saveData(sessionId, userId, userEmail, sessionNum);
+      await saveData(sessionId, userId, userEmail, sessionNum);
     } catch (error) {
       console.log(error);
     }
@@ -249,7 +249,6 @@ const DonationScreen = () => {
             backgroundColor: '#f2f5f8',
             height: '100%',
           }}>
-
           <FlatList
             ref={flatListRef}
             data={answers}
@@ -316,7 +315,7 @@ const DonationScreen = () => {
                 {index == answers.length - 1 ? (
                   <View>
                     {/* random wellness check */}
-                    {wellnessCheck < 99 && currentQuestion.id > 3 ? (
+                    {wellnessCheck < 15 && currentQuestion.id > 3 ? (
                       <View>
                         <Text style={[styles.leftMessage]}>
                           Thank you. I appreciate your continued participation.
@@ -346,12 +345,12 @@ const DonationScreen = () => {
                           </Text>
                         </TouchableOpacity>
                         {wellnessCheckWindow ? (
-                          <View style={{padding: '10%', }}>
+                          <View style={{padding: '10%'}}>
                             <ContactUsScreen />
                             <View
                               style={{
                                 justifyContent: 'center',
-                                marginHorizontal:'30%',
+                                marginHorizontal: '30%',
                                 marginVertical: 10,
                                 borderRadius: 7,
                                 height: 40,
@@ -378,7 +377,7 @@ const DonationScreen = () => {
                             <View
                               style={{
                                 justifyContent: 'center',
-                                marginHorizontal:'30%',
+                                marginHorizontal: '30%',
                                 marginVertical: 10,
                                 borderRadius: 7,
                                 height: 40,
@@ -386,8 +385,8 @@ const DonationScreen = () => {
                               }}>
                               <TouchableOpacity
                                 onPress={() => {
-                                  setWellnessCheck(100)
-                                  setWellnessCheckWindow(false)
+                                  setWellnessCheck(100);
+                                  setWellnessCheckWindow(false);
                                 }}>
                                 <Text style={[styles.Restart]}> continue</Text>
                               </TouchableOpacity>
@@ -1016,7 +1015,7 @@ const DonationScreen = () => {
                       ) {
                         Alert.alert(
                           'Skip',
-                          'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.',
+                          'Skipping this question will end the session - are you sure you want to proceed?',
                           [{text: 'Cancel', tyle: 'cancel'}],
                         );
                       } else {
@@ -1042,7 +1041,7 @@ const DonationScreen = () => {
                           } else {
                             Alert.alert(
                               'Skip',
-                              'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.',
+                              'Skipping this question will end the session - are you sure you want to proceed?',
                               [{text: 'Cancel', tyle: 'cancel'}],
                             );
                             setShortcut(!shortcut);
@@ -1050,7 +1049,7 @@ const DonationScreen = () => {
                         } else {
                           Alert.alert(
                             'Skip',
-                            'Sorry, this question CANNOT be skipped. The response is necessary to proceed. Thank you.',
+                            'Skipping this question will end the session - are you sure you want to proceed?',
                             [{text: 'Cancel', tyle: 'cancel'}],
                           );
                           setShortcut(!shortcut);
