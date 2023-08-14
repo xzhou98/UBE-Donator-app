@@ -1,17 +1,28 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, StyleSheet, Alert, TouchableOpacity, FlatList } from 'react-native'
+import React, {useEffect, useState, useRef} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { getUserInfoByEmail, getAllQuestions, getAllSessions, getAllSessionsByUserId } from '../utils/database';
+import {
+  getUserInfoByEmail,
+  getAllQuestions,
+  getAllSessions,
+  getAllSessionsByUserId,
+} from '../utils/database';
 // import { EditScreen } from '../screens';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { createStackNavigator } from '@react-navigation/stack';
-import { ReviewScreen, EditScreen, DonationScreen} from '../screens';
+import {createStackNavigator} from '@react-navigation/stack';
+import {ReviewScreen, EditScreen, DonationScreen} from '../screens';
+import {ScrollView} from 'react-native-gesture-handler';
 // import { showNotification, handle5SecNotification, handleCancel, handleScheduleNotification } from '../views/notification.android'
 // import DatePicker from 'react-native-date-picker';
 // import moment from 'moment';
 // import Dialog from "react-native-dialog";
-
-
 
 const HomeScreen = ({navigation}) => {
   const [user, setUser] = useState();
@@ -23,9 +34,7 @@ const HomeScreen = ({navigation}) => {
   // const [answerId, setAnswersId] = useState();
   // const [allAnswers, setAllAnswers] = useState();
 
-
   const Stack = createStackNavigator();
-
 
   const onAuthStateChanged = async user => {
     try {
@@ -42,7 +51,6 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
@@ -56,52 +64,73 @@ const HomeScreen = ({navigation}) => {
     //   <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
     //   <Stack.Screen name="EditScreen" component={EditScreen} />
     // </Stack.Navigator>
-    <View style={styles.container}>
-      <Text style={styles.mainTitle}>Welcome back to UBE</Text>
-      <Text style={styles.secondTitle}>Before you begin data donation, please proceed to the Help section.</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() =>{navigation.navigate('Help')}}>
-          <Text style={styles.buttonText}>Help Screen</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.secondTitle}>Please start the session, when you feel comfortable.</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() =>{navigation.navigate('Donation')}}>
-          <Text style={styles.buttonText}>Start donating</Text>
-        </TouchableOpacity>
-      </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.mainTitle}>Welcome back to UBE</Text>
+        <Text style={styles.secondTitle}>
+          Before you begin data donation, please proceed to the Help section.
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('Help');
+            }}>
+            <Text style={styles.buttonText}>Help Screen</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.secondTitle}>
+          Please start the session, when you feel comfortable.
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('Donation');
+            }}>
+            <Text style={styles.buttonText}>Start donating</Text>
+          </TouchableOpacity>
+        </View>
 
-      <Text style={styles.secondTitle}>If you want to review your donation data, please navigate to the review Screen.</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() =>{navigation.navigate('Review')}}>
-          <Text style={styles.buttonText}>Review</Text>
-        </TouchableOpacity>
+        <Text style={styles.secondTitle}>
+          If you want to review your donation data, please navigate to the
+          review Screen.
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('Review');
+            }}>
+            <Text style={styles.buttonText}>Review</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   ) : (
     <View style={[styles.container, styles.center]}>
       <Text style={styles.title}>Please login first</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  mainTitle:{
+  mainTitle: {
     padding: 30,
-    fontSize:28,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#455d60'
+    color: '#455d60',
   },
-  secondTitle:{
-    marginHorizontal:'5%',
-    fontSize:18,
-    color: '#838f91'
+  secondTitle: {
+    marginHorizontal: '5%',
+    fontSize: 15,
+    color: '#838f91',
   },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f2f5f8'
+    backgroundColor: '#f2f5f8',
   },
   buttonContainer: {
     margin: 20,
@@ -109,13 +138,13 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#7db1b7',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 6,
   },
   buttonText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 15,
   },
   title: {
     fontSize: 20,
@@ -124,8 +153,6 @@ const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',
   },
-})
-
-
+});
 
 export default HomeScreen;

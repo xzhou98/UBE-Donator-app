@@ -1,15 +1,26 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, StyleSheet, Alert, TouchableOpacity, FlatList } from 'react-native'
+import React, {useEffect, useState, useRef} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { getUserInfoByEmail, getAllQuestions, getAllSessions, getAllSessionsByUserId } from '../utils/database';
+import {
+  getUserInfoByEmail,
+  getAllQuestions,
+  getAllSessions,
+  getAllSessionsByUserId,
+} from '../utils/database';
 // import { showNotification, handle5SecNotification, handleCancel, handleScheduleNotification } from '../views/notification.android'
 // import DatePicker from 'react-native-date-picker';
 // import moment from 'moment';
 // import Dialog from "react-native-dialog";
 
-
-
-const ReviewScreen = ({ navigation }) => {
+const ReviewScreen = ({navigation}) => {
   const [user, setUser] = useState();
   const [refresh, setRefresh] = useState(false);
   const [render, setRender] = useState(false);
@@ -24,10 +35,10 @@ const ReviewScreen = ({ navigation }) => {
       } else {
         let userInfo = await getUserInfoByEmail(user.email);
         setUser(userInfo);
-        let allSessions = await getAllSessions(userInfo.id)
+        let allSessions = await getAllSessions(userInfo.id);
         setSessions(allSessions);
-        let allAnswers = await getAllSessionsByUserId(userInfo.id)
-        setAllAnswers(allAnswers)
+        let allAnswers = await getAllSessionsByUserId(userInfo.id);
+        setAllAnswers(allAnswers);
 
         setRender(true);
       }
@@ -38,106 +49,143 @@ const ReviewScreen = ({ navigation }) => {
 
   const type = (index, item) => {
     if (item.dateType == 0) {
-      return (<View style={styles.session}>
-        <Text style={styles.bold}>
-          Session {index + 1}
-        </Text>
-        <Text style={styles.slim}>        {item.startDate} to {item.endDate}</Text>
-      </View>)
+      return (
+        <View style={styles.session}>
+          <Text style={styles.bold}>Session {index + 1}</Text>
+          <Text style={styles.slim}>
+            {' '}
+            {item.startDate} to {item.endDate}
+          </Text>
+        </View>
+      );
+    } else if (item.dateType == 1) {
+      return (
+        <View style={styles.session1}>
+          <Text style={styles.bold}>Session {index + 1}</Text>
+          <Text style={styles.slim}>
+            {' '}
+            {item.startDate} to {item.endDate}
+          </Text>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.session2}>
+          <Text style={styles.bold}>Session {index + 1}</Text>
+          <Text style={styles.slim}>
+            {' '}
+            {item.startDate} to {item.endDate}
+          </Text>
+        </View>
+      );
     }
-    else if (item.dateType == 1) {
-      return (<View style={styles.session1}>
-        <Text style={styles.bold}>
-          Session {index + 1}
-        </Text>
-        <Text style={styles.slim}>        {item.startDate} to {item.endDate}</Text>
-      </View>)
-    }
-    else {
-      return (<View style={styles.session2}>
-        <Text style={styles.bold}>
-          Session {index + 1}
-        </Text>
-        <Text style={styles.slim}>        {item.startDate} to {item.endDate}</Text>
-      </View>)
-    }
-  }
+  };
 
   useEffect(() => {
     const focusHandler = navigation.addListener('focus', () => {
       const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-      return subscriber
+      return subscriber;
     });
     // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     // return subscriber; // unsubscribe on unmount
   }, [refresh, navigation]);
 
   return render ? (
-    <View style={{ alignItems: 'center', }}>
+    <View style={{alignItems: 'center'}}>
+      {sessions.length == 0 ? (
+        <View>
+          <Text
+            style={{
+              fontSize: 20,
+              color: 'black',
+              fontWeight: 'bold',
+              marginTop: '20%',
+            }}>
+            Please start your first donation here
+          </Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#7db1b7',
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                borderRadius: 7,
+              }}
+              onPress={() => {
+                navigation.navigate('Donation');
+              }}>
+              <Text style={styles.buttonText}>Start donating</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
+        <></>
+      )}
       <FlatList
         ref={flatListRef}
         data={sessions}
         onContentSizeChange={() => flatListRef.current.scrollToEnd()}
         showsVerticalScrollIndicator={true}
-        renderItem={({ item, index }) => (
-          <View key={index} style={{ flexDirection: 'column', }}>
-            <View style={{ alignItems: 'center' }}>
+        renderItem={({item, index}) => (
+          <View key={index} style={{flexDirection: 'column'}}>
+            <View style={{alignItems: 'center'}}>
               {type(index, item)}
               {allAnswers[index].map((element, index) => {
                 if (element.sessionId == item.id)
-                  return (<View key={index} style={styles.answer}>
-                    <View style={{ flexDirection: 'column', flex: 3 }}>
-                      <Text style={styles.answerTitle}>{index + 1}st submission</Text>
-                      <Text style={styles.answerDate}>{element.date}</Text>
-                    </View>
-                    <View style={{ flex: 2, alignItems: 'center', justifyContent: 'center' }}>
-                      {/* <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(element.id); setSessionId(item.id) }}> */}
-                      <TouchableOpacity onPress={() => { navigation.navigate('EditScreen', { answerId: element.id, sessionId: item.id }) }}>
-                        {/* <TouchableOpacity onPress={() => { console.log(element.id); console.log(item.id); }}> */}
-                        <Text style={styles.button}>
-                          Review
+                  return (
+                    <View key={index} style={styles.answer}>
+                      <View style={{flexDirection: 'column', flex: 3}}>
+                        <Text style={styles.answerTitle}>
+                          {index + 1}st submission
                         </Text>
-                      </TouchableOpacity>
+                        <Text style={styles.answerDate}>{element.date}</Text>
+                      </View>
+                      <View
+                        style={{
+                          flex: 2,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        {/* <TouchableOpacity onPress={() => { setControler(!controler); setAnswersId(element.id); setSessionId(item.id) }}> */}
+                        <TouchableOpacity
+                          onPress={() => {
+                            navigation.navigate('EditScreen', {
+                              answerId: element.id,
+                              sessionId: item.id,
+                            });
+                          }}>
+                          {/* <TouchableOpacity onPress={() => { console.log(element.id); console.log(item.id); }}> */}
+                          <Text style={styles.button}>Review</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                  </View>)
+                  );
               })}
             </View>
           </View>
         )}
       />
-    </View >
-  ) : (<View style={{ alignItems: "center" }}>
-    <Text style={styles.title}>Please login first</Text>
-  </View>)
-}
+    </View>
+  ) : (
+    <View style={{alignItems: 'center'}}>
+      <Text style={styles.title}>
+        Loarding. If screen is stuck, please try to go to another screen and
+        come back
+      </Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   title: {
-    color: "#161924",
-    fontSize: 22,
-    fontWeight: "bold",
-  },
-  back: {
-    color: "#161924",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  basetext: {
-    color: "#161924",
-    fontSize: 16,
-    fontWeight: "400",
-    paddingTop: 10,
-  },
-  boldtext: {
-    color: "#161924",
-    fontSize: 16,
-    fontWeight: "bold",
-    paddingTop: 15,
+    color: '#161924',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
   answer: {
     width: '80%',
     height: 65,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 5,
@@ -146,12 +194,10 @@ const styles = StyleSheet.create({
     shadowRadius: 6.27,
     elevation: 10,
 
-
     borderRadius: 7,
     marginTop: 10,
     flexDirection: 'row',
     backgroundColor: '#7BB2BA',
-
   },
   answerTitle: {
     marginTop: 10,
@@ -169,7 +215,7 @@ const styles = StyleSheet.create({
   session: {
     height: 45,
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 5,
@@ -186,7 +232,7 @@ const styles = StyleSheet.create({
   session1: {
     height: 45,
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 5,
@@ -203,7 +249,7 @@ const styles = StyleSheet.create({
   session2: {
     height: 45,
 
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 5,
@@ -231,7 +277,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   button: {
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 5,
@@ -251,7 +297,14 @@ const styles = StyleSheet.create({
     height: 40,
     width: 70,
   },
-})
-
+  buttonContainer: {
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 15,
+  },
+});
 
 export default ReviewScreen;
