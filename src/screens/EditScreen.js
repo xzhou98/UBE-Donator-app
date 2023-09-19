@@ -11,6 +11,7 @@ import {
   Button,
   Modal,
   ScrollView,
+  TextInput,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {
@@ -37,6 +38,7 @@ const EditScreen = ({route, navigation}) => {
   const [recall, setRecall] = useState(true);
   const [originalId, setOriginalId] = useState();
   const [currentAnswerId, setCurrentAnswerId] = useState();
+  const [textInput, setTextInput] = useState();
 
   const flatListRef = useRef();
 
@@ -155,7 +157,25 @@ const EditScreen = ({route, navigation}) => {
           );
         }
         setRefresh(!refresh);
+      } else if (question.type == 2) {
+      } else if (question.type == 3) {
+        Alert.alert(
+          'Notification',
+          'Are you sure you want to change your answer?',
+          [
+            {
+              text: 'Confirm',
+              onPress: () => {
+                newAnswer.answer[currentAnswerId].answer = [textInput];
+                updateAnswer(newAnswer);
+                setRecall(true);
+              },
+            },
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
       }
+      setRefresh(!refresh);
     } catch (error) {
       console.log(error);
     }
@@ -215,23 +235,36 @@ const EditScreen = ({route, navigation}) => {
             <View>
               {/* iterate question and answers */}
               <View style={{flexDirection: 'row'}}>
-                <Text style={styles.leftOption}>
-                  {getQuestionById(item.questionId).description}
-                </Text>
+                <View style={{flex: 2}}>
+                  <Text style={styles.leftOption}>
+                    {getQuestionById(item.questionId).description}
+                  </Text>
+                  {/* <Text style={styles.leftNote}>
+                  {getQuestionById(item.questionId).note}
+                </Text> */}
+                </View>
                 {index > 1 ? (
                   <View
                     style={{
                       flex: 1,
-                      justifyContent: 'center',
+                      // justifyContent: 'center',
+                      marginTop: 25,
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity
                       onPress={() => {
-                        setSubWindow(true);
                         let q = getQuestionById(item.questionId);
                         setQuestion(q);
                         setCurrentAnswer(item.answer, q);
                         setCurrentAnswerId(index);
+                        if (questions[item.questionId].type == 3) {
+                          let text = '';
+                          item.answer.forEach(element => {
+                            text += element + '\n';
+                          });
+                          setTextInput(text);
+                        }
+                        setSubWindow(true);
                       }}>
                       <View style={styles.buttonContainer}>
                         <Text style={styles.editButton}>Edit</Text>
@@ -282,7 +315,7 @@ const EditScreen = ({route, navigation}) => {
         />
       </SafeAreaView>
 
-      {/* edit interface */}
+      {/* edit window */}
       <Modal transparent={true} visible={subWindow}>
         <View style={{backgroundColor: '#000000aa', flex: 1}}>
           <View
@@ -349,6 +382,51 @@ const EditScreen = ({route, navigation}) => {
                         </View>
                       );
                     })}
+                  </View>
+                ) : (
+                  <></>
+                )}
+
+                {question.type == 2 ? (
+                  <View style={{marginTop: 10, height: '40%'}}>
+                    {question.option.map((option, index) => {
+                      return (
+                        <View key={index} style={{marginTop: 10}}>
+                          <Button
+                            onPress={() => {
+                              let temp = answer;
+                              for (let i = 0; i < temp.length; i++) {
+                                if (i == index) temp[i] = !temp[i];
+                              }
+                              setAnswer(temp);
+                              setRefresh(!refresh);
+                            }}
+                            color={answer[index] ? '#95ec69' : '#aed4d9'}
+                            title={option}
+                          />
+                        </View>
+                      );
+                    })}
+                  </View>
+                ) : (
+                  <></>
+                )}
+
+                {question.type == 3 ? (
+                  <View style={{marginTop: 10, height: '40%'}}>
+                    <TextInput
+                      multiline={true}
+                      value={textInput}
+                      style={{
+                        flex: 9,
+                        borderRadius: 5,
+                        fontSize: 20,
+                        borderWidth: 0.5,
+                      }}
+                      onChangeText={text => {
+                        setTextInput(text);
+                      }}
+                    />
                   </View>
                 ) : (
                   <></>
@@ -422,7 +500,6 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   leftOption: {
-    flex: 2,
     fontSize: 16,
     color: 'black',
     padding: 10,
@@ -432,7 +509,15 @@ const styles = StyleSheet.create({
     marginTop: 15,
     backgroundColor: '#aed4d9',
   },
-
+  leftNote: {
+    fontSize: 16,
+    color: '#3a3b3a',
+    // marginRight: '30%',
+    marginLeft: '3%',
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    fontStyle: 'italic',
+  },
   rightImage: {
     marginLeft: '50%',
     marginRight: '3%',

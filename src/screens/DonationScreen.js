@@ -12,6 +12,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Button,
 } from 'react-native';
 import moment from 'moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -38,7 +39,7 @@ import PhotoEditor from 'react-native-photo-editor';
 import firestore from '@react-native-firebase/firestore';
 import {ContactUsScreen} from '../screens';
 
-const DonationScreen = () => {
+const DonationScreen = ({route, navigation}) => {
   const [render, setRender] = useState(false);
   const [user, setUser] = useState();
   const [questions, setQuestions] = useState();
@@ -59,6 +60,7 @@ const DonationScreen = () => {
   const [image_answer, setImage_answer] = useState();
   const flatListRef = useRef();
   const [wellnessCheck, setWellnessCheck] = useState();
+  const [skip, setSkip] = useState(false);
 
   /**
    * get user info by user email that got from firebase Auth
@@ -92,7 +94,10 @@ const DonationScreen = () => {
         let imageList = [];
 
         for (let i = 0; i < allAnswers.length; i++) {
-          if (allAnswers[i].image != undefined) {
+          if (
+            allAnswers[i].image != undefined &&
+            allAnswers[i].image.length > 0
+          ) {
             let temp = JSON.parse(JSON.stringify(allAnswers[i].image));
             imageList.push(temp);
           } else imageList.push([]);
@@ -136,6 +141,7 @@ const DonationScreen = () => {
   const restartSession = () => {
     setContactUsScreen(false);
     setCurrentInput('');
+    setImageUrl([]);
     setCurrentOption();
     removeAll();
     addAnswers({
@@ -148,6 +154,8 @@ const DonationScreen = () => {
     setReload(true);
     setRefresh(!refresh);
     if (shortcut) setShortcut(!shortcut);
+    setWellnessCheck(false);
+    setSkip(false);
   };
 
   const forceAnswer = item => {
@@ -194,6 +202,7 @@ const DonationScreen = () => {
     setReload(true);
     setRefresh(!refresh);
     if (shortcut) setShortcut(!shortcut);
+    setSkip(false);
   };
 
   const skipQuestion = currentQuestion => {
@@ -213,6 +222,7 @@ const DonationScreen = () => {
       setReload(true);
       setRefresh(!refresh);
       setImageUrl([]);
+      setSkip(false);
     } else
       Alert.alert(
         'Skip',
@@ -220,7 +230,8 @@ const DonationScreen = () => {
         [
           {
             text: 'End Session',
-            onPress: () => restartSession(),
+            // onPress: () => restartSession(),
+            onPress: () => setSkip(true),
           },
           {text: 'Cancel', tyle: 'cancel'},
         ],
@@ -257,9 +268,17 @@ const DonationScreen = () => {
 
   return render ? (
     sessionId == null || sessionId == undefined ? (
-      <Text>
-        The next donation session will open soon.
-      </Text>
+      <View>
+        <Text>The next donation session will open soon.</Text>
+        <Button
+          onPress={() => {
+            setRender(false);
+            setReload(true);
+            setRefresh(!refresh);
+          }}
+          title="Refresh"
+        />
+      </View>
     ) : (
       <View>
         <SafeAreaView
@@ -358,420 +377,14 @@ const DonationScreen = () => {
                         <></>
                       )}
 
-                      {/* multiple choice question */}
-                      {currentQuestion.type == 0 ? (
-                        currentQuestion.option.map((item, index) => {
-                          return (
-                            <TouchableOpacity
-                              key={index}
-                              onPress={() => {
-                                forceAnswer(item);
-                              }}>
-                              <Text key={index} style={[styles.leftOption]}>
-                                {item.option}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        })
-                      ) : (
-                        <></>
-                      )}
-
-                      {/* multiple answers */}
-                      {currentQuestion.type == 1 ? (
-                        <View style={[styles.leftMCOption]}>
-                          <Text
-                            style={{
-                              marginLeft: '3%',
-                              fontSize: 14,
-                              fontStyle: 'italic',
-                            }}>
-                            Please select all that apply:
+                      {/* Display ContactUsScreen */}
+                      {skip ? (
+                        <View>
+                          <Text style={[styles.leftMessage]}>
+                            Thank you so much for your participation.
                           </Text>
-                          {currentQuestion.option.map((item, index) => {
-                            return (
-                              <TouchableOpacity
-                                style={{
-                                  flexDirection: 'row',
-                                  alignItems: 'center',
-                                }}
-                                key={index}
-                                onPress={() => {
-                                  if (
-                                    currentOption == null ||
-                                    currentOption.length == 0
-                                  ) {
-                                    let temp = new Array(
-                                      currentQuestion.option.length,
-                                    ).fill('');
-                                    temp[index] = item;
-                                    setCurrentOption(temp);
-                                  } else {
-                                    let temp = currentOption;
-                                    if (temp[index].length > 0) {
-                                      temp[index] = '';
-                                      setCurrentOption(temp);
-                                    } else {
-                                      temp[index] = item;
-                                      setCurrentOption(temp);
-                                    }
-                                  }
-                                  setReload(true);
-                                  setRefresh(!refresh);
-                                }}>
-                                {currentOption != null &&
-                                currentOption[index].length > 0 ? (
-                                  <Text
-                                    style={{
-                                      fontSize: 16,
-                                      width: '100%',
-                                      marginVertical: 2,
-                                      color: 'black',
-                                      padding: 8,
-                                      borderRadius: 7,
-                                      backgroundColor: '#c7ddff',
-                                    }}
-                                    key={index}>
-                                    {index + 1}. {item}
-                                  </Text>
-                                ) : (
-                                  <Text
-                                    style={{
-                                      fontSize: 16,
-                                      width: '100%',
-                                      marginVertical: 2,
-                                      color: 'black',
-                                      padding: 8,
-                                      borderRadius: 7,
-                                      backgroundColor: '#aed4d9',
-                                    }}
-                                    key={index}>
-                                    {index + 1}. {item}
-                                  </Text>
-                                )}
-                              </TouchableOpacity>
-                            );
-                          })}
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              margin: 10,
-                            }}>
-                            <View style={{flex: 1}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  skipQuestion(currentQuestion);
-                                }}>
-                                <Text style={styles.skipNext}>Skip</Text>
-                              </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'flex-end'}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  if (currentOption != null) {
-                                    let answer = '';
-                                    for (
-                                      let i = 0;
-                                      i < currentOption.length;
-                                      i++
-                                    ) {
-                                      if (currentOption[i].length > 0) {
-                                        if (answer.length > 0)
-                                          answer =
-                                            answer + ',' + currentOption[i];
-                                        else answer = currentOption[i];
-                                      }
-                                    }
-                                    if (answer.length > 0) {
-                                      addAnswers({
-                                        isTrueAnswer: true,
-                                        answer: [answer],
-                                        image: [],
-                                        nextQuestionId:
-                                          currentQuestion.nextQuestionId,
-                                        questionId: currentQuestion.id,
-                                      });
-                                      setCurrentOption();
-                                      setCurrentInput('');
-                                      setReload(true);
-                                      setRefresh(!refresh);
-                                    } else {
-                                      Alert.alert(
-                                        'Hi, no option have been selected - are you sure you want to proceed?',
-                                      );
-                                    }
-                                  } else {
-                                    Alert.alert(
-                                      'Hi, no option have been selected - are you sure you want to proceed?',
-                                    );
-                                  }
-                                }}>
-                                <Text style={styles.skipNext}>Next</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      ) : (
-                        <></>
-                      )}
-
-                      {/* drop down */}
-                      {currentQuestion.type == 2 ? (
-                        <View style={[styles.leftMCOption]}>
-                          <Dropdown
-                            style={[styles.dropdown]}
-                            placeholderStyle={[styles.placeholderStyle]}
-                            selectedTextStyle={[styles.selectedTextStyle]}
-                            itemTextStyle={{color: 'black'}}
-                            iconStyle={[styles.iconStyle]}
-                            maxHeight={300}
-                            labelField="label"
-                            valueField="value"
-                            value={currentOption}
-                            data={currentQuestion.option.map(
-                              (element, index) => ({
-                                label: `${element}`,
-                                value: `${index}`,
-                              }),
-                            )}
-                            onChange={item => {
-                              setCurrentOption(item.value);
-                            }}
-                          />
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              margin: 10,
-                            }}>
-                            <View style={{flex: 1}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  skipQuestion(currentQuestion);
-                                }}>
-                                <Text style={styles.skipNext}>Skip</Text>
-                              </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'flex-end'}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  if (currentOption != null) {
-                                    addAnswers({
-                                      isTrueAnswer: true,
-                                      answer: [
-                                        currentQuestion.option[currentOption],
-                                      ],
-                                      image: [],
-                                      nextQuestionId:
-                                        currentQuestion.nextQuestionId,
-                                      questionId: currentQuestion.id,
-                                    });
-                                    setCurrentOption();
-                                    setCurrentInput('');
-                                    setReload(true);
-                                    setRefresh(!refresh);
-                                  } else {
-                                    Alert.alert(
-                                      'Hi, no option have been selected - are you sure you want to proceed?',
-                                    );
-                                  }
-                                }}>
-                                <Text style={styles.skipNext}>Next</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      ) : (
-                        <></>
-                      )}
-
-                      {/* textInput */}
-                      {currentQuestion.type == 3 ? (
-                        <View>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              marginLeft: '5%',
-                              marginRight: '30%',
-                              marginVertical: 20,
-                            }}>
-                            <View style={{flex: 1}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  // skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
-                                  // setCurrentInput("");
-                                  // setQId(-1);
-                                  // setRefresh(!refresh);
-                                  skipQuestion(currentQuestion);
-                                }}>
-                                <Text style={styles.skipNext}>Skip</Text>
-                              </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'flex-end'}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  if (getQId() == currentQuestion.id) {
-                                    setNextQuestionId(
-                                      currentQuestion.id,
-                                      currentQuestion.nextQuestionId,
-                                    );
-                                    setQId(-1);
-                                    setCurrentInput('');
-                                    setReload(true);
-                                    setRefresh(!refresh);
-                                  } else {
-                                    Alert.alert(
-                                      'Hi, nothing was typed. if you want to skip this question, press the Skip button please.',
-                                    );
-                                  }
-                                }}>
-                                <Text style={styles.skipNext}>Next</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      ) : (
-                        <></>
-                      )}
-
-                      {/* uploading image */}
-                      {currentQuestion.type == 4 ? (
-                        <View>
-                          {imageUrl.map((url, index) => {
-                            return (
-                              <View
-                                key={index}
-                                style={{
-                                  marginLeft: '5%',
-                                  marginRight: '50%',
-                                  marginVertical: 10,
-                                }}>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    setImage(`file://${imageUrl[index]}`);
-                                    setImageVisible(true);
-                                    // PhotoEditor.Edit({
-                                    //   path: `file://${imageUrl[index]}`,
-                                    //   // path: `${imageUrl[index]}`,
-                                    //   hiddenControls: ["share", "crop", "text"],
-                                    //   colors: ["#ff0000"],
-                                    //   onDone: (data) => {
-                                    //     let temp = imageUrl
-                                    //     temp[index] = data
-                                    //     setImageUrl(temp);
-                                    //     setRefresh(!refresh);
-                                    //   }
-                                    // });
-                                  }}>
-                                  <Image
-                                    source={{
-                                      uri: `file://${url}`,
-                                    }}
-                                    resizeMode={'cover'}
-                                    style={{
-                                      width: 150,
-                                      height: 150,
-                                      borderRadius: 5,
-                                    }}
-                                  />
-                                </TouchableOpacity>
-                              </View>
-                            );
-                          })}
-
-                          <TouchableOpacity
-                            style={{
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              marginTop: 10,
-                              borderRadius: 8,
-                              height: 40,
-                              marginRight: '30%',
-                              marginLeft: '5%',
-                              backgroundColor: COLORS.primary + '20',
-                            }}
-                            onPress={selectImage}>
-                            <Text
-                              style={{
-                                opacity: 0.5,
-                                color: COLORS.primary,
-                              }}>
-                              + add image
-                            </Text>
-                          </TouchableOpacity>
-
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              marginVertical: 10,
-                              marginRight: '30%',
-                              marginLeft: '5%',
-                            }}>
-                            <View style={{flex: 1}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  // skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
-                                  // setCurrentInput("");
-                                  // setImageUrl([]);
-                                  // setRefresh(!refresh);
-                                  skipQuestion(currentQuestion);
-                                }}>
-                                <Text style={styles.skipNext}>Skip</Text>
-                              </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'flex-end'}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  if (imageUrl.length > 0) {
-                                    addAnswers({
-                                      isTrueAnswer: true,
-                                      answer: [],
-                                      image: imageUrl,
-                                      nextQuestionId:
-                                        currentQuestion.nextQuestionId,
-                                      questionId: currentQuestion.id,
-                                    });
-                                    setCurrentInput('');
-                                    setImageUrl([]);
-                                    setReload(true);
-                                    setRender(false);
-                                    setRefresh(!refresh);
-                                  } else {
-                                    Alert.alert(
-                                      'Hi, nothing was uploaded. if you want to skip this question, press the Skip button please.',
-                                    );
-                                  }
-                                }}>
-                                <Text style={styles.skipNext}>Next</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      ) : (
-                        <></>
-                      )}
-
-                      {currentQuestion.type == 5 ? (
-                        <View style={{alignItems: 'center', marginTop: 10}}>
-                          {contactUsScreen ? (
-                            <View style={{width: '80%'}}>
-                              <ContactUsScreen></ContactUsScreen>
-                            </View>
-                          ) : (
-                            <></>
-                          )}
-
-                          <View
-                            style={{
-                              justifyContent: 'center',
-                              borderRadius: 7,
-                              height: 40,
-                              width: 110,
-                              backgroundColor: '#95ec69',
-                            }}>
+                          <ContactUsScreen />
+                          <View style={{alignItems: 'center'}}>
                             <TouchableOpacity
                               onPress={() => {
                                 Alert.alert(
@@ -786,243 +399,785 @@ const DonationScreen = () => {
                                   ],
                                 );
                               }}>
-                              <Text style={[styles.Restart]}> RESTART</Text>
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  borderRadius: 7,
+                                  height: 40,
+                                  width: 110,
+                                  backgroundColor: '#95ec69',
+                                }}>
+                                <Text style={[styles.Restart]}> RESTART</Text>
+                              </View>
                             </TouchableOpacity>
                           </View>
                         </View>
                       ) : (
-                        <></>
-                      )}
-
-                      {currentQuestion.type == 6 ? (
                         <View>
-                          <TouchableOpacity
-                            onPress={() => {
-                              Alert.alert(
-                                'Submit Donation',
-                                'Are you sure you want to sumit your donation data?',
-                                [
-                                  {
-                                    text: 'Confirm',
-                                    onPress: () =>
-                                      saveDatatoFirebase(
-                                        currentQuestion.option[0].option,
-                                        sessionId,
-                                        user.id,
-                                        user.email,
-                                        sessionNum,
-                                        currentQuestion.option[0]
-                                          .nextQuestionId,
-                                        '',
-                                      ),
-                                  },
-                                  {text: 'Cancel', style: 'cancel'},
-                                ],
+                          {/* multiple choice question */}
+                          {currentQuestion.type == 0 ? (
+                            currentQuestion.option.map((item, index) => {
+                              return (
+                                <TouchableOpacity
+                                  key={index}
+                                  onPress={() => {
+                                    forceAnswer(item);
+                                  }}>
+                                  <Text key={index} style={[styles.leftOption]}>
+                                    {item.option}
+                                  </Text>
+                                </TouchableOpacity>
                               );
-                            }}>
-                            <Text style={[styles.leftOption]}>
-                              {currentQuestion.option[0].option}
-                            </Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            onPress={() => {
-                              setContactUsScreen(true);
-                              removeAll();
-                              addAnswers({
-                                isTrueAnswer: false,
-                                answer: [],
-                                image: [],
-                                nextQuestionId:
-                                  currentQuestion.option[1].nextQuestionId,
-                                questionId: '',
-                              });
-                              setCurrentInput('');
-                              setReload(true);
-                              setRefresh(!refresh);
-                            }}>
-                            <Text style={[styles.leftOption]}>
-                              {currentQuestion.option[1].option}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      ) : (
-                        <></>
-                      )}
+                            })
+                          ) : (
+                            <></>
+                          )}
 
-                      {/* mark on image */}
-                      {currentQuestion.type == 7 ? (
-                        <View>
-                          {answers[index].image.map((url, index1) => {
-                            // console.log(image_answer[index][index1]);
-                            return (
-                              <TouchableOpacity
-                                key={index1}
-                                onPress={() => {
-                                  PhotoEditor.Edit({
-                                    path: `${url}`,
-                                    // path: `/storage/emulated/0/Download/sulthan-auliya-WNDXky02ds4-unsplash.jpg?1691506395948`,
-                                    hiddenControls: ['share', 'crop', 'text'],
-                                    colors: [
-                                      '#ff0000',
-                                      '#18d918',
-                                      '#000800',
-                                      '#f0e007',
-                                    ],
-                                    onDone: data => {
-                                      let temp = [];
-                                      temp = image_answer;
-                                      const NewPath = PhotoEditorNewPath(data);
-                                      temp[index][index1] = `${NewPath}`;
-                                      setImage_answer(temp);
-                                      setReload(false);
+                          {/* multiple answers */}
+                          {currentQuestion.type == 1 ? (
+                            <View style={[styles.leftMCOption]}>
+                              <Text
+                                style={{
+                                  marginLeft: '3%',
+                                  fontSize: 14,
+                                  fontStyle: 'italic',
+                                }}>
+                                Please select all that apply:
+                              </Text>
+                              {currentQuestion.option.map((item, index) => {
+                                return (
+                                  <TouchableOpacity
+                                    style={{
+                                      flexDirection: 'row',
+                                      alignItems: 'center',
+                                    }}
+                                    key={index}
+                                    onPress={() => {
+                                      if (
+                                        currentOption == null ||
+                                        currentOption.length == 0
+                                      ) {
+                                        let temp = new Array(
+                                          currentQuestion.option.length,
+                                        ).fill('');
+                                        temp[index] = item;
+                                        setCurrentOption(temp);
+                                      } else {
+                                        let temp = currentOption;
+                                        if (temp[index].length > 0) {
+                                          temp[index] = '';
+                                          setCurrentOption(temp);
+                                        } else {
+                                          temp[index] = item;
+                                          setCurrentOption(temp);
+                                        }
+                                      }
+                                      setReload(true);
                                       setRefresh(!refresh);
-
-                                      // let temp = [];
-                                      // if (imageUrl.length == 0)
-                                      //   temp =
-                                      //     answers[answers.length - 1].image;
-                                      // else temp = imageUrl;
-                                      // temp[index] = data;
-                                      setImageUrl(temp);
-                                      // setRefresh(!refresh);
-                                    },
-                                  });
+                                    }}>
+                                    {currentOption != null &&
+                                    currentOption[index].length > 0 ? (
+                                      <Text
+                                        style={{
+                                          fontSize: 16,
+                                          width: '100%',
+                                          marginVertical: 2,
+                                          color: 'black',
+                                          padding: 8,
+                                          borderRadius: 7,
+                                          backgroundColor: '#c7ddff',
+                                        }}
+                                        key={index}>
+                                        {index + 1}. {item}
+                                      </Text>
+                                    ) : (
+                                      <Text
+                                        style={{
+                                          fontSize: 16,
+                                          width: '100%',
+                                          marginVertical: 2,
+                                          color: 'black',
+                                          padding: 8,
+                                          borderRadius: 7,
+                                          backgroundColor: '#aed4d9',
+                                        }}
+                                        key={index}>
+                                        {index + 1}. {item}
+                                      </Text>
+                                    )}
+                                  </TouchableOpacity>
+                                );
+                              })}
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  margin: 10,
                                 }}>
-                                <Image
-                                  source={{
-                                    uri: `file://${image_answer[index][index1]}`,
-                                  }}
-                                  resizeMode={'cover'}
-                                  style={[styles.leftImage]}
-                                />
-                              </TouchableOpacity>
-                            );
-                          })}
-
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              marginVertical: 10,
-                              marginRight: '30%',
-                              marginLeft: '5%',
-                            }}>
-                            <View style={{flex: 1}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  skipQuestion(currentQuestion);
-                                }}>
-                                <Text style={styles.skipNext}>Skip</Text>
-                              </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 1, alignItems: 'flex-end'}}>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  addAnswers({
-                                    isTrueAnswer: true,
-                                    answer: [],
-                                    image: image_answer[index],
-                                    nextQuestionId:
-                                      currentQuestion.nextQuestionId,
-                                    questionId: currentQuestion.id,
-                                  });
-                                  setRender(false);
-                                  setCurrentInput('');
-                                  // setImageUrl([]);
-                                  setReload(true);
-                                  setRefresh(!refresh);
-                                  // if (imageUrl.length > 0) {
-                                  // addAnswers({
-                                  //   isTrueAnswer: true,
-                                  //   answer: [],
-                                  //   image: imageUrl,
-                                  //   nextQuestionId:
-                                  //     currentQuestion.nextQuestionId,
-                                  //   questionId: currentQuestion.id,
-                                  // });
-                                  // setCurrentInput('');
-                                  // setImageUrl([]);
-                                  // setReload(true);
-                                  // setRefresh(!refresh);
-                                  // } else {
-                                  //   Alert.alert(
-                                  //     '',
-                                  //     'You can edit your screenshots here.If you want to skip it, press the skip please.',
-                                  //   );
-                                  // }
-                                }}>
-                                <Text style={styles.skipNext}>Next</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      ) : (
-                        <></>
-                      )}
-
-                      {/* mark on image */}
-                      {currentQuestion.type == 8 ? (
-                        <View>
-                          {/* Wellness Check */}
-                          {wellnessCheck ? (
-                            <View
-                              style={{
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }}>
-                              <View style={{width: '80%'}}>
-                                <ContactUsScreen></ContactUsScreen>
+                                <View style={{flex: 1}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      skipQuestion(currentQuestion);
+                                    }}>
+                                    <Text style={styles.skipNext}>Skip</Text>
+                                  </TouchableOpacity>
+                                </View>
+                                <View style={{flex: 1, alignItems: 'flex-end'}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      if (currentOption != null) {
+                                        let answer = '';
+                                        for (
+                                          let i = 0;
+                                          i < currentOption.length;
+                                          i++
+                                        ) {
+                                          if (currentOption[i].length > 0) {
+                                            if (answer.length > 0)
+                                              answer =
+                                                answer + ',' + currentOption[i];
+                                            else answer = currentOption[i];
+                                          }
+                                        }
+                                        if (answer.length > 0) {
+                                          addAnswers({
+                                            isTrueAnswer: true,
+                                            answer: [answer],
+                                            image: [],
+                                            nextQuestionId:
+                                              currentQuestion.nextQuestionId,
+                                            questionId: currentQuestion.id,
+                                          });
+                                          setCurrentOption();
+                                          setCurrentInput('');
+                                          setReload(true);
+                                          setRefresh(!refresh);
+                                        } else {
+                                          Alert.alert(
+                                            'Hi, no option have been selected - are you sure you want to proceed?',
+                                          );
+                                        }
+                                      } else {
+                                        Alert.alert(
+                                          'Hi, no option have been selected - are you sure you want to proceed?',
+                                        );
+                                      }
+                                    }}>
+                                    <Text style={styles.skipNext}>Next</Text>
+                                  </TouchableOpacity>
+                                </View>
                               </View>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  setWellnessCheck(false);
-                                  forceAnswer({
-                                    nextQuestionId:
-                                      currentQuestion.option[0].nextQuestionId,
-                                    option: currentQuestion.option[0].option,
-                                  });
-                                }}>
-                                <Text style={[styles.leftOption]}>
-                                  Continue.
-                                </Text>
-                              </TouchableOpacity>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  setWellnessCheck(false);
-                                  restartWholeProcess()
-                                }}>
-                                <Text style={[styles.leftOption]}>
-                                  Would you want to end this session.
-                                </Text>
-                              </TouchableOpacity>
                             </View>
                           ) : (
+                            <></>
+                          )}
+
+                          {/* drop down */}
+                          {currentQuestion.type == 2 ? (
+                            <View style={[styles.leftMCOption]}>
+                              <Dropdown
+                                style={[styles.dropdown]}
+                                placeholderStyle={[styles.placeholderStyle]}
+                                selectedTextStyle={[styles.selectedTextStyle]}
+                                itemTextStyle={{color: 'black'}}
+                                iconStyle={[styles.iconStyle]}
+                                maxHeight={300}
+                                labelField="label"
+                                valueField="value"
+                                value={currentOption}
+                                data={currentQuestion.option.map(
+                                  (element, index) => ({
+                                    label: `${element}`,
+                                    value: `${index}`,
+                                  }),
+                                )}
+                                onChange={item => {
+                                  setCurrentOption(item.value);
+                                }}
+                              />
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  margin: 10,
+                                }}>
+                                <View style={{flex: 1}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      skipQuestion(currentQuestion);
+                                    }}>
+                                    <Text style={styles.skipNext}>Skip</Text>
+                                  </TouchableOpacity>
+                                </View>
+                                <View style={{flex: 1, alignItems: 'flex-end'}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      if (currentOption != null) {
+                                        addAnswers({
+                                          isTrueAnswer: true,
+                                          answer: [
+                                            currentQuestion.option[
+                                              currentOption
+                                            ],
+                                          ],
+                                          image: [],
+                                          nextQuestionId:
+                                            currentQuestion.nextQuestionId,
+                                          questionId: currentQuestion.id,
+                                        });
+                                        setCurrentOption();
+                                        setCurrentInput('');
+                                        setReload(true);
+                                        setRefresh(!refresh);
+                                      } else {
+                                        Alert.alert(
+                                          'Hi, no option have been selected - are you sure you want to proceed?',
+                                        );
+                                      }
+                                    }}>
+                                    <Text style={styles.skipNext}>Next</Text>
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                            </View>
+                          ) : (
+                            <></>
+                          )}
+
+                          {/* textInput */}
+                          {currentQuestion.type == 3 ? (
+                            <View>
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  marginLeft: '5%',
+                                  marginRight: '30%',
+                                  marginVertical: 20,
+                                }}>
+                                <View style={{flex: 1}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      // skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
+                                      // setCurrentInput("");
+                                      // setQId(-1);
+                                      // setRefresh(!refresh);
+                                      skipQuestion(currentQuestion);
+                                    }}>
+                                    <Text style={styles.skipNext}>Skip</Text>
+                                  </TouchableOpacity>
+                                </View>
+                                <View style={{flex: 1, alignItems: 'flex-end'}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      if (getQId() == currentQuestion.id) {
+                                        setNextQuestionId(
+                                          currentQuestion.id,
+                                          currentQuestion.nextQuestionId,
+                                        );
+                                        setQId(-1);
+                                        setCurrentInput('');
+                                        setReload(true);
+                                        setRefresh(!refresh);
+                                      } else {
+                                        Alert.alert(
+                                          'Hi, nothing was typed. if you want to skip this question, press the Skip button please.',
+                                        );
+                                      }
+                                    }}>
+                                    <Text style={styles.skipNext}>Next</Text>
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                            </View>
+                          ) : (
+                            <></>
+                          )}
+
+                          {/* uploading image */}
+                          {currentQuestion.type == 4 ? (
+                            <View>
+                              {imageUrl.map((url, index) => {
+                                return (
+                                  <View
+                                    key={index}
+                                    style={{
+                                      marginLeft: '5%',
+                                      marginRight: '50%',
+                                      marginVertical: 10,
+                                    }}>
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        setImage(`file://${imageUrl[index]}`);
+                                        setImageVisible(true);
+                                        // PhotoEditor.Edit({
+                                        //   path: `file://${imageUrl[index]}`,
+                                        //   // path: `${imageUrl[index]}`,
+                                        //   hiddenControls: ["share", "crop", "text"],
+                                        //   colors: ["#ff0000"],
+                                        //   onDone: (data) => {
+                                        //     let temp = imageUrl
+                                        //     temp[index] = data
+                                        //     setImageUrl(temp);
+                                        //     setRefresh(!refresh);
+                                        //   }
+                                        // });
+                                      }}>
+                                      <Image
+                                        source={{
+                                          uri: `file://${url}`,
+                                        }}
+                                        resizeMode={'cover'}
+                                        style={{
+                                          width: 150,
+                                          height: 150,
+                                          borderRadius: 5,
+                                        }}
+                                      />
+                                    </TouchableOpacity>
+                                  </View>
+                                );
+                              })}
+
+                              <TouchableOpacity
+                                style={{
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  marginTop: 10,
+                                  borderRadius: 8,
+                                  height: 40,
+                                  marginRight: '30%',
+                                  marginLeft: '5%',
+                                  backgroundColor: COLORS.primary + '20',
+                                }}
+                                onPress={selectImage}>
+                                <Text
+                                  style={{
+                                    opacity: 0.5,
+                                    color: COLORS.primary,
+                                  }}>
+                                  + add image
+                                </Text>
+                              </TouchableOpacity>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  marginVertical: 10,
+                                  marginRight: '30%',
+                                  marginLeft: '5%',
+                                }}>
+                                <View style={{flex: 1}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      // skipQuestionsById(currentQuestion.id, currentQuestion.nextQuestionId)
+                                      // setCurrentInput("");
+                                      // setImageUrl([]);
+                                      // setRefresh(!refresh);
+                                      skipQuestion(currentQuestion);
+                                    }}>
+                                    <Text style={styles.skipNext}>Skip</Text>
+                                  </TouchableOpacity>
+                                </View>
+                                <View style={{flex: 1, alignItems: 'flex-end'}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      if (imageUrl.length > 0) {
+                                        addAnswers({
+                                          isTrueAnswer: true,
+                                          answer: [],
+                                          image: imageUrl,
+                                          nextQuestionId:
+                                            currentQuestion.nextQuestionId,
+                                          questionId: currentQuestion.id,
+                                        });
+                                        setCurrentInput('');
+                                        setImageUrl([]);
+                                        setReload(true);
+                                        setRender(false);
+                                        setRefresh(!refresh);
+                                      } else {
+                                        Alert.alert(
+                                          'Hi, nothing was uploaded. if you want to skip this question, press the Skip button please.',
+                                        );
+                                      }
+                                    }}>
+                                    <Text style={styles.skipNext}>Next</Text>
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                            </View>
+                          ) : (
+                            <></>
+                          )}
+
+                          {currentQuestion.type == 5 ? (
+                            <View style={{alignItems: 'center', marginTop: 10}}>
+                              {contactUsScreen ? (
+                                <View style={{width: '80%'}}>
+                                  <ContactUsScreen></ContactUsScreen>
+                                </View>
+                              ) : (
+                                <></>
+                              )}
+
+                              <View
+                                style={{
+                                  justifyContent: 'center',
+                                  borderRadius: 7,
+                                  height: 40,
+                                  width: 110,
+                                  backgroundColor: '#95ec69',
+                                }}>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    Alert.alert(
+                                      'Restart Donation',
+                                      'Are you sure you want to restart this donation session? This will permanently delete all your responses so far and cannot be undone.',
+                                      [
+                                        {
+                                          text: 'Restart',
+                                          onPress: () => restartSession(),
+                                        },
+                                        {text: 'Cancel', style: 'cancel'},
+                                      ],
+                                    );
+                                  }}>
+                                  <Text style={[styles.Restart]}> RESTART</Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          ) : (
+                            <></>
+                          )}
+
+                          {currentQuestion.type == 6 ? (
                             <View>
                               <TouchableOpacity
                                 onPress={() => {
-                                  forceAnswer({
-                                    nextQuestionId:
-                                      currentQuestion.option[0].nextQuestionId,
-                                    option: currentQuestion.option[0].option,
-                                  });
+                                  Alert.alert(
+                                    'Submit Donation',
+                                    'Are you sure you want to sumit your donation data?',
+                                    [
+                                      {
+                                        text: 'Confirm',
+                                        onPress: () =>
+                                          saveDatatoFirebase(
+                                            currentQuestion.option[0].option,
+                                            sessionId,
+                                            user.id,
+                                            user.email,
+                                            sessionNum,
+                                            currentQuestion.option[0]
+                                              .nextQuestionId,
+                                            '',
+                                          ),
+                                      },
+                                      {text: 'Cancel', style: 'cancel'},
+                                    ],
+                                  );
                                 }}>
-                                <Text key={index} style={[styles.leftOption]}>
+                                <Text style={[styles.leftOption]}>
                                   {currentQuestion.option[0].option}
                                 </Text>
                               </TouchableOpacity>
                               <TouchableOpacity
                                 onPress={() => {
-                                  setWellnessCheck(true);
+                                  setContactUsScreen(true);
+                                  removeAll();
+                                  addAnswers({
+                                    isTrueAnswer: false,
+                                    answer: [],
+                                    image: [],
+                                    nextQuestionId:
+                                      currentQuestion.option[1].nextQuestionId,
+                                    questionId: '',
+                                  });
+                                  setCurrentInput('');
+                                  setReload(true);
+                                  setRefresh(!refresh);
                                 }}>
-                                <Text key={index} style={[styles.leftOption]}>
+                                <Text style={[styles.leftOption]}>
                                   {currentQuestion.option[1].option}
                                 </Text>
                               </TouchableOpacity>
                             </View>
+                          ) : (
+                            <></>
+                          )}
+
+                          {/* mark on image */}
+                          {currentQuestion.type == 7 ? (
+                            <View>
+                              {answers[index].image.map((url, index1) => {
+                                // console.log(image_answer[index][index1]);
+                                return (
+                                  <TouchableOpacity
+                                    key={index1}
+                                    onPress={() => {
+                                      PhotoEditor.Edit({
+                                        path: `${url}`,
+                                        // path: `/storage/emulated/0/Download/sulthan-auliya-WNDXky02ds4-unsplash.jpg?1691506395948`,
+                                        hiddenControls: [
+                                          'share',
+                                          'crop',
+                                          'text',
+                                        ],
+                                        colors: [
+                                          '#ff0000',
+                                          '#18d918',
+                                          '#000800',
+                                          '#f0e007',
+                                        ],
+                                        onDone: async data => {
+                                          try {
+                                            let temp = [];
+                                            temp = image_answer;
+                                            const NewPath =
+                                              await PhotoEditorNewPath(data);
+                                            temp[index][index1] = `${NewPath}`;
+                                            setImage_answer(temp);
+                                            setReload(false);
+                                            setRefresh(!refresh);
+                                            setImageUrl(temp[index]);
+                                          } catch (error) {
+                                            console.log(error);
+                                          }
+
+                                          // let temp = [];
+                                          // if (imageUrl.length == 0)
+                                          //   temp =
+                                          //     answers[answers.length - 1].image;
+                                          // else temp = imageUrl;
+                                          // temp[index] = data;
+                                          // setRefresh(!refresh);
+                                        },
+                                      });
+                                    }}>
+                                    <Image
+                                      source={{
+                                        uri: `file://${image_answer[index][index1]}`,
+                                      }}
+                                      resizeMode={'cover'}
+                                      style={[styles.leftImage]}
+                                    />
+                                  </TouchableOpacity>
+                                );
+                              })}
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  marginVertical: 10,
+                                  marginRight: '30%',
+                                  marginLeft: '5%',
+                                }}>
+                                <View style={{flex: 1}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      skipQuestion(currentQuestion);
+                                    }}>
+                                    <Text style={styles.skipNext}>Skip</Text>
+                                  </TouchableOpacity>
+                                </View>
+                                <View style={{flex: 1, alignItems: 'flex-end'}}>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      if (imageUrl.length > 0) {
+                                        addAnswers({
+                                          isTrueAnswer: true,
+                                          answer: [],
+                                          image: imageUrl,
+                                          nextQuestionId:
+                                            currentQuestion.nextQuestionId,
+                                          questionId: currentQuestion.id,
+                                        });
+                                      } else {
+                                        addAnswers({
+                                          isTrueAnswer: true,
+                                          answer: ['Skip'],
+                                          image: [],
+                                          nextQuestionId:
+                                            currentQuestion.nextQuestionId,
+                                          questionId: currentQuestion.id,
+                                        });
+                                      }
+                                      setRender(false);
+                                      setCurrentInput('');
+                                      setImageUrl([]);
+                                      setReload(true);
+                                      setRefresh(!refresh);
+
+                                      // if (imageUrl.length > 0) {
+                                      // addAnswers({
+                                      //   isTrueAnswer: true,
+                                      //   answer: [],
+                                      //   image: imageUrl,
+                                      //   nextQuestionId:
+                                      //     currentQuestion.nextQuestionId,
+                                      //   questionId: currentQuestion.id,
+                                      // });
+                                      // setCurrentInput('');
+                                      // setImageUrl([]);
+                                      // setReload(true);
+                                      // setRefresh(!refresh);
+                                      // } else {
+                                      //   Alert.alert(
+                                      //     '',
+                                      //     'You can edit your screenshots here.If you want to skip it, press the skip please.',
+                                      //   );
+                                      // }
+                                    }}>
+                                    <Text style={styles.skipNext}>Next</Text>
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                            </View>
+                          ) : (
+                            <></>
+                          )}
+
+                          {/* Wellness Check */}
+                          {currentQuestion.type == 8 ? (
+                            <View>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  navigation.navigate('ContactUs');
+                                }}>
+                                <Text style={[styles.leftNavigationLink]}>
+                                  Need to talk to someone? Head to contact
+                                  resources.
+                                </Text>
+                              </TouchableOpacity>
+
+                              {wellnessCheck ? (
+                                // <View
+                                //   style={{
+                                //     alignItems: 'center',
+                                //     justifyContent: 'center',
+                                //   }}>
+                                <View>
+                                  {/* <View style={{width: '90%'}}>
+                                <ContactUsScreen></ContactUsScreen>
+                              </View> */}
+                                  <Text style={[styles.leftMessage]}>
+                                    Thank you.
+                                  </Text>
+                                  <Text style={[styles.leftMessage]}>
+                                    If you're not feeling comfortable or ready
+                                    to continue, that's completely okay.
+                                  </Text>
+                                  <Text style={[styles.leftMessage]}>
+                                    Your progress will be saved, and you can
+                                    come back to the data donation process at a
+                                    later time when you're feeling more
+                                    comfortable.
+                                  </Text>
+                                  <Text style={[styles.leftMessage]}>
+                                    We want to make sure you're taking care of
+                                    yourself first and foremost.
+                                  </Text>
+                                  <Text style={[styles.leftMessage]}>
+                                    If you have any questions about the study,
+                                    please contact our Principal Investigator:
+                                  </Text>
+                                  <View style={{width: '90%'}}>
+                                    <ContactUsScreen></ContactUsScreen>
+                                  </View>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      // setWellnessCheck(false);
+                                      forceAnswer({
+                                        nextQuestionId:
+                                          currentQuestion.option[0]
+                                            .nextQuestionId,
+                                        option:
+                                          currentQuestion.option[0].option,
+                                      });
+                                      setWellnessCheck(false);
+                                    }}>
+                                    <Text style={[styles.leftOption]}>
+                                      I’m willing to continue.
+                                    </Text>
+                                  </TouchableOpacity>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      Alert.alert(
+                                        'Comfirm',
+                                        'It will delete your data and restart the whole process - are you sure you want to proceed?',
+                                        [
+                                          {
+                                            text: 'Yes',
+                                            onPress: () => {
+                                              // setWellnessCheck(false);
+                                              restartWholeProcess();
+                                            },
+                                          },
+                                          {text: 'Cancel', tyle: 'cancel'},
+                                        ],
+                                      );
+                                    }}>
+                                    <Text style={[styles.leftOption]}>
+                                      Would you want to end this session.
+                                    </Text>
+                                  </TouchableOpacity>
+                                </View>
+                              ) : (
+                                <View>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      forceAnswer({
+                                        nextQuestionId:
+                                          currentQuestion.option[0]
+                                            .nextQuestionId,
+                                        option:
+                                          currentQuestion.option[0].option,
+                                      });
+                                    }}>
+                                    <Text
+                                      key={index}
+                                      style={[styles.leftOption]}>
+                                      {currentQuestion.option[0].option}
+                                    </Text>
+                                  </TouchableOpacity>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      setWellnessCheck(true);
+                                    }}>
+                                    <Text
+                                      key={index}
+                                      style={[styles.leftOption]}>
+                                      {currentQuestion.option[1].option}
+                                    </Text>
+                                  </TouchableOpacity>
+                                  {/* <TouchableOpacity
+                                    onPress={() => {
+                                      navigation.navigate('ContactUs');
+                                    }}>
+                                    <Text
+                                      key={index}
+                                      style={{
+                                        fontSize: 16,
+                                        color: 'black',
+                                        padding: 10,
+                                        borderRadius: 7,
+                                        marginRight: '30%',
+                                        marginLeft: '5%',
+                                        marginTop: 15,
+                                        backgroundColor: '#54b6c7',
+                                      }}>
+                                      I would like to access support services
+                                    </Text>
+                                  </TouchableOpacity> */}
+                                </View>
+                              )}
+                            </View>
+                          ) : (
+                            <></>
                           )}
                         </View>
-                      ) : (
-                        <></>
                       )}
                     </View>
                   </View>
@@ -1068,7 +1223,8 @@ const DonationScreen = () => {
                           [
                             {
                               text: 'End Session',
-                              onPress: () => restartSession(),
+                              // onPress: () => restartSession(),
+                              onPress: () => setSkip(true),
                             },
                             {text: 'Cancel', tyle: 'cancel'},
                           ],
@@ -1083,6 +1239,7 @@ const DonationScreen = () => {
                             currentQuestion.forceAnswer == false
                           ) {
                             setCurrentInput('');
+                            setImageUrl([]);
                             setCurrentOption();
                             addAnswers({
                               isTrueAnswer: true,
@@ -1094,6 +1251,7 @@ const DonationScreen = () => {
                             setReload(true);
                             setRefresh(!refresh);
                             setShortcut(!shortcut);
+                            setSkip(false);
                           } else {
                             Alert.alert(
                               'Skip',
@@ -1101,7 +1259,8 @@ const DonationScreen = () => {
                               [
                                 {
                                   text: 'End Session',
-                                  onPress: () => restartSession(),
+                                  // onPress: () => restartSession(),
+                                  onPress: () => setSkip(true),
                                 },
                                 {text: 'Cancel', tyle: 'cancel'},
                               ],
@@ -1115,7 +1274,8 @@ const DonationScreen = () => {
                             [
                               {
                                 text: 'End Session',
-                                onPress: () => restartSession(),
+                                // onPress: () => restartSession(),
+                                onPress: () => setSkip(true),
                               },
                               {text: 'Cancel', tyle: 'cancel'},
                             ],
@@ -1143,6 +1303,9 @@ const DonationScreen = () => {
                       setReload(true);
                       setRefresh(!refresh);
                       setShortcut(!shortcut);
+                      setWellnessCheck(false);
+                      setImageUrl([]);
+                      setSkip(false);
                     }}>
                     <Text
                       style={{
@@ -1341,6 +1504,16 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 10,
     fontStyle: 'italic',
+  },
+  leftNavigationLink: {
+    fontSize: 16,
+    color: '#347aeb',
+    marginRight: '30%',
+    marginLeft: '3%',
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    fontStyle: 'italic',
+    textDecorationLine: 'underline',
   },
   rightImage: {
     marginLeft: '50%',

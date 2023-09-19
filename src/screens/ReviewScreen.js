@@ -6,6 +6,7 @@ import {
   Alert,
   TouchableOpacity,
   FlatList,
+  Button,
   ScrollView,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
@@ -27,6 +28,8 @@ const ReviewScreen = ({navigation}) => {
   const [sessions, setSessions] = useState(false);
   const [allAnswers, setAllAnswers] = useState();
   const flatListRef = useRef();
+  const [load, setLoad] = useState(true);
+
 
   const onAuthStateChanged = async user => {
     try {
@@ -40,6 +43,7 @@ const ReviewScreen = ({navigation}) => {
         let allAnswers = await getAllSessionsByUserId(userInfo.id);
         setAllAnswers(allAnswers);
 
+        setLoad(false)
         setRender(true);
       }
     } catch (error) {
@@ -86,6 +90,11 @@ const ReviewScreen = ({navigation}) => {
       const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
       return subscriber;
     });
+
+    if(load){
+      const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+      return subscriber;
+    }
     // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     // return subscriber; // unsubscribe on unmount
   }, [refresh, navigation]);
@@ -169,9 +178,12 @@ const ReviewScreen = ({navigation}) => {
   ) : (
     <View style={{alignItems: 'center'}}>
       <Text style={styles.title}>
-        Loarding. If screen is stuck, please try to go to another screen and
-        come back
+        Loading. If screen is stuck, please try to press the button below
       </Text>
+      <Button onPress={() => {
+        setRefresh(!refresh)
+        setLoad(true)
+      }} title='Refresh'/>
     </View>
   );
 };

@@ -32,7 +32,7 @@ const ContactUsScreen = () => {
 
       <View style={{marginHorizontal: '5%'}}>
         <Text style={[styles.basetext]}>
-          For Questions or Thoughts Regarding The Study Contact:
+        For questions about the study itself, please contact:
         </Text>
 
         <Text style={[styles.boldText]}>{`Dr. Douglas Zytko`}</Text>
@@ -40,6 +40,9 @@ const ContactUsScreen = () => {
           {`Assistant Professor \nDepartment of Computer Science and Engineering\nzytko@oakland.edu \n(609)-313-8009`}
         </Text>
 
+        <Text style={[styles.basetext]}>
+        If the study has brought about any thoughts that you would like to discuss with us, please contact:
+        </Text>
         <Text style={[styles.boldText]}>{`Dr. Kelly Berishaj`}</Text>
         <Text style={[styles.text]}>
           {`Special Instructor \nSchool of Nursing\nberishaj@oakland.edu \n(248) 364-8750`}
@@ -72,7 +75,7 @@ const ContactUsScreen = () => {
           <Text style={[styles.basetext]}>Sexual Assault:</Text>
           <MaterialIcons
             style={{color: 'black', flex: 1}}
-            name={categories[0] ? 'add' : 'remove'}
+            name={categories[0] ? 'remove' : 'add'}
             size={20}
           />
         </TouchableOpacity>
@@ -115,7 +118,7 @@ const ContactUsScreen = () => {
           <Text style={[styles.basetext]}>Mental Health:</Text>
           <MaterialIcons
             style={{color: 'black', flex: 1}}
-            name={categories[1] ? 'add' : 'remove'}
+            name={categories[1] ? 'remove' : 'add'}
             size={20}
           />
         </TouchableOpacity>
