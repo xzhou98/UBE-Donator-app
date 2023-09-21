@@ -1,28 +1,36 @@
 import React, {Component, useState} from 'react';
-import {Text, View, SafeAreaView, Alert} from 'react-native';
+import {Text, View, SafeAreaView, Alert, TouchableOpacity} from 'react-native';
 import FormButton from '../components/shared/FormButton';
 import FormInput from '../components/shared/FormInput';
 import {COLORS} from '../constants/theme';
 import {signUp} from '../utils/auth';
 import {createUser} from '../utils/database';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [statement, setStatement] = useState(true);
 
   const handleOnSubmit = async () => {
     if (email != '' && password != '' && confirmPassword != '') {
-      if (password == confirmPassword) {
-        try {
-          let success = await signUp(email, password);
-          if (success) await createUser(email);
-        } catch (error) {
-          console.log(error);
+      if (statement) {
+        if (password == confirmPassword) {
+          try {
+            // let success = await signUp(email, password);
+            // if (success) await createUser(email);
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          Alert.alert('password did not match');
         }
       } else {
-        Alert.alert('password did not match');
+        Alert.alert('Please agree with the statement below');
       }
+    } else {
+      Alert.alert('Email and password missing');
     }
   };
 
@@ -58,6 +66,7 @@ const SignUpScreen = ({navigation}) => {
 
       <View style={{paddingTop: 10, width: '90%'}}>
         {/* Email */}
+        <Text style={{color: 'black'}}>Email</Text>
         <FormInput
           // labelText="Email"
           placeholderText="Enter your email"
@@ -67,15 +76,17 @@ const SignUpScreen = ({navigation}) => {
         />
 
         {/* Password */}
+        <Text style={{color: 'black'}}>Password</Text>
         <FormInput
           // labelText="Password"
-          placeholderText="Enter your password"
+          placeholderText="Must contain at least 6 characters"
           onChangeText={value => setPassword(value)}
           value={password}
           secureTextEntry={true}
         />
 
         {/* Confirm Password */}
+        <Text style={{color: 'black'}}>Confirm Password</Text>
         <FormInput
           // labelText="Confirm Password"
           placeholderText="Enter your password again"
@@ -85,8 +96,47 @@ const SignUpScreen = ({navigation}) => {
         />
       </View>
 
-      <View style={{width: '85%', paddingTop: 60}}>
-        <FormButton labelText="Sign up" handleOnPress={handleOnSubmit} />
+      {/* <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingTop: 10,
+          width: '80%',
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            setStatement(!statement);
+          }}>
+          {statement ? (
+            <MaterialIcons
+              style={{color: 'black'}}
+              name="check-box"
+              size={20}
+            />
+          ) : (
+            <MaterialIcons
+              style={{color: 'black'}}
+              name="check-box-outline-blank"
+              size={20}
+            />
+          )}
+        </TouchableOpacity>
+        <Text style={{color: 'black', paddingLeft: 10}}>
+          I consent to Ube collecting, and using my data as described in the
+          Privacy Policy.{' '}
+        </Text>
+      </View> */}
+
+      <View style={{width: '85%', paddingTop: 30}}>
+        {statement ? (
+          <FormButton labelText="Sign up" handleOnPress={handleOnSubmit} />
+        ) : (
+          <FormButton
+            style={{backgroundColor: '#d1cbcb', borderColor: '#d1cbcb'}}
+            labelText="Sign up"
+            handleOnPress={handleOnSubmit}
+          />
+        )}
       </View>
       {/* Submit button */}
 

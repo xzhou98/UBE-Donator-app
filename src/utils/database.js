@@ -99,7 +99,6 @@ export const getAllQuestions = async () => {
 export const getAllSessions = async userId => {
   try {
     let answers = [];
-    let date = new Date();
     const allAnswers = await firestore().collection('Questions').get();
 
     await allAnswers.docs.forEach(async element => {
@@ -112,15 +111,15 @@ export const getAllSessions = async userId => {
       else type = 2;
       let a = {
         id: element.id,
+        num: element.data().session,
         endDate: element.data().endDate,
         startDate: element.data().startDate,
         dateType: type,
       };
       answers.push(a);
     });
-
     answers.sort(function (a, b) {
-      return a.startDate._seconds - b.startDate._seconds;
+      return b.startDate._seconds - a.startDate._seconds;
     });
 
     answers = answers.map(item => {
@@ -128,6 +127,7 @@ export const getAllSessions = async userId => {
       let endDate = moment(item.endDate._seconds * 1000);
       return {
         id: item.id,
+        num: item.num,
         startDate: startDate.format('MM/DD/YYYY'),
         endDate: endDate.format('MM/DD/YYYY'),
         dateType: item.dateType,
@@ -219,7 +219,7 @@ export const getAllSessionsByUserId = async userId => {
     });
 
     result.sort(function (a, b) {
-      return a.date._seconds - b.date._seconds;
+      return b.date._seconds - a.date._seconds;
     });
 
     result = result.map(item => {
@@ -304,19 +304,20 @@ export const saveAnswersToFirebase = async (
       });
   }
 
+
   await firestore()
     .collection('DonationData')
     .doc(answersId)
     .collection('Answers')
     .add(finalData);
 
-  findalData = {
-    answer: answers,
-    date: date,
-    session: sessionNum,
-    sessionId: sessionId,
-    userId: userId,
-  };
+  // findalData = {
+  //   answer: answers,
+  //   date: date,
+  //   session: sessionNum,
+  //   sessionId: sessionId,
+  //   userId: userId,
+  // };
   // console.log(finalData);
   // await firestore().collection("AllDonationData").add(finalData)
 };

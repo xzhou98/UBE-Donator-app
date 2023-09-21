@@ -42,7 +42,6 @@ const ReviewScreen = ({navigation}) => {
         setSessions(allSessions);
         let allAnswers = await getAllSessionsByUserId(userInfo.id);
         setAllAnswers(allAnswers);
-
         setLoad(false)
         setRender(true);
       }
@@ -55,7 +54,7 @@ const ReviewScreen = ({navigation}) => {
     if (item.dateType == 0) {
       return (
         <View style={styles.session}>
-          <Text style={styles.bold}>Session {index + 1}</Text>
+          <Text style={styles.bold}>Session {item.num}</Text>
           <Text style={styles.slim}>
             {' '}
             {item.startDate} to {item.endDate}
@@ -65,7 +64,7 @@ const ReviewScreen = ({navigation}) => {
     } else if (item.dateType == 1) {
       return (
         <View style={styles.session1}>
-          <Text style={styles.bold}>Session {index + 1}</Text>
+          <Text style={styles.bold}>Session {item.num}</Text>
           <Text style={styles.slim}>
             {' '}
             {item.startDate} to {item.endDate}
@@ -75,7 +74,7 @@ const ReviewScreen = ({navigation}) => {
     } else {
       return (
         <View style={styles.session2}>
-          <Text style={styles.bold}>Session {index + 1}</Text>
+          <Text style={styles.bold}>Session {item.num}</Text>
           <Text style={styles.slim}>
             {' '}
             {item.startDate} to {item.endDate}
@@ -139,13 +138,13 @@ const ReviewScreen = ({navigation}) => {
           <View key={index} style={{flexDirection: 'column'}}>
             <View style={{alignItems: 'center'}}>
               {type(index, item)}
-              {allAnswers[index].map((element, index) => {
+              {allAnswers[index].map((element, index2) => {
                 if (element.sessionId == item.id)
                   return (
-                    <View key={index} style={styles.answer}>
+                    <View key={index2} style={styles.answer}>
                       <View style={{flexDirection: 'column', flex: 3}}>
                         <Text style={styles.answerTitle}>
-                          {index + 1}st submission
+                          {allAnswers[index].length -index2 }st submission
                         </Text>
                         <Text style={styles.answerDate}>{element.date}</Text>
                       </View>

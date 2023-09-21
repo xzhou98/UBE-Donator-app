@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const ContactUsScreen = () => {
   const [categories, setCategories] = useState([
@@ -21,6 +22,9 @@ const ContactUsScreen = () => {
     false,
   ]);
   const [refresh, setRefresh] = useState(true);
+  const copyToClipboard = str => {
+    Clipboard.setString(str);
+  };
 
   useEffect(() => {}, [refresh]);
 
@@ -30,33 +34,85 @@ const ContactUsScreen = () => {
         <Text style={[styles.title]}>Resource List</Text>
       </View> */}
 
-      <View style={{marginHorizontal: '5%'}}>
+      <View style={{marginHorizontal: '12%'}}>
         <Text style={[styles.basetext]}>
-        For questions about the study itself, please contact:
+          For questions about the study itself, please contact:
         </Text>
 
         <Text style={[styles.boldText]}>{`Dr. Douglas Zytko`}</Text>
-        <Text style={[styles.text]}>
-          {`Assistant Professor \nDepartment of Computer Science and Engineering\nzytko@oakland.edu \n(609)-313-8009`}
-        </Text>
+        <View style={[styles.textContainer]}>
+          <Text style={[styles.text]}>
+            {`Assistant Professor \nDepartment of Computer Science and Engineering`}
+          </Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[styles.text]}>{`zytko@oakland.edu`}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                copyToClipboard('zytko@oakland.edu');
+              }}>
+              <MaterialIcons
+                style={{color: 'black', marginTop: 5, marginLeft: 5}}
+                name="content-copy"
+                size={17}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[styles.text]}>{`(609)-313-8009`}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                copyToClipboard('(609)-313-8009');
+              }}>
+              <MaterialIcons
+                style={{color: 'black', marginTop: 5, marginLeft: 5}}
+                name="content-copy"
+                size={17}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <Text style={[styles.basetext]}>
-        If the study has brought about any thoughts that you would like to discuss with us, please contact:
+          If the study has brought about any thoughts that you would like to
+          discuss with us, please contact:
         </Text>
         <Text style={[styles.boldText]}>{`Dr. Kelly Berishaj`}</Text>
-        <Text style={[styles.text]}>
-          {`Special Instructor \nSchool of Nursing\nberishaj@oakland.edu \n(248) 364-8750`}
-        </Text>
+        <View style={[styles.textContainer]}>
+          <Text style={[styles.text]}>
+            {`Special Instructor \nSchool of Nursing`}
+          </Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[styles.text]}>{`berishaj@oakland.edu`}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                copyToClipboard('berishaj@oakland.edu');
+              }}>
+              <MaterialIcons
+                style={{color: 'black', marginTop: 5, marginLeft: 5}}
+                name="content-copy"
+                size={17}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[styles.text]}>{`(248)-364-8750`}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                copyToClipboard('(248) 364-8750');
+              }}>
+              <MaterialIcons
+                style={{color: 'black', marginTop: 5, marginLeft: 5}}
+                name="content-copy"
+                size={17}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
-      <View style={{marginHorizontal: '5%'}}>
-        <Text style={[styles.basetext]}>Need Help?</Text>
-        <Text style={[styles.basetext]}>Emergency</Text>
-        <Text style={{color: 'black', fontSize: 15, marginVertical: 10}}>
-          {`If you are suffering from a life-threatening injury or illness that requires emergent medical assistance OR if you are in a dangerous or unsafe situation that requires immediate police response:`}
-        </Text>
-        <Text style={[styles.text]}>DIAL 911</Text>
-        <Text style={[styles.basetext]}>Other</Text>
+      <View style={{marginHorizontal: '12%'}}>
+        <Text style={[styles.basetext2]}>Need Help?</Text>
 
         {/* 1 */}
         <TouchableOpacity
@@ -191,14 +247,18 @@ const ContactUsScreen = () => {
                 {`Offers free 24/7 text-based support for people in crisis, including those experiencing suicidal thoughts.`}
               </Text>
               <Text style={[styles.text]}>{`Text HOME to 741-741`}</Text>
-
-
             </View>
           ) : (
             <></>
           )}
         </View>
-        <View style={{margin:30}}/>
+        <Text style={[styles.basetext2]}>Emergency</Text>
+        <Text style={{color: 'black', fontSize: 15, marginVertical: 10}}>
+          {`If you are suffering from a life-threatening injury or illness that requires emergent medical assistance OR if you are in a dangerous or unsafe situation that requires immediate police response:`}
+        </Text>
+        <Text style={[styles.text]}>DIAL 911</Text>
+
+        <View style={{margin: 30}} />
       </View>
     </ScrollView>
   );
@@ -219,11 +279,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  basetext2: {
+    marginTop: 20,
+    flex: 5,
+    // backgroundColor: '#f2f5f8',
+    color: '#161924',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  textContainer: {
+    marginBottom: 10,
+    marginLeft: '10%',
+  },
   text: {
+    // fontWeight: 'bold',
+    marginTop: 8,
     color: 'black',
     fontSize: 15,
-    marginBottom: 20,
-    marginLeft: '10%',
     // fontWeight: 'bold',
   },
   boldText: {

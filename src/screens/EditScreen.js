@@ -476,11 +476,11 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     fontSize: 18,
     color: 'white',
-    borderRadius: 7,
+    borderRadius: 5,
     height: 30,
     width: 80,
     // backgroundColor: '#95ec69',
-    backgroundColor: 'red',
+    backgroundColor: '#FA5454',
   },
   title: {
     color: '#161924',
@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#aed4d9',
+    backgroundColor: '#95ec69',
     borderRadius: 9,
     height: 45,
     width: 80,
@@ -546,7 +546,7 @@ const styles = StyleSheet.create({
   editButton: {
     // margin: '10%'
     // margin: 20,
-    color: 'white',
+    color: 'black',
     fontSize: 18,
   },
 });

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AddSeedScreen, ContactUsScreen,DonationScreen, HomeScreen, HelpScreen,ReviewScreen, EditScreen, SubStackNavigator } from '../screens';
-import { Text, Alert, View, SafeAreaView, TouchableOpacity, StyleSheet, Animated, StatusBar } from 'react-native';
+import { Text, Alert, View, SafeAreaView, TouchableOpacity, StyleSheet, Animated, StatusBar, Button } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../constants/theme';
 import Controler from '../views/Controler';
