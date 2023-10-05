@@ -247,8 +247,8 @@ const EditScreen = ({route, navigation}) => {
                   <View
                     style={{
                       flex: 1,
-                      // justifyContent: 'center',
-                      marginTop: 25,
+                      justifyContent: 'flex-end',
+                      marginBottom: -10,
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity

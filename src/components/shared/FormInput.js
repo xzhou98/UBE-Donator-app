@@ -14,6 +14,7 @@ const FormInput = ({
       <Text>{labelText}</Text>
       <TextInput
         style={{
+          color: 'black',
           padding: 9,
           paddingLeft:20,
           borderColor: COLORS.black + '50',
@@ -22,6 +23,7 @@ const FormInput = ({
           borderRadius: 8,
           // marginTop: 10,
         }}
+        placeholderTextColor='grey'
         placeholder={placeholderText}
         onChangeText={onChangeText}
         value={value}

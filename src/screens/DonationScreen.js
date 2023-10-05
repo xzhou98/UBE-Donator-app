@@ -334,15 +334,27 @@ const DonationScreen = ({route, navigation}) => {
   };
 
   const backToLastQuestion = () => {
-    removeLastQuestion();
-    setCurrentInput('');
-    setCurrentOption();
-    setReload(true);
-    setRefresh(!refresh);
-    setShortcut(false);
-    setWellnessCheck(false);
-    setImageUrl([]);
-    setSkip(false);
+    Alert.alert(
+      'Back to last question',
+      'Are you sure you want to go back to the last question? This will erase your answer to the current question.',
+      [
+        {
+          text: 'Yes',
+          onPress: () => {
+            removeLastQuestion();
+            setCurrentInput('');
+            setCurrentOption();
+            setReload(true);
+            setRefresh(!refresh);
+            setShortcut(false);
+            setWellnessCheck(false);
+            setImageUrl([]);
+            setSkip(false);
+          },
+        },
+        {text: 'No, Cancel', style: 'cancel'},
+      ],
+    );
   };
 
   return render ? (
@@ -369,8 +381,9 @@ const DonationScreen = ({route, navigation}) => {
             height: '100%',
           }}>
           <View style={{flexDirection: 'row'}}>
+            {/* Physical Sexual Contact */}
+            <View  style={{flex: 1, flexDirection:'row'}}>
             <TouchableOpacity
-              style={{flex: 1}}
               onPress={() => {
                 Alert.alert(
                   'Physical Sexual Contact Definition',
@@ -383,7 +396,10 @@ const DonationScreen = ({route, navigation}) => {
                 style={{marginLeft: 20, width: 35, height: 35}}
               />
             </TouchableOpacity>
+            <Text style={{paddingTop: 5,fontSize: 12, color: 'black'}}>Physical Sexual Contact Definition</Text>
+            </View>
 
+            {/* stop session */}
             <View style={{alignItems: 'flex-end', flex: 1}}>
               <TouchableOpacity
                 onPress={() => {
@@ -406,12 +422,12 @@ const DonationScreen = ({route, navigation}) => {
                   style={{
                     textAlign: 'center',
                     textAlignVertical: 'center',
-                    fontSize: 18,
+                    fontSize: 15,
                     color: 'white',
                     borderRadius: 5,
-                    height: 35,
+                    height: 40,
                     marginRight: 20,
-                    width: 130,
+                    width: 100,
                     backgroundColor: '#FA5454',
                   }}>
                   Stop Session
@@ -421,6 +437,7 @@ const DonationScreen = ({route, navigation}) => {
           </View>
 
           <FlatList
+            style={{marginTop:10}}
             ref={flatListRef}
             data={answers}
             onContentSizeChange={() => flatListRef.current.scrollToEnd()}
@@ -627,7 +644,7 @@ const DonationScreen = ({route, navigation}) => {
                                         fontSize: 16,
                                         color: 'black',
                                       }}>
-                                      Choose not to answer
+                                      SKIP
                                     </Text>
                                   </TouchableOpacity>
                                   {/* next */}
@@ -741,7 +758,7 @@ const DonationScreen = ({route, navigation}) => {
                                       fontSize: 16,
                                       color: 'black',
                                     }}>
-                                    Choose not to answer
+                                    SKIP
                                   </Text>
                                 </TouchableOpacity>
                                 {/* next */}
@@ -908,7 +925,7 @@ const DonationScreen = ({route, navigation}) => {
                                       fontSize: 16,
                                       color: 'black',
                                     }}>
-                                    Choose not to answer
+                                    SKIP
                                   </Text>
                                 </TouchableOpacity>
                                 {/* next */}
@@ -1043,7 +1060,7 @@ const DonationScreen = ({route, navigation}) => {
                                       fontSize: 16,
                                       color: 'black',
                                     }}>
-                                    Choose not to answer
+                                    SKIP
                                   </Text>
                                 </TouchableOpacity>
                                 {/* next */}
@@ -1293,7 +1310,7 @@ const DonationScreen = ({route, navigation}) => {
                                       fontSize: 16,
                                       color: 'black',
                                     }}>
-                                    Choose not to answer
+                                    SKIP
                                   </Text>
                                 </TouchableOpacity>
                                 {/* next */}

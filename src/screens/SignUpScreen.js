@@ -66,7 +66,7 @@ const SignUpScreen = ({navigation}) => {
 
       <View style={{paddingTop: 10, width: '90%'}}>
         {/* Email */}
-        <Text style={{color: 'black'}}>Email</Text>
+        <Text style={{paddingTop: 10,color: 'black', marginBottom: -10, fontSize:18}}>Email</Text>
         <FormInput
           // labelText="Email"
           placeholderText="Enter your email"
@@ -76,7 +76,7 @@ const SignUpScreen = ({navigation}) => {
         />
 
         {/* Password */}
-        <Text style={{color: 'black'}}>Password</Text>
+        <Text style={{paddingTop: 10,color: 'black', marginBottom: -10, fontSize:18}}>Password</Text>
         <FormInput
           // labelText="Password"
           placeholderText="Must contain at least 6 characters"
@@ -86,7 +86,7 @@ const SignUpScreen = ({navigation}) => {
         />
 
         {/* Confirm Password */}
-        <Text style={{color: 'black'}}>Confirm Password</Text>
+        <Text style={{paddingTop: 10,color: 'black', marginBottom: -10, fontSize:18}}>Confirm Password</Text>
         <FormInput
           // labelText="Confirm Password"
           placeholderText="Enter your password again"
@@ -142,9 +142,9 @@ const SignUpScreen = ({navigation}) => {
 
       {/* Footer */}
       <View style={{alignItems: 'center', marginTop: 20}}>
-        <Text style={{fontWeight: 'bold'}}>Already have an account?</Text>
+        <Text style={{fontWeight: 'bold', color:'grey', fontSize:18}}>Already have an account?</Text>
         <Text
-          style={{marginLeft: 4, color: COLORS.green, fontWeight: 'bold'}}
+          style={{marginLeft: 4, color: COLORS.green, fontWeight: 'bold', fontSize:18}}
           onPress={() => navigation.navigate('SignInScreen')}>
           Sign in here
         </Text>

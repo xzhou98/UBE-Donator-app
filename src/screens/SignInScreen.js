@@ -50,6 +50,7 @@ const SignInScreen = ({ navigation }) => {
 
             <View style={{ paddingTop: 10, width: '90%' }}>
                 {/* Email */}
+                <Text style={{color: 'black', marginBottom: -10, fontSize:18}}>Email</Text>
                 <FormInput
                     placeholderText="Enter your email address"
                     onChangeText={value => setEmail(value)}
@@ -57,14 +58,15 @@ const SignInScreen = ({ navigation }) => {
                     keyboardType={'email-address'}
                 />
                 {/* Password */}
+                <Text style={{ paddingTop: 10, color: 'black', marginBottom: -10, fontSize:18}}>Password</Text>
                 <FormInput
-                    placeholderText="Enter your password"
+                    placeholderText="Must contain at least 6 characters"
                     onChangeText={value => setPassword(value)}
                     value={password}
                     secureTextEntry={true}
                 />
                 <Text
-                    style={{ marginLeft: 4, color: COLORS.green, fontWeight: 'bold' }}
+                    style={{ marginLeft: 4, color: COLORS.green, fontWeight: 'bold', fontSize:15 }}
                     onPress={() => navigation.navigate('ResetPasswordScreen')}>
                     Forgot your password?
                 </Text>
@@ -82,9 +84,9 @@ const SignInScreen = ({ navigation }) => {
 
             {/* Footer */}
             <View style={{ alignItems: 'center', marginTop: 30 }}>
-                <Text style={{ fontWeight: 'bold' }}>Not yet have an account?</Text>
+                <Text style={{ fontWeight: 'bold', color:'grey', fontSize:18 }}>Not yet have an account?</Text>
                 <Text
-                    style={{ marginLeft: 4, color: COLORS.green, fontWeight: 'bold' }}
+                    style={{ marginLeft: 4, color: COLORS.green, fontWeight: 'bold', fontSize:18 }}
                     onPress={() => navigation.navigate('SignUpScreen')}>
                     Sign up here
                 </Text>
