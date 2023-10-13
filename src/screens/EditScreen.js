@@ -251,25 +251,30 @@ const EditScreen = ({route, navigation}) => {
                       marginBottom: -10,
                       alignItems: 'center',
                     }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        let q = getQuestionById(item.questionId);
-                        setQuestion(q);
-                        setCurrentAnswer(item.answer, q);
-                        setCurrentAnswerId(index);
-                        if (questions[item.questionId].type == 3) {
-                          let text = '';
-                          item.answer.forEach(element => {
-                            text += element + '\n';
-                          });
-                          setTextInput(text);
-                        }
-                        setSubWindow(true);
-                      }}>
-                      <View style={styles.buttonContainer}>
-                        <Text style={styles.editButton}>Edit</Text>
-                      </View>
-                    </TouchableOpacity>
+                    {getQuestionById(item.questionId).type == 4 ||
+                    getQuestionById(item.questionId).type == 7 ? (
+                      <></>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => {
+                          let q = getQuestionById(item.questionId);
+                          setQuestion(q);
+                          setCurrentAnswer(item.answer, q);
+                          setCurrentAnswerId(index);
+                          if (questions[item.questionId].type == 3) {
+                            let text = '';
+                            item.answer.forEach(element => {
+                              text += element + '\n';
+                            });
+                            setTextInput(text);
+                          }
+                          setSubWindow(true);
+                        }}>
+                        <View style={styles.buttonContainer}>
+                          <Text style={styles.editButton}>Edit</Text>
+                        </View>
+                      </TouchableOpacity>
+                    )}
                   </View>
                 ) : (
                   <View style={{flex: 1}} />
@@ -289,27 +294,20 @@ const EditScreen = ({route, navigation}) => {
                 if (url.length > 0) {
                   return (
                     <View key={index}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          // setImage(`file://${url}`);
-                          // setImageVisible(true);
-                        }}>
-                        <Image
-                          source={{
-                            uri: `${url}`,
-                          }}
-                          resizeMode={'contain'}
-                          style={[styles.rightImage]}
-                        />
-                      </TouchableOpacity>
+                      <Image
+                        source={{
+                          uri: `${url}`,
+                        }}
+                        resizeMode={'contain'}
+                        style={[styles.rightImage]}
+                      />
                     </View>
                   );
                 }
               })}
+
               {/* delete button
-                {index == (answers.answer.length - 1) ?
-                
-                  : <></>} */}
+                {index == (answers.answer.length - 1) ? : <></>} */}
             </View>
           )}
         />
@@ -519,6 +517,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   rightImage: {
+    marginTop: 15,
     marginLeft: '50%',
     marginRight: '3%',
     borderRadius: 7,

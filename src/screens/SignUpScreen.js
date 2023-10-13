@@ -18,8 +18,8 @@ const SignUpScreen = ({navigation}) => {
       if (statement) {
         if (password == confirmPassword) {
           try {
-            // let success = await signUp(email, password);
-            // if (success) await createUser(email);
+            let success = await signUp(email, password);
+            if (success) await createUser(email);
           } catch (error) {
             console.log(error);
           }

@@ -382,41 +382,68 @@ const DonationScreen = ({route, navigation}) => {
           }}>
           <View style={{flexDirection: 'row'}}>
             {/* Physical Sexual Contact */}
-            <View  style={{flex: 1, flexDirection:'row'}}>
-            <TouchableOpacity
-              onPress={() => {
-                Alert.alert(
-                  'Physical Sexual Contact Definition',
-                  'Physical Sexual Contact is defined as contact Between two or more people, including hugging, kissing, oral, anal, or vaginal intercourse.',
-                  [{text: 'Close', style: 'cancel'}],
-                );
-              }}>
-              <Image
-                source={require('../css/images/book.jpg')}
-                style={{marginLeft: 20, width: 35, height: 35}}
-              />
-            </TouchableOpacity>
-            <Text style={{paddingTop: 5,fontSize: 12, color: 'black'}}>Physical Sexual Contact Definition</Text>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    'Physical Sexual Contact Definition',
+                    'Physical Sexual Contact is defined as contact Between two or more people, including hugging, kissing, oral, anal, or vaginal intercourse.',
+                    [{text: 'Close', style: 'cancel'}],
+                  );
+                }}>
+                <Image
+                  source={require('../css/images/book.jpg')}
+                  style={{marginLeft: 20, width: 35, height: 35}}
+                />
+              </TouchableOpacity>
+              <Text style={{paddingTop: 5, fontSize: 12, color: 'black'}}>
+                Physical Sexual Contact Definition
+              </Text>
             </View>
 
             {/* stop session */}
             <View style={{alignItems: 'flex-end', flex: 1}}>
               <TouchableOpacity
                 onPress={() => {
-                  Alert.alert(
-                    'Stop Session',
-                    'This will exit from and delete all your session progress. Are you sure you want to quit?',
-                    [
-                      {
-                        text: 'Yes, I want to quit.',
-                        onPress: () => {
-                          restartSession();
-                          navigation.navigate('ContactUs');
-                        },
+                  Alert.alert('Stop/Withdraw Session', '', [
+                    {
+                      text: 'Exit Session Temporarily',
+                      onPress: () => {
+                        Alert.alert(
+                          '',
+                          'This will exit from and delete all your session progress. Are you sure you want to quit?',
+                          [
+                            {
+                              text: 'Yes, I want to quit.',
+                              onPress: () => {
+                                restartSession();
+                                navigation.navigate('ContactUs');
+                              },
+                            },
+                            {text: 'No, Cancel', style: 'cancel'},
+                          ],
+                        );
                       },
-                      {text: 'No, Cancel', style: 'cancel'},
-                    ],
-                  );
+                    },
+                    {
+                      text: 'Quit Session',
+                      onPress: () => {
+                        Alert.alert(
+                          '',
+                          'You are temporarily exiting your current session. Your progress with be saved and you can come back and finish at any time',
+                          [
+                            {
+                              text: 'Okay',
+                              onPress: () => {
+                                navigation.navigate('Home');
+                              },
+                            },
+                            {text: 'Cancel', style: 'cancel'},
+                          ],
+                        );
+                      },
+                    },
+                  ]);
                 }}>
                 <Text
                   style={{
@@ -437,7 +464,7 @@ const DonationScreen = ({route, navigation}) => {
           </View>
 
           <FlatList
-            style={{marginTop:10}}
+            style={{marginTop: 10}}
             ref={flatListRef}
             data={answers}
             onContentSizeChange={() => flatListRef.current.scrollToEnd()}
@@ -506,13 +533,17 @@ const DonationScreen = ({route, navigation}) => {
                 {item.answer.length > 0 ? (
                   item.answer.map((answer, index) => {
                     return (
-                      <View key={index} style={{alignItems:'flex-end'}}>
-                        <Text  style={[styles.rightMessage]}>
-                          {answer}{' '}
-                        </Text>
+                      <View key={index} style={{alignItems: 'flex-end'}}>
+                        <Text style={[styles.rightMessage]}>{answer} </Text>
                         <Image
                           source={require('../css/images/profile_icon.png')}
-                          style={{width: 30, height: 30, borderRadius:20,marginTop:-12, marginRight: '3%'}}
+                          style={{
+                            width: 30,
+                            height: 30,
+                            borderRadius: 20,
+                            marginTop: -12,
+                            marginRight: '3%',
+                          }}
                         />
                       </View>
                     );
@@ -608,8 +639,7 @@ const DonationScreen = ({route, navigation}) => {
                                     onPress={() => {
                                       forceAnswer(item);
                                     }}>
-                                    <Text
-                                      style={[styles.leftOption]}>
+                                    <Text style={[styles.leftOption]}>
                                       {item.option}
                                     </Text>
                                   </TouchableOpacity>
