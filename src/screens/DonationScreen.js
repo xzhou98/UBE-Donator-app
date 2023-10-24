@@ -449,12 +449,12 @@ const DonationScreen = ({route, navigation}) => {
                   style={{
                     textAlign: 'center',
                     textAlignVertical: 'center',
-                    fontSize: 15,
+                    fontSize: 11,
                     color: 'white',
                     borderRadius: 5,
-                    height: 40,
+                    height: 35,
                     marginRight: 20,
-                    width: 100,
+                    width: 80,
                     backgroundColor: '#FA5454',
                   }}>
                   Stop Session
@@ -657,7 +657,7 @@ const DonationScreen = ({route, navigation}) => {
                                     }}>
                                     <Text
                                       style={{
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         color: 'black',
                                       }}>
                                       {'< '}BACK
@@ -671,7 +671,7 @@ const DonationScreen = ({route, navigation}) => {
                                     }}>
                                     <Text
                                       style={{
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         color: 'black',
                                       }}>
                                       SKIP
@@ -726,7 +726,7 @@ const DonationScreen = ({route, navigation}) => {
                                     currentOption[index].length > 0 ? (
                                       <Text
                                         style={{
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           width: '100%',
                                           marginVertical: 2,
                                           color: 'black',
@@ -740,7 +740,7 @@ const DonationScreen = ({route, navigation}) => {
                                     ) : (
                                       <Text
                                         style={{
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           width: '100%',
                                           marginVertical: 2,
                                           color: 'black',
@@ -771,7 +771,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     {'< '}BACK
@@ -785,7 +785,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     SKIP
@@ -835,7 +835,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     NEXT{' >'}
@@ -938,7 +938,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     {'< '}BACK
@@ -952,7 +952,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     SKIP
@@ -972,14 +972,16 @@ const DonationScreen = ({route, navigation}) => {
                                       setReload(true);
                                       setRefresh(!refresh);
                                     } else {
-                                      Alert.alert(
-                                        'Hi, nothing was typed. if you want to skip this question, press the Skip button please.',
-                                      );
+                                      // console.log( currentQuestion.id);
+                                      // Alert.alert(
+                                      //   'Hi, nothing was typed. if you want to skip this question, press the Skip button please.',
+                                      // );
+                                      skipQuestion(currentQuestion);
                                     }
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     NEXT{' >'}
@@ -1073,7 +1075,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     {'< '}BACK
@@ -1087,7 +1089,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     SKIP
@@ -1119,7 +1121,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     NEXT{' >'}
@@ -1323,7 +1325,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     {'< '}BACK
@@ -1337,7 +1339,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     SKIP
@@ -1374,7 +1376,7 @@ const DonationScreen = ({route, navigation}) => {
                                   }}>
                                   <Text
                                     style={{
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       color: 'black',
                                     }}>
                                     NEXT{' >'}
@@ -1628,7 +1630,7 @@ const DonationScreen = ({route, navigation}) => {
                     }}>
                     <Text
                       style={{
-                        fontSize: 20,
+                        fontSize: 18,
                         color: 'black',
                         marginVertical: 10,
                       }}>
@@ -1643,7 +1645,7 @@ const DonationScreen = ({route, navigation}) => {
                     }}>
                     <Text
                       style={{
-                        fontSize: 20,
+                        fontSize: 18,
                         color: 'black',
                         marginVertical: 10,
                       }}>
@@ -1665,7 +1667,7 @@ const DonationScreen = ({route, navigation}) => {
                     }}>
                     <Text
                       style={{
-                        fontSize: 20,
+                        fontSize: 18,
                         color: 'black',
                         marginVertical: 10,
                       }}>
@@ -1709,7 +1711,7 @@ const DonationScreen = ({route, navigation}) => {
                   style={{
                     flex: 9,
                     borderRadius: 10,
-                    fontSize: 18,
+                    fontSize: 16,
                   }}
                   onChangeText={text => {
                     setCurrentInput(text);
@@ -1787,7 +1789,7 @@ const DonationScreen = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   skipNext: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'black',
   },
   Restart: {
@@ -1798,7 +1800,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#161924',
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '500',
   },
   inputSearchStyle: {
@@ -1812,7 +1814,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   leftMessage: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'black',
     padding: 10,
     borderRadius: 7,
@@ -1822,7 +1824,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   leftNote: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#3a3b3a',
     marginRight: '30%',
     marginLeft: '5%',
@@ -1831,7 +1833,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   leftNavigationLink: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#347aeb',
     marginRight: '30%',
     marginLeft: '5%',
@@ -1857,7 +1859,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   rightMessage: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'black',
     padding: 10,
     borderRadius: 7,
@@ -1867,7 +1869,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#95ec69',
   },
   leftOption: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'black',
     padding: 10,
     borderRadius: 7,
@@ -1877,8 +1879,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#aed4d9',
   },
   leftMCOption: {
-    // fontSize:16,
-    // padding: 10,
+
     borderBottomWidth: 1,
     marginRight: '30%',
     marginLeft: '5%',
@@ -1893,7 +1894,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'black',
   },
   selectedTextStyle: {

@@ -1,10 +1,10 @@
 import React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, ScrollView } from 'react-native'
 
 
 const HelpScreen = () => {
   return (
-    <View style={{ padding: '3%'}}>
+    <ScrollView style={{ padding: '3%'}}>
       <View style={{ alignItems: "center"}}>
       </View>
       <Text style={styles.basetext}>UBE is an Artificial Intelligent (AI) Robot that can perform some basic tasks through users voice or text input.</Text>
@@ -27,7 +27,7 @@ const HelpScreen = () => {
         <Text style={styles.boldtext}>  Review Screen: <Text style={styles.basetext}>(you can review your donation data here)</Text></Text>
         <Text style={styles.boldtext}>  Edit Screen: <Text style={styles.basetext}>(you can modified your data here, but if you didn't donate your data, it will navigate to Review Screen.) </Text></Text>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
