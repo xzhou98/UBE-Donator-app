@@ -61,7 +61,6 @@ export const getAnswersByAnswerId = async (userId, answersId) => {
     return error;
   }
 };
-
 /**
  * get all question from firebase
  */
@@ -270,11 +269,14 @@ export const saveAnswersToFirebase = async (
         const reference = storage().ref(
           `/images/${userEmail}/${sessionNum}/${momentDate}-question${element.questionId}-${j}.png`,
         );
-        await reference.putFile(image).then(() => {
-          console.log('Image Uploaded');
-        }).catch((error)=>{
+        await reference
+          .putFile(image)
+          .then(() => {
+            console.log('Image Uploaded');
+          })
+          .catch(error => {
             console.log(image);
-        });
+          });
         let imageUrl = await reference.getDownloadURL();
         answers[i].image[j] = imageUrl;
       }
@@ -304,7 +306,6 @@ export const saveAnswersToFirebase = async (
       });
   }
 
-
   await firestore()
     .collection('DonationData')
     .doc(answersId)
@@ -325,7 +326,6 @@ export const saveAnswersToFirebase = async (
 /**
  * remove donation session
  */
-
 export const removeDonationSession = async (documentId, answerId) => {
   try {
     let allAnswer = await firestore()
@@ -341,38 +341,43 @@ export const removeDonationSession = async (documentId, answerId) => {
 
     allAnswer = allAnswer.data().answer;
     for (let i = 0; i < allAnswer.length; i++) {
-        const images = allAnswer[i].image;
+      const images = allAnswer[i].image;
 
-        if(images != undefined && images.length>0){
-            for (let k = 0; k < images.length; k++) {
-                const pathRegex = /o\/(.*?)\?alt/;
-                const image = images[k];
-                const matches = image.match(pathRegex);
-                if (!matches) {
-                    console.error("URL format not recognized.");
-                    return;
-                }
-                const imagePath = decodeURIComponent(matches[1]);
-                storage().ref(imagePath).delete()
-                .then(() => {
-                    console.log(`Successfully deleted image at ${image}`);
-                })
-                .catch(error => {
-                    console.error(`Error deleting image at ${image}: `, error);
-                });
-            }
-
+      if (images != undefined && images.length > 0) {
+        for (let k = 0; k < images.length; k++) {
+          const pathRegex = /o\/(.*?)\?alt/;
+          const image = images[k];
+          const matches = image.match(pathRegex);
+          if (!matches) {
+            console.error('URL format not recognized.');
+            return;
+          }
+          const imagePath = decodeURIComponent(matches[1]);
+          storage()
+            .ref(imagePath)
+            .delete()
+            .then(() => {
+              console.log(`Successfully deleted image at ${image}`);
+            })
+            .catch(error => {
+              console.error(`Error deleting image at ${image}: `, error);
+            });
         }
+      }
     }
 
-
-    firestore().collection('DonationData').doc(documentId).collection('Answers').doc(answerId).delete().then(() => {
+    firestore()
+      .collection('DonationData')
+      .doc(documentId)
+      .collection('Answers')
+      .doc(answerId)
+      .delete()
+      .then(() => {
         console.log('Doantion session deleted!');
-    });
+      });
   } catch (error) {
     console.log(error);
   }
-
 };
 
 /**
@@ -386,4 +391,26 @@ export const runSeed = async (startDate, endDate) => {
 
     await firestore().collection('Questions').add(seed);
   } catch (error) {}
+};
+
+export const getAllUserInfo = async () => {
+  try {
+    let alluser = [];
+    const users = await firestore().collection('Users').get();
+    await Promise.all( users.docs.map(async element => {
+      let date = moment(element.data().date._seconds * 1000).format(
+        'MMMM Do YYYY, h:mm:ss a',
+      );
+      alluser.push({
+        id: element.id,
+        email: element.data().email,
+        isAdmin: element.data().isAdmin,
+        date: date,
+      });
+    }));
+
+    return alluser;
+  } catch (error) {
+    console.log(error);
+  }
 };

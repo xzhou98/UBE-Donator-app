@@ -28,7 +28,7 @@ const ReviewScreen = ({navigation}) => {
   const [sessions, setSessions] = useState(false);
   const [allAnswers, setAllAnswers] = useState();
   const flatListRef = useRef();
-  const [load, setLoad] = useState(true);
+  const [load, setLoad] = useState(false);
 
 
   const onAuthStateChanged = async user => {
