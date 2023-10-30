@@ -420,6 +420,7 @@ const EditScreen = ({route, navigation}) => {
                         borderRadius: 5,
                         fontSize: 20,
                         borderWidth: 0.5,
+                        color: 'black',
                       }}
                       onChangeText={text => {
                         setTextInput(text);

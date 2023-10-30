@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderRadius: 4,
     flex: 5,
+    color: 'black',
     marginRight: 20,
     // alignItems: 'center',
   },

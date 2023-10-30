@@ -1712,6 +1712,7 @@ const DonationScreen = ({route, navigation}) => {
                     flex: 9,
                     borderRadius: 10,
                     fontSize: 16,
+                    color: 'black',
                   }}
                   onChangeText={text => {
                     setCurrentInput(text);
