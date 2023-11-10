@@ -39,6 +39,7 @@ const EditScreen = ({route, navigation}) => {
   const [originalId, setOriginalId] = useState();
   const [currentAnswerId, setCurrentAnswerId] = useState();
   const [textInput, setTextInput] = useState();
+  const [numericInput, setNumericInput] = useState();
 
   const flatListRef = useRef();
 
@@ -174,6 +175,22 @@ const EditScreen = ({route, navigation}) => {
             {text: 'Cancel', style: 'cancel'},
           ],
         );
+      } else if (question.type == 9) {
+        Alert.alert(
+          'Notification',
+          'Are you sure you want to change your answer?',
+          [
+            {
+              text: 'Confirm',
+              onPress: () => {
+                newAnswer.answer[currentAnswerId].answer = [numericInput];
+                updateAnswer(newAnswer);
+                setRecall(true);
+              },
+            },
+            {text: 'Cancel', style: 'cancel'},
+          ],
+        );
       }
       setRefresh(!refresh);
     } catch (error) {
@@ -248,8 +265,10 @@ const EditScreen = ({route, navigation}) => {
                     style={{
                       flex: 1,
                       justifyContent: 'flex-end',
-                      marginBottom: -10,
-                      alignItems: 'center',
+                      alignItems: 'flex-end',
+                      marginBottom: -17,
+                      marginRight: '3%',
+                      // alignItems: 'center',
                     }}>
                     {getQuestionById(item.questionId).type == 4 ||
                     getQuestionById(item.questionId).type == 7 ? (
@@ -267,6 +286,9 @@ const EditScreen = ({route, navigation}) => {
                               text += element + '\n';
                             });
                             setTextInput(text);
+                          } else if (questions[item.questionId].type == 9) {
+                            let text = item.answer[0];
+                            setNumericInput(text);
                           }
                           setSubWindow(true);
                         }}>
@@ -430,6 +452,33 @@ const EditScreen = ({route, navigation}) => {
                 ) : (
                   <></>
                 )}
+
+                {question.type == 9 ? (
+                  <View style={{marginTop: 10, height: '40%'}}>
+                    <View>
+                      <Text style={styles.rightMessage}>{numericInput}</Text>
+                    </View>
+
+                    <TextInput
+                      keyboardType="numeric"
+                      multiline={true}
+                      value={textInput}
+                      style={{
+                        marginTop: 20,
+                        height: 40,
+                        borderRadius: 5,
+                        fontSize: 20,
+                        borderWidth: 0.5,
+                        color: 'black',
+                      }}
+                      onChangeText={text => {
+                        setNumericInput(text);
+                      }}
+                    />
+                  </View>
+                ) : (
+                  <></>
+                )}
               </View>
             ) : (
               <></>
@@ -539,9 +588,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#95ec69',
-    borderRadius: 9,
-    height: 45,
-    width: 80,
+    borderRadius: 5,
+    height: 40,
+    width: 70,
   },
   editButton: {
     // margin: '10%'

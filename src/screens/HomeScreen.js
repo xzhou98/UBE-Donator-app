@@ -116,12 +116,14 @@ const HomeScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
   mainTitle: {
+    textAlign: 'center',
     padding: 30,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#455d60',
   },
   secondTitle: {
+    textAlign: 'center',
     marginHorizontal: '5%',
     fontSize: 15,
     color: '#838f91',

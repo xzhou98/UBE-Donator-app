@@ -83,6 +83,7 @@ const UserDonationsScreen = ({navigation}) => {
         <TextInput
           style={styles.searchBar}
           placeholder="search user with email address"
+          placeholderTextColor= 'black'
           onChangeText={text => {
             setText(text);
           }}
@@ -186,6 +187,7 @@ const styles = StyleSheet.create({
     flex: 5,
     color: 'black',
     marginRight: 20,
+    
     // alignItems: 'center',
   },
   searchButton: {

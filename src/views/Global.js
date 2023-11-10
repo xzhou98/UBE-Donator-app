@@ -40,10 +40,21 @@ const getAnswer = () => {
     return answers
 }
 
-const addAnswersById = (id, option) => {
+const addAnswersById = (id, text) => {
     for (let i = 0; i < answers.length; i++) {
         if(answers[i].questionId == id){
-            answers[i].answer.push(option);
+            answers[i].answer.push(text);
+        }
+    }
+}
+
+const updateNumericAnswers = (id, num) => {
+    for (let i = 0; i < answers.length; i++) {
+        if(answers[i].questionId == id){
+            if (answers[i].answer.length == 0)
+                answers[i].answer.push(num);
+            else
+                answers[i].answer[0] = num;
         }
     }
 }
@@ -103,6 +114,7 @@ const global = {
     addAnswers,
     changeSession,
     saveData,
+    updateNumericAnswers,
 };
 
 module.exports = global;

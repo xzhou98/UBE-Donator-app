@@ -29,6 +29,7 @@ import {
   addAnswersById,
   setNextQuestionId,
   removeLastQuestion,
+  updateNumericAnswers,
   skipQuestionsById,
 } from '../views/Global';
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -382,8 +383,9 @@ const DonationScreen = ({route, navigation}) => {
           }}>
           <View style={{flexDirection: 'row'}}>
             {/* Physical Sexual Contact */}
-            <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={{flex: 3, flexDirection: 'row'}}>
               <TouchableOpacity
+                style={{flex: 1}}
                 onPress={() => {
                   Alert.alert(
                     'Physical Sexual Contact Definition',
@@ -396,18 +398,61 @@ const DonationScreen = ({route, navigation}) => {
                   style={{marginLeft: 20, width: 35, height: 35}}
                 />
               </TouchableOpacity>
-              <Text style={{paddingTop: 5, fontSize: 12, color: 'black'}}>
+              <View style={{flex: 3, flexDirection: 'column'}}>
+                <Text
+                  style={{
+                    flex: 1,
+                    color: 'black',
+                    fontSize: 12,
+                    paddingTop: 2,
+                  }}>
+                  Physical Sexual
+                </Text>
+                <Text
+                  style={{
+                    flex: 1,
+                    color: 'black',
+                    fontSize: 12,
+                    paddingBottom: 5,
+                  }}>
+                  Contact Definition
+                </Text>
+              </View>
+              {/* <Text style={{paddingTop: 5, fontSize: 12, color: 'black'}}>
                 Physical Sexual Contact Definition
-              </Text>
+              </Text> */}
             </View>
 
             {/* stop session */}
-            <View style={{alignItems: 'flex-end', flex: 1}}>
+            <View
+              style={{
+                alignItems: 'flex-end',
+                flex: 1,
+                flexDirection: 'column',
+              }}>
               <TouchableOpacity
                 onPress={() => {
                   Alert.alert('Stop/Withdraw Session', '', [
                     {
                       text: 'Exit Session Temporarily',
+                      onPress: () => {
+                        Alert.alert(
+                          '',
+                          'You are temporarily exiting your current session. Your progress with be saved and you can come back and finish at any time',
+                          [
+                            {
+                              text: 'Okay',
+                              onPress: () => {
+                                navigation.navigate('Home');
+                              },
+                            },
+                            {text: 'Cancel', style: 'cancel'},
+                          ],
+                        );
+                      },
+                    },
+                    {
+                      text: 'Quit Session',
                       onPress: () => {
                         Alert.alert(
                           '',
@@ -425,24 +470,6 @@ const DonationScreen = ({route, navigation}) => {
                         );
                       },
                     },
-                    {
-                      text: 'Quit Session',
-                      onPress: () => {
-                        Alert.alert(
-                          '',
-                          'You are temporarily exiting your current session. Your progress with be saved and you can come back and finish at any time',
-                          [
-                            {
-                              text: 'Okay',
-                              onPress: () => {
-                                navigation.navigate('Home');
-                              },
-                            },
-                            {text: 'Cancel', style: 'cancel'},
-                          ],
-                        );
-                      },
-                    },
                   ]);
                 }}>
                 <Text
@@ -451,20 +478,40 @@ const DonationScreen = ({route, navigation}) => {
                     textAlignVertical: 'center',
                     fontSize: 11,
                     color: 'white',
-                    borderRadius: 5,
-                    height: 35,
+                    // borderRadius: 5,
+                    borderTopLeftRadius: 5,
+                    borderTopRightRadius: 5,
+                    height: 20,
                     marginRight: 20,
-                    width: 80,
+                    width: 65,
                     backgroundColor: '#FA5454',
+                    paddingTop: 4,
                   }}>
-                  Stop Session
+                  Stop
+                </Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    fontSize: 11,
+                    color: 'white',
+                    borderBottomLeftRadius: 5,
+                    borderBottomRightRadius: 5,
+                    // borderRadius: 5,
+                    height: 20,
+                    marginRight: 20,
+                    width: 65,
+                    backgroundColor: '#FA5454',
+                    paddingBottom: 4,
+                  }}>
+                  Session
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
 
           <FlatList
-            style={{marginTop: 10}}
+            style={{marginTop: 15}}
             ref={flatListRef}
             data={answers}
             onContentSizeChange={() => flatListRef.current.scrollToEnd()}
@@ -575,7 +622,6 @@ const DonationScreen = ({route, navigation}) => {
                                 }}
                               />
                               <Text style={[styles.leftMessage]}>
-                                {' '}
                                 {description}
                               </Text>
                             </View>
@@ -1521,6 +1567,79 @@ const DonationScreen = ({route, navigation}) => {
                           ) : (
                             <></>
                           )}
+
+                          {currentQuestion.type == 9 ? (
+                            <View>
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  marginLeft: '5%',
+                                  marginRight: '30%',
+                                  marginVertical: 20,
+                                }}>
+                                {/* back */}
+                                <TouchableOpacity
+                                  style={{flex: 1}}
+                                  onPress={() => {
+                                    backToLastQuestion();
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: 14,
+                                      color: 'black',
+                                    }}>
+                                    {'< '}BACK
+                                  </Text>
+                                </TouchableOpacity>
+                                {/* skip */}
+                                <TouchableOpacity
+                                  style={{flex: 1, alignItems: 'center'}}
+                                  onPress={() => {
+                                    skipQuestion(currentQuestion);
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: 14,
+                                      color: 'black',
+                                    }}>
+                                    SKIP
+                                  </Text>
+                                </TouchableOpacity>
+                                {/* next */}
+                                <TouchableOpacity
+                                  style={{flex: 1, alignItems: 'flex-end'}}
+                                  onPress={() => {
+                                    if (getQId() == currentQuestion.id) {
+                                      setNextQuestionId(
+                                        currentQuestion.id,
+                                        currentQuestion.nextQuestionId,
+                                      );
+                                      setQId(-1);
+                                      setCurrentInput('');
+                                      setReload(true);
+                                      setRefresh(!refresh);
+                                    } else {
+                                      // console.log( currentQuestion.id);
+                                      // Alert.alert(
+                                      //   'Hi, nothing was typed. if you want to skip this question, press the Skip button please.',
+                                      // );
+                                      skipQuestion(currentQuestion);
+                                    }
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: 14,
+                                      color: 'black',
+                                    }}>
+                                    NEXT{' >'}
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          ) : (
+                            <></>
+                          )}
                         </View>
                       )}
                     </View>
@@ -1702,9 +1821,9 @@ const DonationScreen = ({route, navigation}) => {
               justifyContent: 'center',
             }}>
             {/* input bar */}
-            {currentQuestion.type != 3 ? (
+            {currentQuestion.type != 3 && currentQuestion.type != 9 ? (
               <View style={{height: 45, flex: 9, margin: 10}}></View>
-            ) : (
+            ) : currentQuestion.type == 3 ? (
               <View style={[styles.inputSearchStyle]}>
                 <TextInput
                   value={currentInput}
@@ -1763,7 +1882,89 @@ const DonationScreen = ({route, navigation}) => {
                   />
                 </TouchableOpacity>
               </View>
-            )}
+            ) : currentQuestion.type == 9 ? (
+              <View style={[styles.inputSearchStyle]}>
+                <TextInput
+                  value={currentInput}
+                  keyboardType="numeric"
+                  style={{
+                    flex: 9,
+                    borderRadius: 10,
+                    fontSize: 16,
+                    color: 'black',
+                  }}
+                  onChangeText={text => {
+                    setCurrentInput(text);
+                  }}
+                />
+
+                {/* send button */}
+                <TouchableOpacity
+                  onPress={() => {
+                    if (currentInput.length > 0) {
+                      if (currentQuestion.type == 3) {
+                        if (currentQuestion.id == getQId()) {
+                          addAnswersById(currentQuestion.id, currentInput);
+                          setCurrentInput('');
+                          setReload(true);
+                          setRefresh(!refresh);
+                        } else {
+                          addAnswers({
+                            isTrueAnswer: true,
+                            answer: [currentInput],
+                            image: [],
+                            nextQuestionId: currentQuestion.id,
+                            questionId: currentQuestion.id,
+                          });
+                          setQId(currentQuestion.id);
+                          setCurrentInput('');
+                          setReload(true);
+                          setRefresh(!refresh);
+                        }
+                      } else if (currentQuestion.type == 9) {
+                        if (currentQuestion.id == getQId()) {
+                          updateNumericAnswers(
+                            currentQuestion.id,
+                            currentInput,
+                          );
+                          setCurrentInput('');
+                          setReload(true);
+                          setRefresh(!refresh);
+                        } else {
+                          addAnswers({
+                            isTrueAnswer: true,
+                            answer: [currentInput],
+                            image: [],
+                            nextQuestionId: currentQuestion.id,
+                            questionId: currentQuestion.id,
+                          });
+                          setQId(currentQuestion.id);
+                          setCurrentInput('');
+                          setReload(true);
+                          setRefresh(!refresh);
+                        }
+                      } else {
+                        addAnswers({
+                          isTrueAnswer: false,
+                          answer: [currentInput],
+                          image: [],
+                          nextQuestionId: currentQuestion.id,
+                          questionId: '',
+                        });
+                        setCurrentInput('');
+                        setReload(true);
+                        setRefresh(!refresh);
+                      }
+                    }
+                  }}>
+                  <MaterialIcons
+                    style={{color: 'black', flex: 1, marginTop: 4}}
+                    name="send"
+                    size={30}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : null}
 
             {/* hambuger button */}
             {/* <TouchableOpacity
@@ -1880,7 +2081,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#aed4d9',
   },
   leftMCOption: {
-
     borderBottomWidth: 1,
     marginRight: '30%',
     marginLeft: '5%',
