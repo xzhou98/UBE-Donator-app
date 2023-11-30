@@ -1406,7 +1406,7 @@ const DonationScreen = ({route, navigation}) => {
                                       });
                                     } else {
                                       addAnswers({
-                                        isTrueAnswer: true,
+                                        isTrueAnswer: false,
                                         answer: ['Skip'],
                                         image: [],
                                         nextQuestionId:

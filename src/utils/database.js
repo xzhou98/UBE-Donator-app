@@ -312,15 +312,15 @@ export const saveAnswersToFirebase = async (
     .collection('Answers')
     .add(finalData);
 
-  // findalData = {
-  //   answer: answers,
-  //   date: date,
-  //   session: sessionNum,
-  //   sessionId: sessionId,
-  //   userId: userId,
-  // };
-  // console.log(finalData);
-  // await firestore().collection("AllDonationData").add(finalData)
+  findalData = {
+    answer: answers,
+    date: date,
+    session: sessionNum,
+    sessionId: sessionId,
+    userId: userId,
+  };
+  console.log(finalData);
+  await firestore().collection("AllDonationData").add(finalData)
 };
 
 /**
