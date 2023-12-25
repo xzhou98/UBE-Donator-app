@@ -1,5 +1,5 @@
 import React, {Component, useState} from 'react';
-import {Text, View, SafeAreaView, Alert, TouchableOpacity} from 'react-native';
+import {Text, View, SafeAreaView, Alert, TouchableOpacity, ScrollView} from 'react-native';
 import FormButton from '../components/shared/FormButton';
 import FormInput from '../components/shared/FormInput';
 import {COLORS} from '../constants/theme';
@@ -35,68 +35,93 @@ const SignUpScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: COLORS.white,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        padding: 20,
-      }}>
-      {/* Header */}
-      <Text
+    <ScrollView style={{backgroundColor: COLORS.white,  padding: '3%'}}>
+      <SafeAreaView
         style={{
-          fontSize: 35,
-          color: COLORS.black,
-          fontWeight: 'bold',
-          paddingTop: 40,
+          flex: 1,
+          backgroundColor: COLORS.white,
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          padding: 20,
         }}>
-        UBE Data
-      </Text>
-      <Text
-        style={{
-          fontSize: 20,
-          color: COLORS.black,
-          fontWeight: 'bold',
-          paddingTop: 15,
-          marginVertical: 10,
-        }}>
-        Sign up with Email
-      </Text>
+        {/* Header */}
+        <Text
+          style={{
+            fontSize: 35,
+            color: COLORS.black,
+            fontWeight: 'bold',
+            paddingTop: 40,
+          }}>
+          UBE Data
+        </Text>
+        <Text
+          style={{
+            fontSize: 20,
+            color: COLORS.black,
+            fontWeight: 'bold',
+            paddingTop: 15,
+            marginVertical: 10,
+          }}>
+          Sign up with Email
+        </Text>
 
-      <View style={{paddingTop: 10, width: '90%'}}>
-        {/* Email */}
-        <Text style={{paddingTop: 10,color: 'black', marginBottom: -10, fontSize:18}}>Email</Text>
-        <FormInput
-          // labelText="Email"
-          placeholderText="Enter your email"
-          onChangeText={value => setEmail(value)}
-          value={email}
-          keyboardType={'email-address'}
-        />
+        <View style={{paddingTop: 10, width: '90%'}}>
+          {/* Email */}
+          <Text
+            style={{
+              paddingTop: 10,
+              color: 'black',
+              marginBottom: -10,
+              fontSize: 18,
+            }}>
+            Email
+          </Text>
+          <FormInput
+            // labelText="Email"
+            placeholderText="Enter your email"
+            onChangeText={value => setEmail(value)}
+            value={email}
+            keyboardType={'email-address'}
+          />
 
-        {/* Password */}
-        <Text style={{paddingTop: 10,color: 'black', marginBottom: -10, fontSize:18}}>Password</Text>
-        <FormInput
-          // labelText="Password"
-          placeholderText="Must contain at least 6 characters"
-          onChangeText={value => setPassword(value)}
-          value={password}
-          secureTextEntry={true}
-        />
+          {/* Password */}
+          <Text
+            style={{
+              paddingTop: 10,
+              color: 'black',
+              marginBottom: -10,
+              fontSize: 18,
+            }}>
+            Password
+          </Text>
+          <FormInput
+            // labelText="Password"
+            placeholderText="Must contain at least 6 characters"
+            onChangeText={value => setPassword(value)}
+            value={password}
+            secureTextEntry={true}
+          />
 
-        {/* Confirm Password */}
-        <Text style={{paddingTop: 10,color: 'black', marginBottom: -10, fontSize:18}}>Confirm Password</Text>
-        <FormInput
-          // labelText="Confirm Password"
-          placeholderText="Enter your password again"
-          onChangeText={value => setConfirmPassword(value)}
-          value={confirmPassword}
-          secureTextEntry={true}
-        />
-      </View>
+          {/* Confirm Password */}
+          <Text
+            style={{
+              paddingTop: 10,
+              color: 'black',
+              marginBottom: -10,
+              fontSize: 18,
+            }}>
+            Confirm Password
+          </Text>
+          <FormInput
+            // labelText="Confirm Password"
+            placeholderText="Enter your password again"
+            onChangeText={value => setConfirmPassword(value)}
+            value={confirmPassword}
+            secureTextEntry={true}
+          />
+        </View>
 
-      {/* <View
+        {/* <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -127,29 +152,37 @@ const SignUpScreen = ({navigation}) => {
         </Text>
       </View> */}
 
-      <View style={{width: '85%', paddingTop: 30}}>
-        {statement ? (
-          <FormButton labelText="Sign up" handleOnPress={handleOnSubmit} />
-        ) : (
-          <FormButton
-            style={{backgroundColor: '#d1cbcb', borderColor: '#d1cbcb'}}
-            labelText="Sign up"
-            handleOnPress={handleOnSubmit}
-          />
-        )}
-      </View>
-      {/* Submit button */}
+        <View style={{width: '85%', paddingTop: 30}}>
+          {statement ? (
+            <FormButton labelText="Sign up" handleOnPress={handleOnSubmit} />
+          ) : (
+            <FormButton
+              style={{backgroundColor: '#d1cbcb', borderColor: '#d1cbcb'}}
+              labelText="Sign up"
+              handleOnPress={handleOnSubmit}
+            />
+          )}
+        </View>
+        {/* Submit button */}
 
-      {/* Footer */}
-      <View style={{alignItems: 'center', marginTop: 20}}>
-        <Text style={{fontWeight: 'bold', color:'grey', fontSize:18}}>Already have an account?</Text>
-        <Text
-          style={{marginLeft: 4, color: COLORS.green, fontWeight: 'bold', fontSize:18}}
-          onPress={() => navigation.navigate('SignInScreen')}>
-          Sign in here
-        </Text>
-      </View>
-    </SafeAreaView>
+        {/* Footer */}
+        <View style={{alignItems: 'center', marginTop: 20}}>
+          <Text style={{fontWeight: 'bold', color: 'grey', fontSize: 18}}>
+            Already have an account?
+          </Text>
+          <Text
+            style={{
+              marginLeft: 4,
+              color: COLORS.green,
+              fontWeight: 'bold',
+              fontSize: 18,
+            }}
+            onPress={() => navigation.navigate('SignInScreen')}>
+            Sign in here
+          </Text>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 

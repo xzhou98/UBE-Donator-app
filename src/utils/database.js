@@ -2,7 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {Alert} from 'react-native';
 import moment from 'moment';
-import seed from '../seed/seed.json';
+import seed from '../seed/session1.json';
 
 export const createUser = async email => {
   console.log(11);
@@ -232,7 +232,8 @@ export const getAllSessionsByUserId = async userId => {
     });
 
     for (let i = 0; i < result.length; i++) {
-      allSessions[result[i].session - 1].push(result[i]);
+      len = allSessions.length
+      allSessions[len - result[i].session].push(result[i]);
     }
     return allSessions;
   } catch (error) {}
@@ -406,6 +407,7 @@ export const getAllUserInfo = async () => {
         email: element.data().email,
         isAdmin: element.data().isAdmin,
         date: date,
+        num: element.data().num,
       });
     }));
 

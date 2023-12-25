@@ -30,7 +30,6 @@ const ReviewScreen = ({navigation}) => {
   const flatListRef = useRef();
   const [load, setLoad] = useState(false);
 
-
   const onAuthStateChanged = async user => {
     try {
       if (user == null) {
@@ -42,7 +41,7 @@ const ReviewScreen = ({navigation}) => {
         setSessions(allSessions);
         let allAnswers = await getAllSessionsByUserId(userInfo.id);
         setAllAnswers(allAnswers);
-        setLoad(false)
+        setLoad(false);
         setRender(true);
       }
     } catch (error) {
@@ -50,35 +49,41 @@ const ReviewScreen = ({navigation}) => {
     }
   };
 
-  const type = (index, item) => {
+  const type = (index, item, allAnswers) => {
     if (item.dateType == 0) {
       return (
-        <View style={styles.session}>
-          <Text style={styles.bold}>Session {item.num}</Text>
-          <Text style={styles.slim}>
-            {' '}
-            {item.startDate} to {item.endDate}
-          </Text>
+        <View>
+          <View style={styles.session}>
+            <Text style={styles.bold}>Session {item.num}</Text>
+            <Text style={styles.slim}>
+              {' '}
+              {item.startDate} to {item.endDate}
+            </Text>
+          </View>
         </View>
       );
     } else if (item.dateType == 1) {
       return (
-        <View style={styles.session1}>
-          <Text style={styles.bold}>Session {item.num}</Text>
-          <Text style={styles.slim}>
-            {' '}
-            {item.startDate} to {item.endDate}
-          </Text>
+        <View>
+          <View style={styles.session1}>
+            <Text style={styles.bold}>Session {item.num}</Text>
+            <Text style={styles.slim}>
+              {' '}
+              {item.startDate} to {item.endDate}
+            </Text>
+          </View>
         </View>
       );
     } else {
       return (
-        <View style={styles.session2}>
-          <Text style={styles.bold}>Session {item.num}</Text>
-          <Text style={styles.slim}>
-            {' '}
-            {item.startDate} to {item.endDate}
-          </Text>
+        <View>
+          <View style={styles.session2}>
+            <Text style={styles.bold}>Session {item.num}</Text>
+            <Text style={styles.slim}>
+              {' '}
+              {item.startDate} to {item.endDate}
+            </Text>
+          </View>
         </View>
       );
     }
@@ -90,7 +95,7 @@ const ReviewScreen = ({navigation}) => {
       return subscriber;
     });
 
-    if(load){
+    if (load) {
       const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
       return subscriber;
     }
@@ -137,14 +142,29 @@ const ReviewScreen = ({navigation}) => {
         renderItem={({item, index}) => (
           <View key={index} style={{flexDirection: 'column'}}>
             <View style={{alignItems: 'center'}}>
-              {type(index, item)}
+              {/* {console.log(allAnswers[1])} */}
+              {/* {console.log(item.id)} */}
+              {/* {console.log(11111111)} */}
+              {type(index, item, allAnswers)}
               {allAnswers[index].map((element, index2) => {
-                if (element.sessionId == item.id)
+                // console.log(item.id);
+
+                // if (element.sessionId == 'UM8yrYjJP6VJpiRdJ5jI')
+                //   console.log(1);
+                //   if (element.sessionId == 'dbGdEfk34y0dnJs8ou0D')
+                //   console.log(item.id);
+                // console.log("------------------------------");
+                // console.log(element.sessionId);
+                // console.log(item.id);
+
+                // console.log("------------------------------");
+
+                if (element.sessionId == item.id) {
                   return (
                     <View key={index2} style={styles.answer}>
                       <View style={{flexDirection: 'column', flex: 3}}>
                         <Text style={styles.answerTitle}>
-                          {allAnswers[index].length -index2 }st submission
+                          {allAnswers[index].length - index2}st submission
                         </Text>
                         <Text style={styles.answerDate}>{element.date}</Text>
                       </View>
@@ -168,6 +188,7 @@ const ReviewScreen = ({navigation}) => {
                       </View>
                     </View>
                   );
+                }
               })}
             </View>
           </View>
@@ -179,10 +200,13 @@ const ReviewScreen = ({navigation}) => {
       <Text style={styles.title}>
         Loading. If screen is stuck, please try to press the button below
       </Text>
-      <Button onPress={() => {
-        setRefresh(!refresh)
-        setLoad(true)
-      }} title='Refresh'/>
+      <Button
+        onPress={() => {
+          setRefresh(!refresh);
+          setLoad(true);
+        }}
+        title="Refresh"
+      />
     </View>
   );
 };

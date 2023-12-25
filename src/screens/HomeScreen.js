@@ -76,7 +76,19 @@ const HomeScreen = ({navigation}) => {
             onPress={() => {
               navigation.navigate('Help');
             }}>
-            <Text style={styles.buttonText}>Help Screen</Text>
+            <Text style={styles.buttonText}>Using Ube</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.secondTitle}>
+          If you're looking for some help.
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('ContactUs');
+            }}>
+            <Text style={styles.buttonText}>Contact Us</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.secondTitle}>

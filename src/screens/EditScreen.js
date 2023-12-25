@@ -358,7 +358,7 @@ const EditScreen = ({route, navigation}) => {
 
                 {/* multiple choice */}
                 {question.type == 0 ? (
-                  <View style={{marginTop: 10, height: '40%'}}>
+                  <ScrollView style={{marginTop: 10, height: '40%'}}>
                     {question.option.map((option, index) => {
                       return (
                         <View key={index} style={{marginTop: 10}}>
@@ -378,13 +378,13 @@ const EditScreen = ({route, navigation}) => {
                         </View>
                       );
                     })}
-                  </View>
+                  </ScrollView>
                 ) : (
                   <></>
                 )}
                 {question.type == 1 ? (
-                  <View style={{marginTop: 10, height: '40%'}}>
-                    {question.option.map((option, index) => {
+                  <ScrollView style={{marginTop: 10, height: '40%'}}>
+                    {/* {question.option.map((option, index) => {
                       return (
                         <View key={index} style={{marginTop: 10}}>
                           <Button
@@ -401,14 +401,14 @@ const EditScreen = ({route, navigation}) => {
                           />
                         </View>
                       );
-                    })}
-                  </View>
+                    })} */}
+                  </ScrollView>
                 ) : (
                   <></>
                 )}
 
                 {question.type == 2 ? (
-                  <View style={{marginTop: 10, height: '40%'}}>
+                  <ScrollView style={{marginTop: 10, height: '40%'}}>
                     {question.option.map((option, index) => {
                       return (
                         <View key={index} style={{marginTop: 10}}>
@@ -427,13 +427,13 @@ const EditScreen = ({route, navigation}) => {
                         </View>
                       );
                     })}
-                  </View>
+                  </ScrollView>
                 ) : (
                   <></>
                 )}
 
                 {question.type == 3 ? (
-                  <View style={{marginTop: 10, height: '40%'}}>
+                  <ScrollView style={{marginTop: 10, height: '40%'}}>
                     <TextInput
                       multiline={true}
                       value={textInput}
@@ -448,13 +448,13 @@ const EditScreen = ({route, navigation}) => {
                         setTextInput(text);
                       }}
                     />
-                  </View>
+                  </ScrollView>
                 ) : (
                   <></>
                 )}
 
                 {question.type == 9 ? (
-                  <View style={{marginTop: 10, height: '40%'}}>
+                  <ScrollView style={{marginTop: 10, height: '40%'}}>
                     <View>
                       <Text style={styles.rightMessage}>{numericInput}</Text>
                     </View>
@@ -475,7 +475,7 @@ const EditScreen = ({route, navigation}) => {
                         setNumericInput(text);
                       }}
                     />
-                  </View>
+                  </ScrollView>
                 ) : (
                   <></>
                 )}
@@ -484,7 +484,7 @@ const EditScreen = ({route, navigation}) => {
               <></>
             )}
 
-            <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={{flex: 1, marginTop:20, flexDirection: 'row'}}>
               <TouchableOpacity
                 style={{flex: 1, alignItems: 'center'}}
                 onPress={() => {

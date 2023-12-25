@@ -389,7 +389,7 @@ const DonationScreen = ({route, navigation}) => {
                 onPress={() => {
                   Alert.alert(
                     'Physical Sexual Contact Definition',
-                    'Physical Sexual Contact is defined as contact Between two or more people, including hugging, kissing, oral, anal, or vaginal intercourse.',
+                    'Physical Sexual Contact is defined as contact between two or more people, including hugging, kissing, oral, anal, or vaginal intercourse.',
                     [{text: 'Close', style: 'cancel'}],
                   );
                 }}>
@@ -631,9 +631,12 @@ const DonationScreen = ({route, navigation}) => {
                       {/* type next question note */}
                       {currentQuestion.note != undefined &&
                       currentQuestion.note.length != 0 ? (
-                        <Text style={[styles.leftNote]}>
-                          {currentQuestion.note}
-                        </Text>
+                        currentQuestion.note.split('\\n').map((line, index) => (
+                          <Text key={index} style={styles.leftNote}>
+                            <Text style={{fontWeight: 'bold'}}>Note: </Text>
+                            {line}
+                          </Text>
+                        ))
                       ) : (
                         <></>
                       )}
@@ -1018,10 +1021,6 @@ const DonationScreen = ({route, navigation}) => {
                                       setReload(true);
                                       setRefresh(!refresh);
                                     } else {
-                                      // console.log( currentQuestion.id);
-                                      // Alert.alert(
-                                      //   'Hi, nothing was typed. if you want to skip this question, press the Skip button please.',
-                                      // );
                                       skipQuestion(currentQuestion);
                                     }
                                   }}>
@@ -1182,7 +1181,14 @@ const DonationScreen = ({route, navigation}) => {
                           {currentQuestion.type == 5 ? (
                             <View style={{alignItems: 'center', marginTop: 10}}>
                               {contactUsScreen ? (
-                                <ContactUsScreen></ContactUsScreen>
+                                <View>
+                                  <Text style={[styles.leftOption]}>
+                                    Thank you so much for your participation.
+                                    Please be sure we will handle it with the
+                                    utmost care and confidentiality.
+                                  </Text>
+                                  <ContactUsScreen></ContactUsScreen>
+                                </View>
                               ) : (
                                 <></>
                               )}
@@ -1220,10 +1226,10 @@ const DonationScreen = ({route, navigation}) => {
                                     onPress={() => {
                                       Alert.alert(
                                         'Restart Donation',
-                                        'Are you sure you want to restart this donation session? This will permanently delete all your responses so far and cannot be undone.',
+                                        'Are you sure you want to start a new donation?',
                                         [
                                           {
-                                            text: 'Restart',
+                                            text: 'Confirm',
                                             onPress: () => restartSession(),
                                           },
                                           {text: 'Cancel', style: 'cancel'},
@@ -1272,26 +1278,39 @@ const DonationScreen = ({route, navigation}) => {
                                   {currentQuestion.option[0].option}
                                 </Text>
                               </TouchableOpacity>
-                              <TouchableOpacity
+                              {/* <TouchableOpacity
                                 onPress={() => {
-                                  setContactUsScreen(true);
-                                  removeAll();
-                                  addAnswers({
-                                    isTrueAnswer: false,
-                                    answer: [],
-                                    image: [],
-                                    nextQuestionId:
-                                      currentQuestion.option[1].nextQuestionId,
-                                    questionId: '',
-                                  });
-                                  setCurrentInput('');
-                                  setReload(true);
-                                  setRefresh(!refresh);
+                                  Alert.alert(
+                                    'Delete Donation',
+                                    'Are you sure you want to delete your donation data?',
+                                    [
+                                      {
+                                        text: 'Confirm',
+                                        onPress: () => {
+                                          setContactUsScreen(true);
+                                          removeAll();
+                                          addAnswers({
+                                            isTrueAnswer: false,
+                                            answer: [],
+                                            image: [],
+                                            nextQuestionId:
+                                              currentQuestion.option[1]
+                                                .nextQuestionId,
+                                            questionId: '',
+                                          });
+                                          setCurrentInput('');
+                                          setReload(true);
+                                          setRefresh(!refresh);
+                                        },
+                                      },
+                                      {text: 'Cancel', style: 'cancel'},
+                                    ],
+                                  );
                                 }}>
                                 <Text style={[styles.leftOption]}>
                                   {currentQuestion.option[1].option}
                                 </Text>
-                              </TouchableOpacity>
+                              </TouchableOpacity> */}
                             </View>
                           ) : (
                             <></>
@@ -1567,7 +1586,7 @@ const DonationScreen = ({route, navigation}) => {
                           ) : (
                             <></>
                           )}
-
+                          {/* Numeric Input */}
                           {currentQuestion.type == 9 ? (
                             <View>
                               <View
@@ -1620,12 +1639,68 @@ const DonationScreen = ({route, navigation}) => {
                                       setReload(true);
                                       setRefresh(!refresh);
                                     } else {
-                                      // console.log( currentQuestion.id);
-                                      // Alert.alert(
-                                      //   'Hi, nothing was typed. if you want to skip this question, press the Skip button please.',
-                                      // );
                                       skipQuestion(currentQuestion);
                                     }
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: 14,
+                                      color: 'black',
+                                    }}>
+                                    NEXT{' >'}
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          ) : (
+                            <></>
+                          )}
+
+                          {/* Text Display */}
+                          {currentQuestion.type == 10 ? (
+                            <View>
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  marginLeft: '5%',
+                                  marginRight: '30%',
+                                  marginVertical: 20,
+                                }}>
+                                {/* back */}
+                                <TouchableOpacity
+                                  style={{flex: 1}}
+                                  onPress={() => {
+                                    backToLastQuestion();
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: 14,
+                                      color: 'black',
+                                    }}>
+                                    {'< '}BACK
+                                  </Text>
+                                </TouchableOpacity>
+
+                                {/* next */}
+                                <TouchableOpacity
+                                  style={{flex: 1, alignItems: 'flex-end'}}
+                                  onPress={() => {
+                                    addAnswers({
+                                      isTrueAnswer: true,
+                                      answer: [],
+                                      image: [],
+                                      nextQuestionId: currentQuestion.id,
+                                      questionId: currentQuestion.id,
+                                    });
+                                    setNextQuestionId(
+                                      currentQuestion.id,
+                                      currentQuestion.nextQuestionId,
+                                    );
+
+                                    setCurrentInput('');
+                                    setReload(true);
+                                    setRefresh(!refresh);
                                   }}>
                                   <Text
                                     style={{
@@ -1894,7 +1969,10 @@ const DonationScreen = ({route, navigation}) => {
                     color: 'black',
                   }}
                   onChangeText={text => {
-                    setCurrentInput(text);
+                    // Check if the text is not '0'
+                    if (text !== '0') {
+                      setCurrentInput(text);
+                    }
                   }}
                 />
 

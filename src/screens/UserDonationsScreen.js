@@ -54,7 +54,6 @@ const UserDonationsScreen = ({navigation}) => {
           list.push(user);
         }
       });
-
       setUserList(list);
       setCurrentPage(1);
     } else {
@@ -83,7 +82,7 @@ const UserDonationsScreen = ({navigation}) => {
         <TextInput
           style={styles.searchBar}
           placeholder="search user with email address"
-          placeholderTextColor= 'black'
+          placeholderTextColor="black"
           onChangeText={text => {
             setText(text);
           }}
@@ -121,9 +120,15 @@ const UserDonationsScreen = ({navigation}) => {
                 alignItems: 'center',
               }}>
               <View style={{flex: 3}}>
-                <Text style={{color: 'black', marginLeft: 20, fontSize: 18}}>
-                  {item.email}
-                </Text>
+                {item.num == undefined || item.num < 2 ? (
+                  <Text style={{color: 'black', marginLeft: 20, fontSize: 18}}>
+                    {item.email}
+                  </Text>
+                ) : (
+                  <Text style={{color: 'red', marginLeft: 20, fontSize: 18}}>
+                    {item.email}
+                  </Text>
+                )}
               </View>
               <Pressable
                 style={({pressed}) => [
@@ -133,7 +138,7 @@ const UserDonationsScreen = ({navigation}) => {
                   },
                 ]}
                 onPress={() => {
-                  navigation.navigate('ReviewScreen2',{user: item});
+                  navigation.navigate('ReviewScreen2', {user: item});
                 }}>
                 <Text style={{color: 'white', fontSize: 16}}>Review</Text>
               </Pressable>
@@ -187,7 +192,7 @@ const styles = StyleSheet.create({
     flex: 5,
     color: 'black',
     marginRight: 20,
-    
+
     // alignItems: 'center',
   },
   searchButton: {
