@@ -16,7 +16,11 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {getUserInfoByEmail, getAllQuestions} from '../utils/database';
+import {
+  getUserInfoByEmail,
+  getAllQuestions,
+  countInactNum,
+} from '../utils/database';
 import auth from '@react-native-firebase/auth';
 import {Dropdown} from 'react-native-element-dropdown';
 import {
@@ -157,9 +161,10 @@ const DonationScreen = ({route, navigation}) => {
   };
 
   const forceAnswer = item => {
+    console.log(item);
     if (
       currentQuestion.nextQuestionId == undefined ||
-      currentQuestion.nextQuestionId.length == 0
+      currentQuestion.nextQuestionId.length == 0 || currentQuestion.nextQuestionId != item.nextQuestionId
     ) {
       setCurrentInput('');
       addAnswers({
@@ -202,39 +207,6 @@ const DonationScreen = ({route, navigation}) => {
     if (shortcut) setShortcut(!shortcut);
     setSkip(false);
   };
-
-  // const skipQuestion = currentQuestion => {
-  //   if (
-  //     currentQuestion.forceAnswer == undefined ||
-  //     currentQuestion.forceAnswer == false
-  //   ) {
-  //     addAnswers({
-  //       isTrueAnswer: true,
-  //       answer: ['Skip'],
-  //       image: [],
-  //       nextQuestionId: currentQuestion.nextQuestionId,
-  //       questionId: currentQuestion.id,
-  //     });
-  //     setCurrentOption();
-  //     setCurrentInput('');
-  //     setReload(true);
-  //     setRefresh(!refresh);
-  //     setImageUrl([]);
-  //     setSkip(false);
-  //   } else
-  //     Alert.alert(
-  //       'Skip',
-  //       'Skipping this question will end the session - are you sure you want to proceed?',
-  //       [
-  //         {
-  //           text: 'End Session',
-  //           // onPress: () => restartSession(),
-  //           onPress: () => setSkip(true),
-  //         },
-  //         {text: 'Cancel', tyle: 'cancel'},
-  //       ],
-  //     );
-  // };
 
   const skipQuestion = currentQuestion => {
     if (currentQuestion.type == 5 || currentQuestion.type == 6) {
@@ -334,6 +306,14 @@ const DonationScreen = ({route, navigation}) => {
     setRefresh(!refresh);
   };
 
+  const countSubmittionOfInactUser = async userId => {
+    try {
+      await countInactNum(userId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const backToLastQuestion = () => {
     Alert.alert(
       'Back to last question',
@@ -359,9 +339,35 @@ const DonationScreen = ({route, navigation}) => {
   };
 
   return render ? (
-    sessionId == null || sessionId == undefined ? (
-      <View>
-        <Text>The next donation session will open soon.</Text>
+    user.num >= 2 ? (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 20,
+          }}>
+          Thank you for your responses.
+        </Text>
+      </View>
+    ) : sessionId == null || sessionId == undefined ? (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 20,
+          }}>
+          The next donation session will open soon.
+        </Text>
         <Button
           onPress={() => {
             setRender(false);
@@ -1320,7 +1326,6 @@ const DonationScreen = ({route, navigation}) => {
                           {currentQuestion.type == 7 ? (
                             <View>
                               {answers[index].image.map((url, index1) => {
-                                // console.log(image_answer[index][index1]);
                                 return (
                                   <TouchableOpacity
                                     key={index1}
@@ -1711,6 +1716,44 @@ const DonationScreen = ({route, navigation}) => {
                                   </Text>
                                 </TouchableOpacity>
                               </View>
+                            </View>
+                          ) : (
+                            <></>
+                          )}
+
+                          {/* bad end */}
+                          {currentQuestion.type == 11 ? (
+                            <View>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  Alert.alert(
+                                    'Submit Donation',
+                                    'Are you sure you want to sumit your donation data?',
+                                    [
+                                      {
+                                        text: 'Confirm',
+                                        onPress: () => {
+                                          saveDatatoFirebase(
+                                            currentQuestion.option[0].option,
+                                            sessionId,
+                                            user.id,
+                                            user.email,
+                                            sessionNum,
+                                            currentQuestion.option[0]
+                                              .nextQuestionId,
+                                            '',
+                                          ),
+                                            countSubmittionOfInactUser(user.id);
+                                        },
+                                      },
+                                      {text: 'Cancel', style: 'cancel'},
+                                    ],
+                                  );
+                                }}>
+                                <Text style={[styles.leftOption]}>
+                                  {currentQuestion.option[0].option}
+                                </Text>
+                              </TouchableOpacity>
                             </View>
                           ) : (
                             <></>

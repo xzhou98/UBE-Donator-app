@@ -5,13 +5,13 @@ import moment from 'moment';
 import seed from '../seed/session1.json';
 
 export const createUser = async email => {
-  console.log(11);
   return firestore()
     .collection('Users')
     .add({
       email: email,
       isAdmin: false,
       date: firestore.Timestamp.fromDate(new Date()),
+      num: 0,
     });
 };
 
@@ -154,6 +154,7 @@ export const getUserInfoByEmail = async email => {
           email: element.data().email,
           isAdmin: element.data().isAdmin,
           date: date,
+          num: element.data().num,
         };
       }
     });
@@ -416,3 +417,15 @@ export const getAllUserInfo = async () => {
     console.log(error);
   }
 };
+
+export const countInactNum = async (userId) => {
+  try {
+    return firestore().collection('Users').doc(userId).update({
+      num: firestore.FieldValue.increment(1)
+    });
+  } catch (error) {
+    console.log(error);
+    return "Fail to increment num"
+  }
+
+}

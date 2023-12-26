@@ -92,12 +92,6 @@ const skipQuestionsById = (curId, nextId) => {
 
 const saveData = async (sessionId, userId, userEmail, sessionNum) => {
   let answerFilter = [];
-//   answers.forEach(element => {
-//     if (element.isTrueAnswer) {
-//       delete element.isTrueAnswer;
-//       answerFilter.push(element);
-//     }
-//   });
 
   for (let i = 0; i < answers.length; i++) {
     const element = answers[i];
