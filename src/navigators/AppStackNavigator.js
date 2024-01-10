@@ -98,7 +98,7 @@ function AppStackNavigator({navigation}) {
       <Drawer.Screen name="Technical Support" component={HelpScreen} />
       <Drawer.Screen name="Donation" component={DonationScreen} />
       <Drawer.Screen name="Review" component={SubStackNavigator} />
-      <Drawer.Screen name="Ube Help" component={ContactUsScreen} />
+      <Drawer.Screen name="Help" component={ContactUsScreen} />
       {currentUser?.email === 'zxy357038667@gmail.com' && (
         <Drawer.Screen name="AddSeed" component={AddSeedScreen} />
       )}

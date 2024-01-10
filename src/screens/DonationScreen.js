@@ -471,7 +471,7 @@ const DonationScreen = ({route, navigation}) => {
                               text: 'Yes, I want to quit.',
                               onPress: () => {
                                 restartSession();
-                                navigation.navigate('Ube Help');
+                                navigation.navigate('Help');
                               },
                             },
                             {text: 'No, Cancel', style: 'cancel'},

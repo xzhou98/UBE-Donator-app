@@ -30,86 +30,7 @@ const ContactUsScreen = () => {
 
   return (
     <ScrollView>
-      {/* <View style={{alignItems: 'center', margin: 15}}>
-        <Text style={[styles.title]}>Resource List</Text>
-      </View> */}
 
-      <View style={{marginHorizontal: '12%'}}>
-        <Text style={[styles.basetext]}>
-          For questions about the study itself, please contact:
-        </Text>
-
-        <Text style={[styles.boldText]}>{`Dr. Douglas Zytko`}</Text>
-        <View style={[styles.textContainer]}>
-          <Text style={[styles.text]}>
-            {`Assistant Professor \nDepartment of Computer Science and Engineering`}
-          </Text>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.text]}>{`zytko@oakland.edu`}</Text>
-            <TouchableOpacity
-              onPress={() => {
-                copyToClipboard('zytko@oakland.edu');
-              }}>
-              <MaterialIcons
-                style={{color: 'black', marginTop: 5, marginLeft: 5}}
-                name="content-copy"
-                size={17}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.text]}>{`(609)-313-8009`}</Text>
-            <TouchableOpacity
-              onPress={() => {
-                copyToClipboard('(609)-313-8009');
-              }}>
-              <MaterialIcons
-                style={{color: 'black', marginTop: 5, marginLeft: 5}}
-                name="content-copy"
-                size={17}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* <Text style={[styles.basetext]}>
-          If the study has brought about any thoughts that you would like to
-          discuss with us, please contact:
-        </Text>
-        <Text style={[styles.boldText]}>{`Dr. Kelly Berishaj`}</Text>
-        <View style={[styles.textContainer]}>
-          <Text style={[styles.text]}>
-            {`Special Instructor \nSchool of Nursing`}
-          </Text>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.text]}>{`berishaj@oakland.edu`}</Text>
-            <TouchableOpacity
-              onPress={() => {
-                copyToClipboard('berishaj@oakland.edu');
-              }}>
-              <MaterialIcons
-                style={{color: 'black', marginTop: 5, marginLeft: 5}}
-                name="content-copy"
-                size={17}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.text]}>{`(248)-364-8750`}</Text>
-            <TouchableOpacity
-              onPress={() => {
-                copyToClipboard('(248) 364-8750');
-              }}>
-              <MaterialIcons
-                style={{color: 'black', marginTop: 5, marginLeft: 5}}
-                name="content-copy"
-                size={17}
-              />
-            </TouchableOpacity>
-          </View>
-        </View> */}
-      </View>
 
       <View style={{marginHorizontal: '12%'}}>
         <Text style={[styles.basetext2]}>Need Help?</Text>
@@ -252,13 +173,29 @@ const ContactUsScreen = () => {
             <></>
           )}
         </View>
-        <Text style={[styles.basetext2]}>Emergency</Text>
+        <Text style={[styles.basetext2, {borderBottomWidth:2}]}>Emergency</Text>
         <Text style={{color: 'black', fontSize: 15, marginVertical: 10}}>
           {`If you are suffering from a life-threatening injury or illness that requires emergent medical assistance OR if you are in a dangerous or unsafe situation that requires immediate police response:`}
         </Text>
-        {/* <Text style={[styles.text]}>DIAL 911</Text> */}
-
-        <View style={{margin: 30}} />
+        <Text style={[styles.text, {borderBottomWidth:2}]}>Need other help? Contact:</Text>
+        <Text style={[styles.basetext2]}>Dr. Melissa McDonald</Text>
+        <Text
+          style={[
+            styles.text, {marginTop: 15}
+          ]}>{`Associate Professor, Department of Psychology`}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={[styles.text, {marginTop: 15}]}>{`mmmcdonald@oakland.edu`}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              copyToClipboard('mmmcdonald@oakland.edu');
+            }}>
+            <MaterialIcons
+              style={{color: 'black', marginTop: 15, marginLeft: 5}}
+              name="content-copy"
+              size={17}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );

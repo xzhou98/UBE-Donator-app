@@ -84,7 +84,7 @@ const HelpScreen = () => {
                 styles.cate_text
               }>{`The donation review page. This is where you can review and edit your donated data after submitting it.`}</Text>
 
-            <Text style={styles.cate_title}>{`Ube Help`}</Text>
+            <Text style={styles.cate_title}>{`Help`}</Text>
             <Text
               style={
                 styles.cate_text
