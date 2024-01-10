@@ -72,7 +72,7 @@ const ContactUsScreen = () => {
           </View>
         </View>
 
-        <Text style={[styles.basetext]}>
+        {/* <Text style={[styles.basetext]}>
           If the study has brought about any thoughts that you would like to
           discuss with us, please contact:
         </Text>
@@ -108,7 +108,7 @@ const ContactUsScreen = () => {
               />
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
       </View>
 
       <View style={{marginHorizontal: '12%'}}>
@@ -256,7 +256,7 @@ const ContactUsScreen = () => {
         <Text style={{color: 'black', fontSize: 15, marginVertical: 10}}>
           {`If you are suffering from a life-threatening injury or illness that requires emergent medical assistance OR if you are in a dangerous or unsafe situation that requires immediate police response:`}
         </Text>
-        <Text style={[styles.text]}>DIAL 911</Text>
+        {/* <Text style={[styles.text]}>DIAL 911</Text> */}
 
         <View style={{margin: 30}} />
       </View>

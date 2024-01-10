@@ -74,7 +74,7 @@ const HomeScreen = ({navigation}) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('Help');
+              navigation.navigate('Technical Support');
             }}>
             <Text style={styles.buttonText}>Using Ube</Text>
           </TouchableOpacity>
@@ -86,9 +86,9 @@ const HomeScreen = ({navigation}) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('ContactUs');
+              navigation.navigate('Ube Help');
             }}>
-            <Text style={styles.buttonText}>Contact Us</Text>
+            <Text style={styles.buttonText}>Ube Help</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.secondTitle}>

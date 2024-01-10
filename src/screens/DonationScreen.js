@@ -67,6 +67,7 @@ const DonationScreen = ({route, navigation}) => {
   const [wellnessCheck, setWellnessCheck] = useState();
   const [skip, setSkip] = useState(false);
 
+
   /**
    * get user info by user email that got from firebase Auth
    *
@@ -107,7 +108,7 @@ const DonationScreen = ({route, navigation}) => {
         setImage_answer(imageList);
       }
 
-      // console.log(allQuestions[qId]);
+      // console.log(allQuestions);
       setRender(true);
       setReload(false);
     } catch (error) {
@@ -118,8 +119,10 @@ const DonationScreen = ({route, navigation}) => {
   useEffect(() => {
     if (reload) {
       const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+
       return subscriber;
     }
+
     // unsubscribe on unmount
   }, [refresh]);
 
@@ -161,10 +164,10 @@ const DonationScreen = ({route, navigation}) => {
   };
 
   const forceAnswer = item => {
-    console.log(item);
     if (
       currentQuestion.nextQuestionId == undefined ||
-      currentQuestion.nextQuestionId.length == 0 || currentQuestion.nextQuestionId != item.nextQuestionId
+      currentQuestion.nextQuestionId.length == 0 ||
+      currentQuestion.nextQuestionId != item.nextQuestionId
     ) {
       setCurrentInput('');
       addAnswers({
@@ -468,7 +471,7 @@ const DonationScreen = ({route, navigation}) => {
                               text: 'Yes, I want to quit.',
                               onPress: () => {
                                 restartSession();
-                                navigation.navigate('ContactUs');
+                                navigation.navigate('Ube Help');
                               },
                             },
                             {text: 'No, Cancel', style: 'cancel'},
@@ -1187,21 +1190,44 @@ const DonationScreen = ({route, navigation}) => {
                           {currentQuestion.type == 5 ? (
                             <View style={{alignItems: 'center', marginTop: 10}}>
                               {contactUsScreen ? (
-                                <View>
-                                  <Text style={[styles.leftOption]}>
+                                <ScrollView style={{}}>
+                                  {/* <Text style={[styles.leftOption]}>
                                     Thank you so much for your participation.
                                     Please be sure we will handle it with the
                                     utmost care and confidentiality.
-                                  </Text>
+                                  </Text> */}
                                   <ContactUsScreen></ContactUsScreen>
-                                </View>
+                                </ScrollView>
                               ) : (
                                 <></>
                               )}
 
-                              <View style={{flexDirection: 'row'}}>
+                              <View style={{flexDirection: 'column'}}>
+                                {currentQuestion.id == 2 ? (
+                                  <View
+                                    style={{
+                                      marginTop: 15,
+                                      justifyContent: 'center',
+                                      marginRight: 20,
+                                      borderRadius: 7,
+                                      height: 45,
+                                      width: 130,
+                                      backgroundColor: '#95ec69',
+                                    }}>
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        backToLastQuestion();
+                                      }}>
+                                      <Text style={[styles.Restart]}>BACK</Text>
+                                    </TouchableOpacity>
+                                  </View>
+                                ) : (
+                                  <></>
+                                )}
+
                                 <View
                                   style={{
+                                    marginTop: 15,
                                     justifyContent: 'center',
                                     marginRight: 20,
                                     borderRadius: 7,
@@ -1222,6 +1248,7 @@ const DonationScreen = ({route, navigation}) => {
 
                                 <View
                                   style={{
+                                    marginTop: 15,
                                     justifyContent: 'center',
                                     borderRadius: 7,
                                     height: 45,
@@ -1260,7 +1287,7 @@ const DonationScreen = ({route, navigation}) => {
                                 onPress={() => {
                                   Alert.alert(
                                     'Submit Donation',
-                                    'Are you sure you want to sumit your donation data?',
+                                    'Are you sure you want to submit your donation data?',
                                     [
                                       {
                                         text: 'Confirm',
@@ -1488,7 +1515,7 @@ const DonationScreen = ({route, navigation}) => {
                                   <Text style={[styles.leftMessage]}>
                                     Your progress will be saved, and you can
                                     come back to the data donation process at a
-                                    later time when you're feeling more
+                                    later time if you're feeling more
                                     comfortable.
                                   </Text>
                                   <Text style={[styles.leftMessage]}>
@@ -1534,7 +1561,7 @@ const DonationScreen = ({route, navigation}) => {
                                       );
                                     }}>
                                     <Text style={[styles.leftOption]}>
-                                      Would you want to end this session.
+                                      I would like to end this session.
                                     </Text>
                                   </TouchableOpacity>
                                 </View>
@@ -1728,7 +1755,7 @@ const DonationScreen = ({route, navigation}) => {
                                 onPress={() => {
                                   Alert.alert(
                                     'Submit Donation',
-                                    'Are you sure you want to sumit your donation data?',
+                                    'Are you sure you want to submit your donation data?',
                                     [
                                       {
                                         text: 'Confirm',
@@ -1754,6 +1781,30 @@ const DonationScreen = ({route, navigation}) => {
                                   {currentQuestion.option[0].option}
                                 </Text>
                               </TouchableOpacity>
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  marginVertical: 10,
+                                  marginRight: '30%',
+                                  marginLeft: '5%',
+                                }}>
+                                {/* back */}
+                                <TouchableOpacity
+                                  style={{flex: 1}}
+                                  onPress={() => {
+                                    backToLastQuestion();
+                                  }}>
+                                  <Text
+                                    style={{
+                                      fontSize: 14,
+                                      color: 'black',
+                                    }}>
+                                    {'< '}BACK
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
                             </View>
                           ) : (
                             <></>

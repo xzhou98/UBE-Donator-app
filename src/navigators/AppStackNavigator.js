@@ -95,10 +95,10 @@ function AppStackNavigator({navigation}) {
       initialRouteName="Home"
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="Home" component={HomeScreen} />
-      <Drawer.Screen name="Help" component={HelpScreen} />
+      <Drawer.Screen name="Technical Support" component={HelpScreen} />
       <Drawer.Screen name="Donation" component={DonationScreen} />
       <Drawer.Screen name="Review" component={SubStackNavigator} />
-      <Drawer.Screen name="ContactUs" component={ContactUsScreen} />
+      <Drawer.Screen name="Ube Help" component={ContactUsScreen} />
       {currentUser?.email === 'zxy357038667@gmail.com' && (
         <Drawer.Screen name="AddSeed" component={AddSeedScreen} />
       )}

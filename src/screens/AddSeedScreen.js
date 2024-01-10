@@ -36,15 +36,15 @@ const AddSeedScreen = () => {
 
   return (
     <View>
-      {/* <TouchableOpacity
+      <TouchableOpacity
         onPress={() => {
           runSeed(startDate, endDate)
         }}>
         <Text style={{color:'red'}}>run seed</Text>
-      </TouchableOpacity> */}
-      <TouchableOpacity onPress={() => {fetchProlificUserInfo()}}>
-        <Text>ss</Text>
       </TouchableOpacity>
+      {/* <TouchableOpacity onPress={() => {fetchProlificUserInfo()}}>
+        <Text>ss</Text>
+      </TouchableOpacity> */}
     </View>
   );
 };
