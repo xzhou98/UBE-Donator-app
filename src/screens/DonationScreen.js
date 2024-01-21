@@ -12,6 +12,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Linking,
   Button,
 } from 'react-native';
 import moment from 'moment';
@@ -66,7 +67,10 @@ const DonationScreen = ({route, navigation}) => {
   const flatListRef = useRef();
   const [wellnessCheck, setWellnessCheck] = useState();
   const [skip, setSkip] = useState(false);
-
+  const [donorEmailAddress, setDonorEmailAddress] = useState([]);
+  const [prolific_fail_link, setProlific_fail_link] = useState([]);
+  const [prolific_success_link, setProlific_success_link] = useState([]);
+  const [shouldScrollToEnd, setShouldScrollToEnd] = useState(false);
 
   /**
    * get user info by user email that got from firebase Auth
@@ -83,6 +87,9 @@ const DonationScreen = ({route, navigation}) => {
       if (allQuestions != null) {
         setSessionId(allQuestions.id);
         setSessionNum(allQuestions.session);
+        setDonorEmailAddress(allQuestions.DonorEmailAddress);
+        setProlific_fail_link(allQuestions.prolific_fail_link);
+        setProlific_success_link(allQuestions.prolific_success_link);
         allQuestions = allQuestions.questions;
         setQuestions(allQuestions);
         let allAnswers = getAnswer();
@@ -119,7 +126,7 @@ const DonationScreen = ({route, navigation}) => {
   useEffect(() => {
     if (reload) {
       const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-
+      setShouldScrollToEnd(true);
       return subscriber;
     }
 
@@ -289,9 +296,16 @@ const DonationScreen = ({route, navigation}) => {
     sessionNum,
     nextQuestionId,
     currentQuestionId,
+    donorEmailAddress,
   ) => {
     try {
-      await saveData(sessionId, userId, userEmail, sessionNum);
+      await saveData(
+        sessionId,
+        userId,
+        userEmail,
+        sessionNum,
+        donorEmailAddress,
+      );
     } catch (error) {
       console.log(error);
     }
@@ -392,7 +406,7 @@ const DonationScreen = ({route, navigation}) => {
           }}>
           <View style={{flexDirection: 'row'}}>
             {/* Physical Sexual Contact */}
-            <View style={{flex: 3, flexDirection: 'row'}}>
+            {/* <View style={{flex: 3, flexDirection: 'row'}}>
               <TouchableOpacity
                 style={{flex: 1}}
                 onPress={() => {
@@ -427,10 +441,7 @@ const DonationScreen = ({route, navigation}) => {
                   Contact Definition
                 </Text>
               </View>
-              {/* <Text style={{paddingTop: 5, fontSize: 12, color: 'black'}}>
-                Physical Sexual Contact Definition
-              </Text> */}
-            </View>
+            </View> */}
 
             {/* stop session */}
             <View
@@ -523,8 +534,14 @@ const DonationScreen = ({route, navigation}) => {
             style={{marginTop: 15}}
             ref={flatListRef}
             data={answers}
-            onContentSizeChange={() => flatListRef.current.scrollToEnd()}
-            showsVerticalScrollIndicator={true}
+            // onContentSizeChange={() => flatListRef.current.scrollToEnd()}
+            onContentSizeChange={() => {
+              if (shouldScrollToEnd) {
+                flatListRef.current.scrollToEnd();
+                setShouldScrollToEnd(false); // Reset the flag
+              }
+            }}
+            // showsVerticalScrollIndicator={true}
             renderItem={({item, index}) => (
               <View>
                 {/* list answers */}
@@ -1202,13 +1219,16 @@ const DonationScreen = ({route, navigation}) => {
                                 <></>
                               )}
 
-                              <View style={{flexDirection: 'column'}}>
+                              <View
+                                style={{
+                                  flexDirection: 'column',
+                                  alignItems: 'center',
+                                }}>
                                 {currentQuestion.id == 2 ? (
                                   <View
                                     style={{
                                       marginTop: 15,
                                       justifyContent: 'center',
-                                      marginRight: 20,
                                       borderRadius: 7,
                                       height: 45,
                                       width: 130,
@@ -1229,7 +1249,7 @@ const DonationScreen = ({route, navigation}) => {
                                   style={{
                                     marginTop: 15,
                                     justifyContent: 'center',
-                                    marginRight: 20,
+                                    // marginRight: 20,
                                     borderRadius: 7,
                                     height: 45,
                                     width: 130,
@@ -1275,6 +1295,58 @@ const DonationScreen = ({route, navigation}) => {
                                     </Text>
                                   </TouchableOpacity>
                                 </View>
+
+                                {donorEmailAddress.includes(
+                                  user.email + '**',
+                                ) ||
+                                (currentQuestion.id != 596 &&
+                                  currentQuestion.id != 571) ? (
+                                  <></>
+                                ) : (
+                                  <View
+                                    style={{
+                                      marginTop: 15,
+                                      alignItems: 'center',
+                                      marginHorizontal: 20,
+                                    }}>
+                                    <Text style={[styles.Restart]}>
+                                      {' '}
+                                      Please press the button below to link to
+                                      your Prolific account to complete your
+                                      Submission
+                                    </Text>
+
+                                    <View
+                                      style={{
+                                        marginTop: 15,
+                                        justifyContent: 'center',
+                                        borderRadius: 7,
+                                        height: 45,
+                                        width: 130,
+                                        backgroundColor: '#95ec69',
+                                      }}>
+                                      <TouchableOpacity
+                                        onPress={() => {
+                                          if (
+                                            donorEmailAddress.includes(
+                                              user.email,
+                                            )
+                                          ) {
+                                            Linking.openURL(
+                                              prolific_success_link,
+                                            );
+                                          } else {
+                                            Linking.openURL(prolific_fail_link);
+                                          }
+                                        }}>
+                                        <Text style={[styles.Restart]}>
+                                          {' '}
+                                          Link to Prolific
+                                        </Text>
+                                      </TouchableOpacity>
+                                    </View>
+                                  </View>
+                                )}
                               </View>
                             </View>
                           ) : (
@@ -1291,7 +1363,26 @@ const DonationScreen = ({route, navigation}) => {
                                     [
                                       {
                                         text: 'Confirm',
-                                        onPress: () =>
+                                        onPress: () => {
+                                          if (
+                                            donorEmailAddress.includes(
+                                              user.email + '**',
+                                            )
+                                          ) {
+                                          } else if (
+                                            donorEmailAddress.includes(
+                                              user.email,
+                                            ) ||
+                                            donorEmailAddress.includes(
+                                              user.email + '*',
+                                            )
+                                          ) {
+                                            donorEmailAddress.push(
+                                              user.email + '**',
+                                            );
+                                          } else {
+                                            donorEmailAddress.push(user.email);
+                                          }
                                           saveDatatoFirebase(
                                             currentQuestion.option[0].option,
                                             sessionId,
@@ -1301,7 +1392,9 @@ const DonationScreen = ({route, navigation}) => {
                                             currentQuestion.option[0]
                                               .nextQuestionId,
                                             '',
-                                          ),
+                                            donorEmailAddress,
+                                          );
+                                        },
                                       },
                                       {text: 'Cancel', style: 'cancel'},
                                     ],
@@ -1311,39 +1404,6 @@ const DonationScreen = ({route, navigation}) => {
                                   {currentQuestion.option[0].option}
                                 </Text>
                               </TouchableOpacity>
-                              {/* <TouchableOpacity
-                                onPress={() => {
-                                  Alert.alert(
-                                    'Delete Donation',
-                                    'Are you sure you want to delete your donation data?',
-                                    [
-                                      {
-                                        text: 'Confirm',
-                                        onPress: () => {
-                                          setContactUsScreen(true);
-                                          removeAll();
-                                          addAnswers({
-                                            isTrueAnswer: false,
-                                            answer: [],
-                                            image: [],
-                                            nextQuestionId:
-                                              currentQuestion.option[1]
-                                                .nextQuestionId,
-                                            questionId: '',
-                                          });
-                                          setCurrentInput('');
-                                          setReload(true);
-                                          setRefresh(!refresh);
-                                        },
-                                      },
-                                      {text: 'Cancel', style: 'cancel'},
-                                    ],
-                                  );
-                                }}>
-                                <Text style={[styles.leftOption]}>
-                                  {currentQuestion.option[1].option}
-                                </Text>
-                              </TouchableOpacity> */}
                             </View>
                           ) : (
                             <></>
@@ -1385,14 +1445,6 @@ const DonationScreen = ({route, navigation}) => {
                                           } catch (error) {
                                             console.log(error);
                                           }
-
-                                          // let temp = [];
-                                          // if (imageUrl.length == 0)
-                                          //   temp =
-                                          //     answers[answers.length - 1].image;
-                                          // else temp = imageUrl;
-                                          // temp[index] = data;
-                                          // setRefresh(!refresh);
                                         },
                                       });
                                     }}>
@@ -1760,6 +1812,27 @@ const DonationScreen = ({route, navigation}) => {
                                       {
                                         text: 'Confirm',
                                         onPress: () => {
+                                          if (
+                                            donorEmailAddress.includes(
+                                              user.email + '**',
+                                            )
+                                          ) {
+                                          } else if (
+                                            donorEmailAddress.includes(
+                                              user.email,
+                                            ) ||
+                                            donorEmailAddress.includes(
+                                              user.email + '*',
+                                            )
+                                          ) {
+                                            donorEmailAddress.push(
+                                              user.email + '**',
+                                            );
+                                          } else {
+                                            donorEmailAddress.push(
+                                              user.email + '*',
+                                            );
+                                          }
                                           saveDatatoFirebase(
                                             currentQuestion.option[0].option,
                                             sessionId,
@@ -1769,8 +1842,10 @@ const DonationScreen = ({route, navigation}) => {
                                             currentQuestion.option[0]
                                               .nextQuestionId,
                                             '',
-                                          ),
-                                            countSubmittionOfInactUser(user.id);
+                                            donorEmailAddress,
+                                          );
+
+                                          countSubmittionOfInactUser(user.id);
                                         },
                                       },
                                       {text: 'Cancel', style: 'cancel'},
@@ -2137,23 +2212,6 @@ const DonationScreen = ({route, navigation}) => {
                 </TouchableOpacity>
               </View>
             ) : null}
-
-            {/* hambuger button */}
-            {/* <TouchableOpacity
-              onPress={() => {
-                setShortcut(!shortcut);
-              }}>
-              <MaterialIcons
-                style={{
-                  color: 'black',
-                  flex: 1,
-                  marginRight: 5,
-                  marginTop: '5%',
-                }}
-                name="notes"
-                size={40}
-              />
-            </TouchableOpacity> */}
           </View>
         </SafeAreaView>
       </View>

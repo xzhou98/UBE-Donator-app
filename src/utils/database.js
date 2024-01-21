@@ -83,6 +83,9 @@ export const getAllQuestions = async () => {
           id: element.id,
           questions: temp,
           session: element.data().session,
+          DonorEmailAddress: element.data().DonorEmailAddress,
+          prolific_fail_link: element.data().prolific_fail_link,
+          prolific_success_link: element.data().prolific_success_link,
         };
       }
     });
@@ -233,7 +236,7 @@ export const getAllSessionsByUserId = async userId => {
     });
 
     for (let i = 0; i < result.length; i++) {
-      len = allSessions.length
+      len = allSessions.length;
       allSessions[len - result[i].session].push(result[i]);
     }
     return allSessions;
@@ -257,6 +260,7 @@ export const saveAnswersToFirebase = async (
   userEmail,
   sessionNum,
   answers,
+  donorEmailAddress,
 ) => {
   let date = new Date();
 
@@ -314,6 +318,14 @@ export const saveAnswersToFirebase = async (
     .collection('Answers')
     .add(finalData);
 
+  // update donorEmailAddress
+  await firestore()
+    .collection('Questions')
+    .doc(sessionId)
+    .update({
+      DonorEmailAddress: donorEmailAddress
+    });
+
   findalData = {
     answer: answers,
     date: date,
@@ -322,7 +334,7 @@ export const saveAnswersToFirebase = async (
     userId: userId,
   };
   console.log(finalData);
-  await firestore().collection("AllDonationData").add(finalData)
+  await firestore().collection('AllDonationData').add(finalData);
 };
 
 /**
@@ -399,18 +411,20 @@ export const getAllUserInfo = async () => {
   try {
     let alluser = [];
     const users = await firestore().collection('Users').get();
-    await Promise.all( users.docs.map(async element => {
-      let date = moment(element.data().date._seconds * 1000).format(
-        'MMMM Do YYYY, h:mm:ss a',
-      );
-      alluser.push({
-        id: element.id,
-        email: element.data().email,
-        isAdmin: element.data().isAdmin,
-        date: date,
-        num: element.data().num,
-      });
-    }));
+    await Promise.all(
+      users.docs.map(async element => {
+        let date = moment(element.data().date._seconds * 1000).format(
+          'MMMM Do YYYY, h:mm:ss a',
+        );
+        alluser.push({
+          id: element.id,
+          email: element.data().email,
+          isAdmin: element.data().isAdmin,
+          date: date,
+          num: element.data().num,
+        });
+      }),
+    );
 
     return alluser;
   } catch (error) {
@@ -418,14 +432,16 @@ export const getAllUserInfo = async () => {
   }
 };
 
-export const countInactNum = async (userId) => {
+export const countInactNum = async userId => {
   try {
-    return firestore().collection('Users').doc(userId).update({
-      num: firestore.FieldValue.increment(1)
-    });
+    return firestore()
+      .collection('Users')
+      .doc(userId)
+      .update({
+        num: firestore.FieldValue.increment(1),
+      });
   } catch (error) {
     console.log(error);
-    return "Fail to increment num"
+    return 'Fail to increment num';
   }
-
-}
+};

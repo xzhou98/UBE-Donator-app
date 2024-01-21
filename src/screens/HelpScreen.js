@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Linking,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -187,7 +188,21 @@ const HelpScreen = () => {
                 {marginTop: 10},
               ]}>{`Video Tutorial`}</Text>
 
-            <Text></Text>
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(
+                  'https://youtu.be/YGCuaQSTyss?t=301&si=OaFkAhWDpMYJMhwg',
+                );
+              }}>
+              <Text
+                style={{
+                  marginTop: 10,
+                  color: '#1f28fc',
+                  fontSize: 16,
+                }}>
+                Navigate to the youtube video
+              </Text>
+            </TouchableOpacity>
 
             <Text
               style={[
@@ -202,7 +217,6 @@ const HelpScreen = () => {
         <Text
           style={[
             styles.cate_title,
-            {borderBottomWidth: 0.5},
           ]}>{`Didn’t find the answer to your question? For further questions regarding the app and study, contact:`}</Text>
 
         <Text style={styles.boldtext}>Dr. Melissa McDonald</Text>

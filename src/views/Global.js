@@ -90,7 +90,7 @@ const skipQuestionsById = (curId, nextId) => {
   }
 };
 
-const saveData = async (sessionId, userId, userEmail, sessionNum) => {
+const saveData = async (sessionId, userId, userEmail, sessionNum, donorEmailAddress) => {
   let answerFilter = [];
 
   for (let i = 0; i < answers.length; i++) {
@@ -108,7 +108,7 @@ const saveData = async (sessionId, userId, userEmail, sessionNum) => {
   }
 
   try {
-      await saveAnswersToFirebase(sessionId, userId, userEmail, sessionNum, answerFilter)
+      await saveAnswersToFirebase(sessionId, userId, userEmail, sessionNum, answerFilter, donorEmailAddress)
   } catch (error) {
       console.log(error);
   }

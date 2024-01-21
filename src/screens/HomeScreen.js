@@ -66,7 +66,7 @@ const HomeScreen = ({navigation}) => {
     // </Stack.Navigator>
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.mainTitle}>Welcome back to UBE</Text>
+        <Text style={styles.mainTitle}>Welcome to UBE</Text>
         <Text style={styles.secondTitle}>
           Before you begin data donation, please proceed to the Help section.
         </Text>

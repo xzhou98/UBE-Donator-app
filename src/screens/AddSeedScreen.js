@@ -8,7 +8,7 @@ const AddSeedScreen = () => {
     firestore.Timestamp.fromDate(new Date('2023-06-11T00:00:00')),
   );
   const [endDate, setEndDate] = useState(
-    firestore.Timestamp.fromDate(new Date('2023-06-30T00:00:00')),
+    firestore.Timestamp.fromDate(new Date('2024-06-30T00:00:00')),
   );
   const fetchProlificUserInfo = async () => {
     const url = 'https://api.prolific.com/api/v1/participant-groups/';
