@@ -89,7 +89,7 @@ const HelpScreen = () => {
             <Text
               style={
                 styles.cate_text
-              }>{`The contact resources page. This is where you can find contact resources to seek mental health and abuse help, and reach out to us with questions about UBE and the study.`}</Text>
+              }>{`The contact resources page. This is where you can find contact information to 1) ask questions about how to use UBE 2) ask questions about your participation in this study, 3) seek help or advice for a personal mental health concern.`}</Text>
           </View>
         ) : (
           <></>
@@ -122,29 +122,41 @@ const HelpScreen = () => {
         </TouchableOpacity>
         {categories[1] ? (
           <View>
-            <Text style={styles.cate_title}>{`Skip Button`}</Text>
+            <Text style={styles.cate_title}>{`Skip`}</Text>
             <Text
               style={
                 styles.cate_text
-              }>{`I do not want to answer this question.`}</Text>
+              }>{`I choose not to answer this question.`}</Text>
 
-            <Text style={styles.cate_title}>{`Next Button`}</Text>
+            <Text style={styles.cate_title}>{`Next`}</Text>
             <Text
               style={
                 styles.cate_text
               }>{`I am done answering this question. Proceed to the next question.`}</Text>
 
-            <Text style={styles.cate_title}>{`Back Button`}</Text>
+            <Text style={styles.cate_title}>{`Back`}</Text>
             <Text
               style={
                 styles.cate_text
-              }>{`I made a mistake in the previous question. Go back to that question so I can re-do and fix it.`}</Text>
+              }>{`I want to go back to the last question so I can re-do it.`}</Text>
 
-            <Text style={styles.cate_title}>{`Stop Session Button`}</Text>
+            <Text style={styles.cate_title}>{`Stop Session`}</Text>
             <Text
               style={
                 styles.cate_text
-              }>{`I want to stop donating immediately.\n\nI click “Exit Session Temporarily” or close the app to save my current donation progress and resume it a later time.\n\nI click “Quit Session” to stop the current, ongoing donation and delete all my donation progress. `}</Text>
+              }>{`I want to pause or stop donating immediately.`}</Text>
+
+            <Text style={styles.cate_title}>{`Exit Session Temporarily`}</Text>
+            <Text
+              style={
+                styles.cate_text
+              }>{`I want to pause my donation.`}</Text>
+
+            <Text style={styles.cate_title}>{`Quit Session`}</Text>
+            <Text
+              style={
+                styles.cate_text
+              }>{`I want to stop donating and permanently delete my progress for the current donation.`}</Text>
           </View>
         ) : (
           <></>
@@ -200,7 +212,7 @@ const HelpScreen = () => {
                   color: '#1f28fc',
                   fontSize: 16,
                 }}>
-                Navigate to the youtube video
+                Embed youtube video
               </Text>
             </TouchableOpacity>
 

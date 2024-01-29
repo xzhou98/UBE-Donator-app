@@ -151,10 +151,6 @@ const DonationScreen = ({route, navigation}) => {
   };
 
   const restartSession = () => {
-    setContactUsScreen(false);
-    setCurrentInput('');
-    setImageUrl([]);
-    setCurrentOption();
     removeAll();
     addAnswers({
       isTrueAnswer: false,
@@ -163,11 +159,15 @@ const DonationScreen = ({route, navigation}) => {
       nextQuestionId: '1',
       questionId: '0',
     });
-    setReload(true);
-    setRefresh(!refresh);
+    setContactUsScreen(false);
+    setCurrentInput('');
+    setImageUrl([]);
+    setCurrentOption();
     if (shortcut) setShortcut(!shortcut);
     setWellnessCheck(false);
     setSkip(false);
+    setReload(true);
+    setRefresh(!refresh);
   };
 
   const forceAnswer = item => {
@@ -355,6 +355,19 @@ const DonationScreen = ({route, navigation}) => {
     );
   };
 
+  const reGetAllquestions = () => {
+    // try {
+    //   let allQuestions = await getAllQuestions();
+    //   allQuestions = allQuestions.questions;
+    //   setQuestions(allQuestions);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    setRender(false);
+    setReload(true);
+    setRefresh(!refresh)
+  };
+
   return render ? (
     user.num >= 2 ? (
       <View
@@ -406,15 +419,16 @@ const DonationScreen = ({route, navigation}) => {
           }}>
           <View style={{flexDirection: 'row'}}>
             {/* Physical Sexual Contact */}
-            {/* <View style={{flex: 3, flexDirection: 'row'}}>
+            <View style={{flex: 3, flexDirection: 'row'}}>
               <TouchableOpacity
                 style={{flex: 1}}
                 onPress={() => {
-                  Alert.alert(
-                    'Physical Sexual Contact Definition',
-                    'Physical Sexual Contact is defined as contact between two or more people, including hugging, kissing, oral, anal, or vaginal intercourse.',
-                    [{text: 'Close', style: 'cancel'}],
-                  );
+                  // Alert.alert(
+                  //   'Physical Sexual Contact Definition',
+                  //   'Physical Sexual Contact is defined as contact between two or more people, including hugging, kissing, oral, anal, or vaginal intercourse.',
+                  //   [{text: 'Close', style: 'cancel'}],
+                  // );
+                  reGetAllquestions()
                 }}>
                 <Image
                   source={require('../css/images/book.jpg')}
@@ -429,7 +443,7 @@ const DonationScreen = ({route, navigation}) => {
                     fontSize: 12,
                     paddingTop: 2,
                   }}>
-                  Physical Sexual
+                  If find any error, please
                 </Text>
                 <Text
                   style={{
@@ -438,10 +452,10 @@ const DonationScreen = ({route, navigation}) => {
                     fontSize: 12,
                     paddingBottom: 5,
                   }}>
-                  Contact Definition
+                  refresh the screen
                 </Text>
               </View>
-            </View> */}
+            </View>
 
             {/* stop session */}
             <View

@@ -68,7 +68,7 @@ const HomeScreen = ({navigation}) => {
       <View style={styles.container}>
         <Text style={styles.mainTitle}>Welcome to UBE</Text>
         <Text style={styles.secondTitle}>
-          Before you begin data donation, please proceed to the Help section.
+        For questions regarding how to use UBE, head to TECHNICAL SUPPORT section
         </Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -76,11 +76,11 @@ const HomeScreen = ({navigation}) => {
             onPress={() => {
               navigation.navigate('Technical Support');
             }}>
-            <Text style={styles.buttonText}>Using Ube</Text>
+            <Text style={styles.buttonText}>TECHNICAL SUPPORT</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.secondTitle}>
-          If you're looking for some help.
+        If you need to contact someone with questions about the study or seek support services, head to HELP page
         </Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -88,7 +88,7 @@ const HomeScreen = ({navigation}) => {
             onPress={() => {
               navigation.navigate('Help');
             }}>
-            <Text style={styles.buttonText}>Help</Text>
+            <Text style={styles.buttonText}>HELP</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.secondTitle}>
@@ -100,7 +100,7 @@ const HomeScreen = ({navigation}) => {
             onPress={() => {
               navigation.navigate('Donation');
             }}>
-            <Text style={styles.buttonText}>Start donating</Text>
+            <Text style={styles.buttonText}>START DONATING</Text>
           </TouchableOpacity>
         </View>
 
@@ -114,7 +114,7 @@ const HomeScreen = ({navigation}) => {
             onPress={() => {
               navigation.navigate('Review');
             }}>
-            <Text style={styles.buttonText}>Review</Text>
+            <Text style={styles.buttonText}>REVIEW</Text>
           </TouchableOpacity>
         </View>
       </View>
