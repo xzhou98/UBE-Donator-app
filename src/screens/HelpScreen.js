@@ -30,7 +30,7 @@ const HelpScreen = () => {
   useEffect(() => {}, [refresh]);
 
   return (
-    <ScrollView style={{padding: '3%'}}>
+    <ScrollView style={{paddingHorizontal: '3%'}}>
       <View style={{alignItems: 'center'}}></View>
       <Text style={styles.basetext}>
         UBE is a ChatBot App for Data Donation. It embeds some basic
@@ -38,7 +38,7 @@ const HelpScreen = () => {
         and image upload. This page will help you in understanding how to use
         the functionalities.
       </Text>
-      <Text style={[styles.basetext, {fontSize: 20}]}>How to use UBE?</Text>
+      <Text style={[styles.basetext, {fontSize: 20}]}>How to use UBE:</Text>
       <View>
         {/* 1 */}
         <TouchableOpacity
@@ -237,7 +237,7 @@ const HelpScreen = () => {
             styles.cate_title,
           ]}>{`Associate Professor, Department of Psychology`}</Text>
         <View style={{flexDirection: 'row'}}>
-          <Text style={[styles.cate_title]}>{`mmmcdonald@oakland.edu`}</Text>
+          <Text style={[styles.cate_title]}>{`mmmcdonald@oakland.edu\n\n\n\n\n\n\n\n`}</Text>
           <TouchableOpacity
             onPress={() => {
               copyToClipboard('mmmcdonald@oakland.edu');

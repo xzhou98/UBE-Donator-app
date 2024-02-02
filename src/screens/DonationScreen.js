@@ -365,7 +365,7 @@ const DonationScreen = ({route, navigation}) => {
     // }
     setRender(false);
     setReload(true);
-    setRefresh(!refresh)
+    setRefresh(!refresh);
   };
 
   return render ? (
@@ -428,7 +428,7 @@ const DonationScreen = ({route, navigation}) => {
                   //   'Physical Sexual Contact is defined as contact between two or more people, including hugging, kissing, oral, anal, or vaginal intercourse.',
                   //   [{text: 'Close', style: 'cancel'}],
                   // );
-                  reGetAllquestions()
+                  reGetAllquestions();
                 }}>
                 <Image
                   source={require('../css/images/book.jpg')}
@@ -467,24 +467,7 @@ const DonationScreen = ({route, navigation}) => {
               <TouchableOpacity
                 onPress={() => {
                   Alert.alert('Stop/Withdraw Session', '', [
-                    {
-                      text: 'Exit Session Temporarily',
-                      onPress: () => {
-                        Alert.alert(
-                          '',
-                          'You are temporarily exiting your current session. Your progress with be saved and you can come back and finish at any time',
-                          [
-                            {
-                              text: 'Okay',
-                              onPress: () => {
-                                navigation.navigate('Home');
-                              },
-                            },
-                            {text: 'Cancel', style: 'cancel'},
-                          ],
-                        );
-                      },
-                    },
+                    {text: 'Cancel', style: 'cancel'},
                     {
                       text: 'Quit Session',
                       onPress: () => {
@@ -500,6 +483,24 @@ const DonationScreen = ({route, navigation}) => {
                               },
                             },
                             {text: 'No, Cancel', style: 'cancel'},
+                          ],
+                        );
+                      },
+                    },
+                    {
+                      text: 'Exit Session Temporarily',
+                      onPress: () => {
+                        Alert.alert(
+                          '',
+                          'You are temporarily exiting your current session. Your progress with be saved and you can come back and finish at any time',
+                          [
+                            {
+                              text: 'Okay',
+                              onPress: () => {
+                                navigation.navigate('Home');
+                              },
+                            },
+                            {text: 'Cancel', style: 'cancel'},
                           ],
                         );
                       },
@@ -576,7 +577,6 @@ const DonationScreen = ({route, navigation}) => {
                               zIndex: 1,
                             }}
                           />
-
                           <Text style={[styles.leftMessage]}>
                             {' '}
                             {description}
@@ -588,6 +588,18 @@ const DonationScreen = ({route, navigation}) => {
                 ) : (
                   <></>
                 )}
+
+                {questions[item.questionId].note != undefined &&
+                  questions[item.questionId].note.length != 0 ? (
+                    questions[item.questionId].note.split('\\n').map((line, index) => (
+                      <Text key={index} style={styles.leftNote}>
+                        <Text style={{fontWeight: 'bold'}}>Note: </Text>
+                        {line}
+                      </Text>
+                    ))
+                  ) : (
+                    <></>
+                  )}
 
                 {/* check if the answer has image */}
                 <View>
@@ -669,7 +681,7 @@ const DonationScreen = ({route, navigation}) => {
                       })}
 
                       {/* type next question note */}
-                      {currentQuestion.note != undefined &&
+                      {/* {currentQuestion.note != undefined &&
                       currentQuestion.note.length != 0 ? (
                         currentQuestion.note.split('\\n').map((line, index) => (
                           <Text key={index} style={styles.leftNote}>
@@ -679,7 +691,7 @@ const DonationScreen = ({route, navigation}) => {
                         ))
                       ) : (
                         <></>
-                      )}
+                      )} */}
 
                       {/* Display ContactUsScreen or current question*/}
                       {skip ? (
@@ -1556,7 +1568,7 @@ const DonationScreen = ({route, navigation}) => {
                             <View>
                               <TouchableOpacity
                                 onPress={() => {
-                                  navigation.navigate('ContactUs');
+                                  navigation.navigate('Help');
                                 }}>
                                 <Text style={[styles.leftNavigationLink]}>
                                   Need to talk to someone? Head to contact

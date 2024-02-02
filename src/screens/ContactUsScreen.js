@@ -30,8 +30,6 @@ const ContactUsScreen = () => {
 
   return (
     <ScrollView>
-
-
       <View style={{marginHorizontal: '12%'}}>
         <Text style={[styles.basetext2]}>Need Help?</Text>
 
@@ -134,7 +132,7 @@ const ContactUsScreen = () => {
               <Text style={[styles.italic]}>
                 {`Provides free and confidential support to individuals in suicidal crisis or emotional distress`}
               </Text>
-              <Text
+              {/* <Text
                 style={{
                   color: 'black',
                   fontSize: 15,
@@ -151,7 +149,11 @@ const ContactUsScreen = () => {
                   color: 'black',
                   fontSize: 15,
                   marginLeft: '10%',
-                }}>{`Spanish`}</Text>
+                }}>{`Spanish`}</Text> */}
+              <Text style={[styles.text]}>{`1-800-273-TALK (8255)`}</Text>
+
+              <Text style={[styles.text]}>{`Can text 988`}</Text>
+
               <Text style={[styles.text]}>{`Español: 1-888-628-9454h`}</Text>
 
               {/* 3 */}
@@ -173,18 +175,27 @@ const ContactUsScreen = () => {
             <></>
           )}
         </View>
-        <Text style={[styles.basetext2, {borderBottomWidth:2}]}>Emergency</Text>
+        <Text style={[styles.basetext2, {borderBottomWidth: 2}]}>
+          Emergency
+        </Text>
         <Text style={{color: 'black', fontSize: 15, marginVertical: 10}}>
           {`If you are suffering from a life-threatening injury or illness that requires emergent medical assistance OR if you are in a dangerous or unsafe situation that requires immediate police response:`}
         </Text>
-        <Text style={[styles.text, {borderBottomWidth:2}]}>Need other help? Contact:</Text>
+        <Text style={[styles.text, {borderBottomWidth: 2}]}>
+          Need other help? Contact:
+        </Text>
         <Text style={[styles.basetext2]}>Dr. Melissa McDonald</Text>
         <Text
           style={[
-            styles.text, {marginTop: 15}
+            styles.text,
+            {marginTop: 15},
           ]}>{`Associate Professor, Department of Psychology`}</Text>
         <View style={{flexDirection: 'row'}}>
-          <Text style={[styles.text, {marginTop: 15}]}>{`mmmcdonald@oakland.edu`}</Text>
+          <Text
+            style={[
+              styles.text,
+              {marginTop: 15},
+            ]}>{`mmmcdonald@oakland.edu\n\n\n\n\n\n\n`}</Text>
           <TouchableOpacity
             onPress={() => {
               copyToClipboard('mmmcdonald@oakland.edu');
