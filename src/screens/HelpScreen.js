@@ -148,9 +148,7 @@ const HelpScreen = () => {
 
             <Text style={styles.cate_title}>{`Exit Session Temporarily`}</Text>
             <Text
-              style={
-                styles.cate_text
-              }>{`I want to pause my donation.`}</Text>
+              style={styles.cate_text}>{`I want to pause my donation.`}</Text>
 
             <Text style={styles.cate_title}>{`Quit Session`}</Text>
             <Text
@@ -194,7 +192,7 @@ const HelpScreen = () => {
                 styles.cate_title
               }>{`UBE allows you to upload your screenshots and then edit them in the app itself to hide anything you do not want to share with us.`}</Text>
 
-            <Text
+            {/* <Text
               style={[
                 styles.cate_text,
                 {marginTop: 10},
@@ -221,6 +219,7 @@ const HelpScreen = () => {
                 styles.cate_text,
                 {marginTop: 10},
               ]}>{`Please refer to the PDF you received before the study for more detailed steps regarding how to upload and edit your screenshots in UBE. If you are unable to use this feature, please contact us ASAP for help.`}</Text>
+           */}
           </View>
         ) : (
           <></>
@@ -229,7 +228,67 @@ const HelpScreen = () => {
         <Text
           style={[
             styles.cate_title,
+            {paddingBottom: 10},
           ]}>{`Didn’t find the answer to your question? For further questions regarding the app and study, contact:`}</Text>
+
+        <View
+          style={{
+            borderTopWidth: 0.5,
+            borderBottomWidth: 0.5,
+            padding: 10,
+            flexDirection: 'column',
+          }}>
+          <View
+            style={{
+              paddingBottom: 10,
+              flexDirection: 'row',
+            }}>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+              }}>
+              1. Refer to this{' '}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL('https://youtu.be/7a29MPrR764');
+              }}>
+              <Text
+                style={{
+                  color: '#1f28fc',
+                  fontSize: 16,
+                }}>
+                information youtube video [link: https://youtu.be/7a29MPrR764]
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              paddingBottom: 10,
+              flexDirection: 'row',
+            }}>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 16,
+              }}>
+              2. Refer to this{' '}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL('https://youtu.be/7a29MPrR764');
+              }}>
+              <Text
+                style={{
+                  color: '#1f28fc',
+                  fontSize: 16,
+                }}>
+                information youtube video [link: https://youtu.be/7a29MPrR764]
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <Text style={styles.boldtext}>Dr. Melissa McDonald</Text>
         <Text
@@ -237,7 +296,10 @@ const HelpScreen = () => {
             styles.cate_title,
           ]}>{`Associate Professor, Department of Psychology`}</Text>
         <View style={{flexDirection: 'row'}}>
-          <Text style={[styles.cate_title]}>{`mmmcdonald@oakland.edu\n\n\n\n\n\n\n\n`}</Text>
+          <Text
+            style={[
+              styles.cate_title,
+            ]}>{`mmmcdonald@oakland.edu\n\n\n\n\n\n\n\n`}</Text>
           <TouchableOpacity
             onPress={() => {
               copyToClipboard('mmmcdonald@oakland.edu');
