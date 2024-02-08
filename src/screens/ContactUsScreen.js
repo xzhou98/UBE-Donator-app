@@ -69,7 +69,19 @@ const ContactUsScreen = () => {
               <Text style={[styles.italic]}>
                 {`The National Sexual Assault Hotline gives you access to a range of free services offered by sexual assault service providers`}
               </Text>
-              <Text style={[styles.text]}>{`1-800.656.HOPE (4673)`}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.text]}>{`1-800.656.HOPE (4673)`}</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    copyToClipboard('1-800.656.HOPE (4673)');
+                  }}>
+                  <MaterialIcons
+                    style={{color: 'black', marginTop: 5, marginLeft: 5}}
+                    name="content-copy"
+                    size={17}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           ) : (
             <></>
@@ -150,11 +162,45 @@ const ContactUsScreen = () => {
                   fontSize: 15,
                   marginLeft: '10%',
                 }}>{`Spanish`}</Text> */}
-              <Text style={[styles.text]}>{`1-800-273-TALK (8255)`}</Text>
-
-              <Text style={[styles.text]}>{`Can text 988`}</Text>
-
-              <Text style={[styles.text]}>{`Español: 1-888-628-9454h`}</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.text]}>{`1-800-273-TALK (8255)`}</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    copyToClipboard('1-800-273-TALK (8255)');
+                  }}>
+                  <MaterialIcons
+                    style={{color: 'black', marginTop: 5, marginLeft: 5}}
+                    name="content-copy"
+                    size={17}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.text]}>{`Can text 988`}</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    copyToClipboard('988');
+                  }}>
+                  <MaterialIcons
+                    style={{color: 'black', marginTop: 5, marginLeft: 5}}
+                    name="content-copy"
+                    size={17}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.text]}>{`Español: 1-888-628-9454h`}</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    copyToClipboard('1-888-628-9454h');
+                  }}>
+                  <MaterialIcons
+                    style={{color: 'black', marginTop: 5, marginLeft: 5}}
+                    name="content-copy"
+                    size={17}
+                  />
+                </TouchableOpacity>
+              </View>
 
               {/* 3 */}
               <Text
@@ -169,7 +215,20 @@ const ContactUsScreen = () => {
               <Text style={[styles.italic]}>
                 {`Offers free 24/7 text-based support for people in crisis, including those experiencing suicidal thoughts.`}
               </Text>
-              <Text style={[styles.text]}>{`Text HOME to 741-741`}</Text>
+
+              <View style={{flexDirection: 'row'}}>
+                <Text style={[styles.text]}>{`Text HOME to 741-741`}</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    copyToClipboard('741-741');
+                  }}>
+                  <MaterialIcons
+                    style={{color: 'black', marginTop: 5, marginLeft: 5}}
+                    name="content-copy"
+                    size={17}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           ) : (
             <></>
