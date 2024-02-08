@@ -430,10 +430,15 @@ const DonationScreen = ({route, navigation}) => {
                   // );
                   reGetAllquestions();
                 }}>
-                <Image
+                {/* <Image
                   source={require('../css/images/book.jpg')}
                   style={{marginLeft: 20, width: 35, height: 35}}
-                />
+                /> */}
+                                 <MaterialIcons
+                    style={{color: 'black', flex: 1, marginLeft: 20,}}
+                    name="refresh"
+                    size={35}
+                  />
               </TouchableOpacity>
               <View style={{flex: 3, flexDirection: 'column'}}>
                 <Text
@@ -1463,6 +1468,7 @@ const DonationScreen = ({route, navigation}) => {
                                             temp = image_answer;
                                             const NewPath =
                                               await PhotoEditorNewPath(data);
+
                                             temp[index][index1] = `${NewPath}`;
                                             setImage_answer(temp);
                                             setReload(false);

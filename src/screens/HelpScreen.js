@@ -233,6 +233,7 @@ const HelpScreen = () => {
 
         <View
           style={{
+            marginHorizontal:5,
             borderTopWidth: 0.5,
             borderBottomWidth: 0.5,
             padding: 10,
@@ -252,14 +253,15 @@ const HelpScreen = () => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL('https://youtu.be/7a29MPrR764');
+                Linking.openURL('https://drive.google.com/file/d/1L4GqT1BCtYjbDSlIk3KaAxrgu-2xtcj9/view?usp=sharing');
               }}>
               <Text
                 style={{
                   color: '#1f28fc',
                   fontSize: 16,
+                  
                 }}>
-                information youtube video [link: https://youtu.be/7a29MPrR764]
+                information pdf
               </Text>
             </TouchableOpacity>
           </View>
@@ -284,7 +286,7 @@ const HelpScreen = () => {
                   color: '#1f28fc',
                   fontSize: 16,
                 }}>
-                information youtube video [link: https://youtu.be/7a29MPrR764]
+                information youtube video
               </Text>
             </TouchableOpacity>
           </View>
