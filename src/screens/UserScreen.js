@@ -9,9 +9,7 @@ import {
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {resetPassword} from '../utils/auth';
-import {
-    // getUserInfoByEmail,
-  } from '../utils/database';
+import {getUserInfoByEmail, deleteUser} from '../utils/database';
 
 const UserDonationsScreen = ({navigation}) => {
   const [render, setRender] = useState(false);
@@ -19,24 +17,42 @@ const UserDonationsScreen = ({navigation}) => {
   const [user, setUser] = useState();
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(async user => {
+    // Async function declared inside the useEffect
+    const fetchData = async () => {
+      try {
+        const userAuth = auth().currentUser;
+        if (userAuth) {
+          setUserEmail(userAuth.email);
+          const userInfo = await getUserInfoByEmail(userAuth.email);
+        //   console.log(userInfo);
+          setUser(userInfo);
+        } else {
+          console.log('User is not logged in');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    // Call the async function
+    fetchData();
+  
+    // Setup the subscriber for auth state changes
+    const subscriber = auth().onAuthStateChanged(user => {
       if (user) {
         setUserEmail(user.email);
-        try {
-          let userInfo = await getUserInfoByEmail(user.email);
-          console.log(userInfo);
-          setUser(userInfo);
-        } catch (error) {
-          console.log(error);
-        }
-
-        setRender(true);
       } else {
         console.log('User is not logged in');
       }
     });
-    return subscriber; // Unsubscribe on unmount
-  });
+    setRender(true)
+    // Cleanup function
+    return () => {
+      // Assuming subscriber() correctly removes the event listener
+      // If `subscriber` itself is the cleanup function, just call it
+      subscriber();
+    };
+  }, []);
 
   const resetPasswordSubmit = () => {
     if (userEmail != '') {
@@ -49,8 +65,12 @@ const UserDonationsScreen = ({navigation}) => {
     }
   };
 
-  const deleteAccount = () => {
-    console.log(user);
+  const deleteAccount = async (email, userId, password) => {
+    try {
+      await deleteUser(email, userId, password);
+    } catch (error) {
+      console.log(error);
+    }
     // console.log(1);
   };
 
@@ -104,7 +124,8 @@ const UserDonationsScreen = ({navigation}) => {
                   [
                     {
                       text: 'Confirm',
-                      onPress: () => deleteAccount(),
+                      onPress: () =>
+                        user && deleteAccount(userEmail, user.id, user.password),
                     },
                     {text: 'Cancel', style: 'cancel'},
                   ],

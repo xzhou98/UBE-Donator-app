@@ -42,7 +42,7 @@ const SignUpScreen = ({navigation}) => {
           // G45S5D1Q
           if (code == verificationCode) {
             let success = await signUp(email, password);
-            if (success) await createUser(email);
+            if (success) await createUser(email, password);
           } else {
             Alert.alert('The verification code is incorrect');
           }

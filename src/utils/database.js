@@ -3,28 +3,143 @@ import storage from '@react-native-firebase/storage';
 import {Alert} from 'react-native';
 import moment from 'moment';
 import seed from '../seed/session1.json';
+import {getStorage, ref, deleteObject} from 'firebase/storage';
+import auth from '@react-native-firebase/auth';
 
-export const createUser = async email => {
+export const createUser = async (email, password) => {
   return firestore()
     .collection('Users')
     .add({
       email: email,
+      password: password,
       isAdmin: false,
       date: firestore.Timestamp.fromDate(new Date()),
       num: 0,
     });
 };
 
-export const getVerificationCode = async() => {
-  id = 'txfFQy1uUbt5SbFLBX6n'
+const reauthenticateUser = async (email, password) => {
   try {
-    const verification_code = (await firestore().collection('Verification').doc(id).get()).data().code;
+    const user = auth().currentUser;
+    const credential = auth.EmailAuthProvider.credential(email, password);
+    await user.reauthenticateWithCredential(credential);
+    console.log('User re-authenticated successfully');
+    return true; // User re-authenticated
+  } catch (error) {
+    console.error('Error re-authenticating user:', error);
+    return false; // Failed to re-authenticate
+  }
+};
 
-    return verification_code
+const deleteUserAccount = async () => {
+  try {
+    const user = auth().currentUser;
+    await user.delete();
+    console.log('User account deleted successfully');
+    // Perform any cleanup after account deletion here (e.g., redirect to login screen)
+  } catch (error) {
+    console.error('Error deleting user account:', error);
+    // Handle deletion error (e.g., show message to user)
+  }
+};
+
+const deleteUserByEmailAndPassword = async (email, password) => {
+  const reauthenticated = await reauthenticateUser(email, password);
+  if (reauthenticated) {
+    await deleteUserAccount(); // Proceed to delete the user account
+  } else {
+    console.error('Could not re-authenticate user for account deletion.');
+    // Handle failed re-authentication (e.g., prompt user again or show error)
+  }
+};
+
+export const deleteUser = async (email, userId, password) => {
+  if (!email || !userId) return;
+
+  let folderPath = 'images/' + email;
+
+  // delete the user
+  try {
+    await firestore().collection('Users').doc(userId).delete();
+    console.log('User account successfully deleted for userId:', userId);
+  } catch (error) {
+    console.error(`Error deleting user account: ${email}`, error);
+  }
+
+  // delete the donation data
+  try {
+    let querySnapshot = await firestore()
+      .collection('DonationData')
+      .where('userId', '==', userId)
+      .get();
+
+    // const documentIds = querySnapshot.docs.map(doc => doc.id);
+
+    for (const doc of querySnapshot.docs) {
+      // First, delete all documents in the Answers subcollection
+      const answersSnapshot = await firestore()
+        .collection('DonationData')
+        .doc(doc.id)
+        .collection('Answers')
+        .get();
+
+      const answersDeletePromises = answersSnapshot.docs.map(answerDoc =>
+        firestore()
+          .collection('DonationData')
+          .doc(doc.id)
+          .collection('Answers')
+          .doc(answerDoc.id)
+          .delete(),
+      );
+
+      // Wait for all Answers documents to be deleted
+      await Promise.all(answersDeletePromises);
+
+      // Then, delete the parent DonationData document
+      await firestore().collection('DonationData').doc(doc.id).delete();
+    }
+
+    console.log(
+      'All matching documents and their Answers successfully deleted',
+    );
+    console.log('Documents successfully deleted for userId:', userId);
+  } catch (error) {
+    console.log('No documents found for userId:', userId);
+  }
+
+  // delete screenshots
+  try {
+    // List all files in the folder
+    const listResult = await storage().ref(folderPath).listAll();
+    // Delete each file
+    for (const fileRef of listResult.items) {
+      await fileRef.delete();
+    }
+    console.log(`Successfully deleted all images of account: ${email}`);
+  } catch (error) {
+    console.error(`Error deleting images of account: ${email}`, error);
+  }
+
+  //delete user account
+  deleteUserByEmailAndPassword(email, password)
+    .then(() => console.log('Deletion process complete.'))
+    .catch(error =>
+      console.error('Deletion process encountered an error:', error),
+    );
+};
+
+export const getVerificationCode = async () => {
+  id = 'txfFQy1uUbt5SbFLBX6n';
+  try {
+    const verification_code = (
+      await firestore().collection('Verification').doc(id).get()
+    ).data().code;
+
+    return verification_code;
   } catch (error) {
     return error;
   }
-}
+};
 
 /**
  * get all questions by session Id
@@ -166,6 +281,7 @@ export const getUserInfoByEmail = async email => {
         user = {
           id: element.id,
           email: element.data().email,
+          password: element.data().password,
           isAdmin: element.data().isAdmin,
           date: date,
           num: element.data().num,
@@ -330,12 +446,9 @@ export const saveAnswersToFirebase = async (
     .add(finalData);
 
   // update donorEmailAddress
-  await firestore()
-    .collection('Questions')
-    .doc(sessionId)
-    .update({
-      DonorEmailAddress: donorEmailAddress
-    });
+  await firestore().collection('Questions').doc(sessionId).update({
+    DonorEmailAddress: donorEmailAddress,
+  });
 
   findalData = {
     answer: answers,
