@@ -1,10 +1,18 @@
-import React, {Component, useState} from 'react';
-import {Text, View, SafeAreaView, Alert, TouchableOpacity, ScrollView} from 'react-native';
+import React, {Component, useState, useEffect} from 'react';
+import {
+  Text,
+  View,
+  SafeAreaView,
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import FormButton from '../components/shared/FormButton';
 import FormInput from '../components/shared/FormInput';
 import {COLORS} from '../constants/theme';
 import {signUp} from '../utils/auth';
-import {createUser} from '../utils/database';
+import {createUser, getVerificationCode} from '../utils/database';
+
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const SignUpScreen = ({navigation}) => {
@@ -12,19 +20,36 @@ const SignUpScreen = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [statement, setStatement] = useState(true);
+  const [code, setCode] = useState('');
+  const [verificationCode, setVerificationCode] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const v_code = await getVerificationCode();
+        setVerificationCode(v_code);
+      } catch (error) {
+        console.error('Error fetching verification code:', error);
+      }
+    }
+    fetchData();
+  }, []);
 
   const handleOnSubmit = async () => {
     if (email != '' && password != '' && confirmPassword != '') {
       if (statement) {
         if (password == confirmPassword) {
-          try {
+          // G45S5D1Q
+          if (code == verificationCode) {
             let success = await signUp(email, password);
             if (success) await createUser(email);
-          } catch (error) {
-            console.log(error);
+          } else {
+            Alert.alert('The verification code is incorrect');
           }
+
+ 
         } else {
-          Alert.alert('password did not match');
+          Alert.alert('Password did not match');
         }
       } else {
         Alert.alert('Please agree with the statement below');
@@ -35,7 +60,7 @@ const SignUpScreen = ({navigation}) => {
   };
 
   return (
-    <ScrollView style={{backgroundColor: COLORS.white,  padding: '3%'}}>
+    <ScrollView style={{backgroundColor: COLORS.white, padding: '3%'}}>
       <SafeAreaView
         style={{
           flex: 1,
@@ -118,6 +143,22 @@ const SignUpScreen = ({navigation}) => {
             onChangeText={value => setConfirmPassword(value)}
             value={confirmPassword}
             secureTextEntry={true}
+          />
+
+          {/* Verification code */}
+          <Text
+            style={{
+              paddingTop: 10,
+              color: 'black',
+              marginBottom: -10,
+              fontSize: 18,
+            }}>
+            Verification code
+          </Text>
+          <FormInput
+            placeholderText="Enter the code"
+            onChangeText={value => setCode(value)}
+            value={code}
           />
         </View>
 

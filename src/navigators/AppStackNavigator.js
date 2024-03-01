@@ -6,6 +6,7 @@ import {
   DonationScreen,
   HomeScreen,
   HelpScreen,
+  UserScreen,
   ReviewScreen,
   EditScreen,
   UserDonationsScreen,
@@ -99,6 +100,7 @@ function AppStackNavigator({navigation}) {
       <Drawer.Screen name="Donation" component={DonationScreen} />
       <Drawer.Screen name="Review" component={SubStackNavigator} />
       <Drawer.Screen name="Help" component={ContactUsScreen} />
+      <Drawer.Screen name="Account" component={UserScreen} />
       {currentUser?.email === 'zxy357038667@gmail.com' && (
         <Drawer.Screen name="AddSeed" component={AddSeedScreen} />
       )}

@@ -594,8 +594,8 @@ const DonationScreen = ({route, navigation}) => {
                   <></>
                 )}
 
-                {questions[item.questionId].note != undefined &&
-                  questions[item.questionId].note.length != 0 ? (
+                {(questions[item.questionId] != undefined && questions[item.questionId].note != undefined &&
+                  questions[item.questionId].note.length != 0) ? (
                     questions[item.questionId].note.split('\\n').map((line, index) => (
                       <Text key={index} style={styles.leftNote}>
                         <Text style={{fontWeight: 'bold'}}>Note: </Text>
@@ -1394,7 +1394,7 @@ const DonationScreen = ({route, navigation}) => {
                                     [
                                       {
                                         text: 'Confirm',
-                                        onPress: () => {
+                                        onPress: async () => {
                                           if (
                                             donorEmailAddress.includes(
                                               user.email + '**',
@@ -1843,7 +1843,7 @@ const DonationScreen = ({route, navigation}) => {
                                     [
                                       {
                                         text: 'Confirm',
-                                        onPress: () => {
+                                        onPress: async () => {
                                           if (
                                             donorEmailAddress.includes(
                                               user.email + '**',

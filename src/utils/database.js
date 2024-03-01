@@ -15,6 +15,17 @@ export const createUser = async email => {
     });
 };
 
+export const getVerificationCode = async() => {
+  id = 'txfFQy1uUbt5SbFLBX6n'
+  try {
+    const verification_code = (await firestore().collection('Verification').doc(id).get()).data().code;
+
+    return verification_code
+  } catch (error) {
+    return error;
+  }
+}
+
 /**
  * get all questions by session Id
  */

@@ -90,6 +90,7 @@ const ReviewScreen = ({navigation}) => {
   };
 
   useEffect(() => {
+    
     const focusHandler = navigation.addListener('focus', () => {
       const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
       return subscriber;

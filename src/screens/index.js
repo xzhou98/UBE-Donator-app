@@ -11,5 +11,6 @@ import AddSeedScreen from "./AddSeedScreen";
 import UserDonationsScreen from "./UserDonationsScreen"
 import ReviewScreen2 from "./ReviewScreen2"
 import SessionDetailScreen from "./SessionDetailScreen";
+import UserScreen from "./UserScreen";
 
-export { SessionDetailScreen, ReviewScreen2, AddSeedScreen,EditScreen,ResetPasswordScreen, ReviewScreen, ContactUsScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, UserDonationsScreen };
+export { UserScreen, SessionDetailScreen, ReviewScreen2, AddSeedScreen,EditScreen,ResetPasswordScreen, ReviewScreen, ContactUsScreen, HelpScreen, DonationScreen, HomeScreen, SignInScreen, SignUpScreen, UserDonationsScreen };
