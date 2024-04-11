@@ -17,6 +17,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
+  const [prolificId, setProlificId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [statement, setStatement] = useState(true);
@@ -36,18 +37,16 @@ const SignUpScreen = ({navigation}) => {
   }, []);
 
   const handleOnSubmit = async () => {
-    if (email != '' && password != '' && confirmPassword != '') {
+    if (email != '' && prolificId != '' && password != '' && confirmPassword != '') {
       if (statement) {
         if (password == confirmPassword) {
           // G45S5D1Q
           if (code == verificationCode) {
             let success = await signUp(email, password);
-            if (success) await createUser(email, password);
+            if (success) await createUser(email, prolificId, password);
           } else {
             Alert.alert('The verification code is incorrect');
           }
-
- 
         } else {
           Alert.alert('Password did not match');
         }
@@ -107,6 +106,24 @@ const SignUpScreen = ({navigation}) => {
             onChangeText={value => setEmail(value)}
             value={email}
             keyboardType={'email-address'}
+          />
+
+          {/* Prolific ID */}
+          <Text
+            style={{
+              paddingTop: 10,
+              color: 'black',
+              marginBottom: -10,
+              fontSize: 18,
+            }}>
+            Prolific ID
+          </Text>
+          <FormInput
+            // labelText="Prolific ID"
+            placeholderText="Enter your Prolific ID"
+            onChangeText={value => setProlificId(value)}
+            value={prolificId}
+            secureTextEntry={true}
           />
 
           {/* Password */}

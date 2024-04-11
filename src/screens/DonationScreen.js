@@ -21,6 +21,7 @@ import {
   getUserInfoByEmail,
   getAllQuestions,
   countInactNum,
+  getProlificIdList,
 } from '../utils/database';
 import auth from '@react-native-firebase/auth';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -71,6 +72,8 @@ const DonationScreen = ({route, navigation}) => {
   const [prolific_fail_link, setProlific_fail_link] = useState([]);
   const [prolific_success_link, setProlific_success_link] = useState([]);
   const [shouldScrollToEnd, setShouldScrollToEnd] = useState(false);
+  const [sendingStatus, setSendingStatus] = useState(false);
+  const [prolificIdList, setProlificIdList] = useState();
 
   /**
    * get user info by user email that got from firebase Auth
@@ -114,6 +117,8 @@ const DonationScreen = ({route, navigation}) => {
         }
         setImage_answer(imageList);
       }
+      let id_list = await getProlificIdList();
+      setProlificIdList(id_list);
 
       // console.log(allQuestions);
       setRender(true);
@@ -318,6 +323,7 @@ const DonationScreen = ({route, navigation}) => {
       nextQuestionId: nextQuestionId,
       questionId: currentQuestionId,
     });
+    setSendingStatus(false);
     setCurrentInput('');
     setReload(true);
     setRefresh(!refresh);
@@ -331,7 +337,7 @@ const DonationScreen = ({route, navigation}) => {
     }
   };
 
-  const backToLastQuestion = () => {
+  const backToLastQuestion = currentquestionId => {
     Alert.alert(
       'Back to last question',
       'Are you sure you want to go back to the last question? This will erase your answer to the current question.',
@@ -339,6 +345,9 @@ const DonationScreen = ({route, navigation}) => {
         {
           text: 'Yes',
           onPress: () => {
+            if (currentquestionId == answers[answers.length - 1].questionId) {
+              removeLastQuestion();
+            }
             removeLastQuestion();
             setCurrentInput('');
             setCurrentOption();
@@ -384,7 +393,12 @@ const DonationScreen = ({route, navigation}) => {
           Thank you for your responses.
         </Text>
       </View>
-    ) : sessionId == null || sessionId == undefined ? (
+    ) : sessionId == null ||
+      sessionId == undefined ||
+      !prolificIdList.includes(user.prolificId) ||
+      donorEmailAddress.includes(user.email) ||
+      donorEmailAddress.includes(user.email + "*") ||
+      donorEmailAddress.includes(user.email + "**") ? (
       <View
         style={{
           flex: 1,
@@ -434,11 +448,11 @@ const DonationScreen = ({route, navigation}) => {
                   source={require('../css/images/book.jpg')}
                   style={{marginLeft: 20, width: 35, height: 35}}
                 /> */}
-                                 <MaterialIcons
-                    style={{color: 'black', flex: 1, marginLeft: 20,}}
-                    name="refresh"
-                    size={35}
-                  />
+                <MaterialIcons
+                  style={{color: 'black', flex: 1, marginLeft: 20}}
+                  name="refresh"
+                  size={35}
+                />
               </TouchableOpacity>
               <View style={{flex: 3, flexDirection: 'column'}}>
                 <Text
@@ -594,17 +608,21 @@ const DonationScreen = ({route, navigation}) => {
                   <></>
                 )}
 
-                {(questions[item.questionId] != undefined && questions[item.questionId].note != undefined &&
-                  questions[item.questionId].note.length != 0) ? (
-                    questions[item.questionId].note.split('\\n').map((line, index) => (
+                {questions[item.questionId] != currentQuestion.id &&
+                questions[item.questionId] != undefined &&
+                questions[item.questionId].note != undefined &&
+                questions[item.questionId].note.length != 0 ? (
+                  questions[item.questionId].note
+                    .split('\\n')
+                    .map((line, index) => (
                       <Text key={index} style={styles.leftNote}>
                         <Text style={{fontWeight: 'bold'}}>Note: </Text>
                         {line}
                       </Text>
                     ))
-                  ) : (
-                    <></>
-                  )}
+                ) : (
+                  <></>
+                )}
 
                 {/* check if the answer has image */}
                 <View>
@@ -685,8 +703,8 @@ const DonationScreen = ({route, navigation}) => {
                           );
                       })}
 
-                      {/* type next question note */}
-                      {/* {currentQuestion.note != undefined &&
+                      {/* type note */}
+                      {currentQuestion.note != undefined &&
                       currentQuestion.note.length != 0 ? (
                         currentQuestion.note.split('\\n').map((line, index) => (
                           <Text key={index} style={styles.leftNote}>
@@ -696,7 +714,7 @@ const DonationScreen = ({route, navigation}) => {
                         ))
                       ) : (
                         <></>
-                      )} */}
+                      )}
 
                       {/* Display ContactUsScreen or current question*/}
                       {skip ? (
@@ -759,7 +777,7 @@ const DonationScreen = ({route, navigation}) => {
                                   <TouchableOpacity
                                     style={{flex: 1}}
                                     onPress={() => {
-                                      backToLastQuestion();
+                                      backToLastQuestion(currentQuestion.id);
                                     }}>
                                     <Text
                                       style={{
@@ -873,7 +891,7 @@ const DonationScreen = ({route, navigation}) => {
                                 <TouchableOpacity
                                   style={{flex: 1}}
                                   onPress={() => {
-                                    backToLastQuestion();
+                                    backToLastQuestion(currentQuestion.id);
                                   }}>
                                   <Text
                                     style={{
@@ -1040,7 +1058,7 @@ const DonationScreen = ({route, navigation}) => {
                                 <TouchableOpacity
                                   style={{flex: 1}}
                                   onPress={() => {
-                                    backToLastQuestion();
+                                    backToLastQuestion(currentQuestion.id);
                                   }}>
                                   <Text
                                     style={{
@@ -1157,7 +1175,7 @@ const DonationScreen = ({route, navigation}) => {
                                     opacity: 0.5,
                                     color: COLORS.primary,
                                   }}>
-                                  + add image
+                                  + select image
                                 </Text>
                               </TouchableOpacity>
 
@@ -1173,7 +1191,7 @@ const DonationScreen = ({route, navigation}) => {
                                 <TouchableOpacity
                                   style={{flex: 1}}
                                   onPress={() => {
-                                    backToLastQuestion();
+                                    backToLastQuestion(currentQuestion.id);
                                   }}>
                                   <Text
                                     style={{
@@ -1217,7 +1235,8 @@ const DonationScreen = ({route, navigation}) => {
                                       setRefresh(!refresh);
                                     } else {
                                       Alert.alert(
-                                        'Hi, nothing was uploaded. if you want to skip this question, press the Skip button please.',
+                                        'Hi, nothing was uploaded.',
+                                        'if you want to skip this question, press the Skip button please.',
                                       );
                                     }
                                   }}>
@@ -1236,9 +1255,14 @@ const DonationScreen = ({route, navigation}) => {
                           )}
 
                           {currentQuestion.type == 5 ? (
-                            <View style={{alignItems: 'center', marginTop: 10}}>
+                            <View
+                              style={{
+                                alignItems: 'center',
+                                marginTop: 10,
+                                marginBottom: 100,
+                              }}>
                               {contactUsScreen ? (
-                                <ScrollView style={{}}>
+                                <ScrollView style={{flex: 1}}>
                                   {/* <Text style={[styles.leftOption]}>
                                     Thank you so much for your participation.
                                     Please be sure we will handle it with the
@@ -1252,13 +1276,13 @@ const DonationScreen = ({route, navigation}) => {
 
                               <View
                                 style={{
+                                  flex: 1,
                                   flexDirection: 'column',
                                   alignItems: 'center',
                                 }}>
                                 {currentQuestion.id == 2 ? (
                                   <View
                                     style={{
-                                      marginTop: 15,
                                       justifyContent: 'center',
                                       borderRadius: 7,
                                       height: 45,
@@ -1267,7 +1291,7 @@ const DonationScreen = ({route, navigation}) => {
                                     }}>
                                     <TouchableOpacity
                                       onPress={() => {
-                                        backToLastQuestion();
+                                        backToLastQuestion(currentQuestion.id);
                                       }}>
                                       <Text style={[styles.Restart]}>BACK</Text>
                                     </TouchableOpacity>
@@ -1278,7 +1302,7 @@ const DonationScreen = ({route, navigation}) => {
 
                                 <View
                                   style={{
-                                    marginTop: 15,
+                                    marginTop: 10,
                                     justifyContent: 'center',
                                     // marginRight: 20,
                                     borderRadius: 7,
@@ -1384,6 +1408,7 @@ const DonationScreen = ({route, navigation}) => {
                             <></>
                           )}
 
+                          {/* submit */}
                           {currentQuestion.type == 6 ? (
                             <View>
                               <TouchableOpacity
@@ -1395,6 +1420,8 @@ const DonationScreen = ({route, navigation}) => {
                                       {
                                         text: 'Confirm',
                                         onPress: async () => {
+                                          setSendingStatus(true);
+
                                           if (
                                             donorEmailAddress.includes(
                                               user.email + '**',
@@ -1502,7 +1529,7 @@ const DonationScreen = ({route, navigation}) => {
                                 <TouchableOpacity
                                   style={{flex: 1}}
                                   onPress={() => {
-                                    backToLastQuestion();
+                                    backToLastQuestion(currentQuestion.id);
                                   }}>
                                   <Text
                                     style={{
@@ -1707,17 +1734,18 @@ const DonationScreen = ({route, navigation}) => {
                             <View>
                               <View
                                 style={{
+                                  marginVertical: 10,
                                   flexDirection: 'row',
                                   alignItems: 'center',
                                   marginLeft: '5%',
                                   marginRight: '30%',
-                                  marginVertical: 20,
+                                  // marginVertical: 20,
                                 }}>
                                 {/* back */}
                                 <TouchableOpacity
                                   style={{flex: 1}}
                                   onPress={() => {
-                                    backToLastQuestion();
+                                    backToLastQuestion(currentQuestion.id);
                                   }}>
                                   <Text
                                     style={{
@@ -1742,7 +1770,7 @@ const DonationScreen = ({route, navigation}) => {
                                   </Text>
                                 </TouchableOpacity>
                                 {/* next */}
-                                <TouchableOpacity
+                                {/* <TouchableOpacity
                                   style={{flex: 1, alignItems: 'flex-end'}}
                                   onPress={() => {
                                     if (getQId() == currentQuestion.id) {
@@ -1765,7 +1793,7 @@ const DonationScreen = ({route, navigation}) => {
                                     }}>
                                     NEXT{' >'}
                                   </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                               </View>
                             </View>
                           ) : (
@@ -1787,7 +1815,7 @@ const DonationScreen = ({route, navigation}) => {
                                 <TouchableOpacity
                                   style={{flex: 1}}
                                   onPress={() => {
-                                    backToLastQuestion();
+                                    backToLastQuestion(currentQuestion.id);
                                   }}>
                                   <Text
                                     style={{
@@ -1901,7 +1929,7 @@ const DonationScreen = ({route, navigation}) => {
                                 <TouchableOpacity
                                   style={{flex: 1}}
                                   onPress={() => {
-                                    backToLastQuestion();
+                                    backToLastQuestion(currentQuestion.id);
                                   }}>
                                   <Text
                                     style={{
@@ -2036,7 +2064,7 @@ const DonationScreen = ({route, navigation}) => {
                   {/* back to last question */}
                   <TouchableOpacity
                     onPress={() => {
-                      backToLastQuestion();
+                      backToLastQuestion(currentQuestion.id);
                     }}>
                     <Text
                       style={{
@@ -2201,27 +2229,63 @@ const DonationScreen = ({route, navigation}) => {
                           setRefresh(!refresh);
                         }
                       } else if (currentQuestion.type == 9) {
-                        if (currentQuestion.id == getQId()) {
-                          updateNumericAnswers(
-                            currentQuestion.id,
-                            currentInput,
-                          );
-                          setCurrentInput('');
-                          setReload(true);
-                          setRefresh(!refresh);
-                        } else {
-                          addAnswers({
-                            isTrueAnswer: true,
-                            answer: [currentInput],
-                            image: [],
-                            nextQuestionId: currentQuestion.id,
-                            questionId: currentQuestion.id,
-                          });
-                          setQId(currentQuestion.id);
-                          setCurrentInput('');
-                          setReload(true);
-                          setRefresh(!refresh);
-                        }
+                        addAnswers({
+                          isTrueAnswer: true,
+                          answer: [currentInput],
+                          image: [],
+                          nextQuestionId: currentQuestion.id,
+                          questionId: currentQuestion.id,
+                        });
+                        setNextQuestionId(
+                          currentQuestion.id,
+                          currentQuestion.nextQuestionId,
+                        );
+                        setQId(-1);
+                        setCurrentInput('');
+                        setReload(true);
+                        setRefresh(!refresh);
+                        // if (currentQuestion.id == getQId()) {
+                        //   updateNumericAnswers(
+                        //     currentQuestion.id,
+                        //     currentInput,
+                        //   );
+                        //   setCurrentInput('');
+                        //   setReload(true);
+                        //   setRefresh(!refresh);
+                        // } else {
+                        //   addAnswers({
+                        //     isTrueAnswer: true,
+                        //     answer: [currentInput],
+                        //     image: [],
+                        //     nextQuestionId: currentQuestion.id,
+                        //     questionId: currentQuestion.id,
+                        //   });
+                        //   setQId(currentQuestion.id);
+                        //   setCurrentInput('');
+                        //   setReload(true);
+                        //   setRefresh(!refresh);
+                        // }
+                        // if (getQId() == currentQuestion.id) {
+                        //   // console.log(1);
+                        //   console.log(currentInput);
+                        //   addAnswers({
+                        //     isTrueAnswer: true,
+                        //     answer: [currentInput],
+                        //     image: [],
+                        //     nextQuestionId: currentQuestion.id,
+                        //     questionId: currentQuestion.id,
+                        //   });
+                        //   setNextQuestionId(
+                        //     currentQuestion.id,
+                        //     currentQuestion.nextQuestionId,
+                        //   );
+                        //   setQId(-1);
+                        //   setCurrentInput('');
+                        //   setReload(true);
+                        //   setRefresh(!refresh);
+                        // } else {
+                        //   skipQuestion(currentQuestion);
+                        // }
                       } else {
                         addAnswers({
                           isTrueAnswer: false,
@@ -2245,6 +2309,36 @@ const DonationScreen = ({route, navigation}) => {
               </View>
             ) : null}
           </View>
+
+          {/* Submittion loading */}
+          {sendingStatus ? (
+            <View
+              style={{
+                position: 'absolute',
+                top: 0, // Adjust position as needed
+                left: 0,
+                right: 0,
+                bottom: 0,
+                // height: 0, // Or adjust the height as needed
+                backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <View
+                style={{
+                  height: '20%',
+                  width: '70%',
+                  backgroundColor: 'white',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 20,
+                }}>
+                <Text style={{color: 'black', fontSize: 22}}>
+                  Submitting...
+                </Text>
+              </View>
+            </View>
+          ) : null}
         </SafeAreaView>
       </View>
     )

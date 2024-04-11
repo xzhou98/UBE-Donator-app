@@ -189,7 +189,7 @@ const ContactUsScreen = () => {
                 </TouchableOpacity>
               </View>
               <View style={{flexDirection: 'row'}}>
-                <Text style={[styles.text]}>{`Español: 1-888-628-9454h`}</Text>
+                <Text style={[styles.text]}>{`Español: 1-888-628-9454`}</Text>
                 <TouchableOpacity
                   onPress={() => {
                     copyToClipboard('1-888-628-9454h');
@@ -249,7 +249,7 @@ const ContactUsScreen = () => {
             styles.text,
             {marginTop: 15},
           ]}>{`Associate Professor, Department of Psychology`}</Text>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', marginBottom:-40}}>
           <Text
             style={[
               styles.text,

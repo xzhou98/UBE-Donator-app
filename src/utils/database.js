@@ -6,11 +6,12 @@ import seed from '../seed/session1.json';
 import {getStorage, ref, deleteObject} from 'firebase/storage';
 import auth from '@react-native-firebase/auth';
 
-export const createUser = async (email, password) => {
+export const createUser = async (email, prolificId, password) => {
   return firestore()
     .collection('Users')
     .add({
       email: email,
+      prolificId: prolificId,
       password: password,
       isAdmin: false,
       date: firestore.Timestamp.fromDate(new Date()),
@@ -57,7 +58,7 @@ export const deleteUser = async (email, userId, password) => {
   if (!email || !userId) return;
 
   let folderPath = 'images/' + email;
-
+  ` `` `` `` `` `` `` `` `` `;
   // delete the user
   try {
     await firestore().collection('Users').doc(userId).delete();
@@ -128,14 +129,43 @@ export const deleteUser = async (email, userId, password) => {
     );
 };
 
-export const getVerificationCode = async () => {
-  id = 'txfFQy1uUbt5SbFLBX6n';
+export const updateProlificId = async (userId, prolificId) => {
   try {
-    const verification_code = (
-      await firestore().collection('Verification').doc(id).get()
-    ).data().code;
+    await firestore().collection('Users').doc(userId).update({
+      prolificId: prolificId,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    return verification_code;
+export const getVerificationCode = async () => {
+  // id = 'txfFQy1uUbt5SbFLBX6n';
+  try {
+    // const verification_code = (
+    //   await firestore().collection('Verification').doc(id).get()
+    // ).data().code;
+    let snapshot = await firestore().collection('Verification').get()
+    let data;
+    snapshot.forEach(doc => {
+      console.log(doc.id, '=>', doc.data());
+      data = doc.data(); // As there's only one document, assign it directly.
+    });
+    return data.code;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getProlificIdList = async () => {
+  try {
+    let snapshot = await firestore().collection('ProlificId').get()
+    let data;
+    snapshot.forEach(doc => {
+      // console.log(doc.id, '=>', doc.data());
+      data = doc.data(); // As there's only one document, assign it directly.
+    });
+    return data.id_list;
   } catch (error) {
     return error;
   }
@@ -188,7 +218,7 @@ export const getAnswersByAnswerId = async (userId, answersId) => {
   }
 };
 /**
- * get all question from firebase
+ * get all question of current session from firebase
  */
 export const getAllQuestions = async () => {
   // return firestore().collection('Questions').get();
@@ -216,6 +246,112 @@ export const getAllQuestions = async () => {
       }
     });
     return session;
+  } catch (error) {
+    return error;
+  }
+};
+
+/**
+ * get all question of all sessionsfrom firebase
+ */
+export const getAllQuestionsFromAllSessions = async () => {
+  // return firestore().collection('Questions').get();
+  try {
+    const q = await firestore().collection('Questions').get();
+    let session = null;
+    let allSessions = [];
+    await q.docs.forEach(async element => {
+      let temp = [];
+      element.data().questions.forEach((x, index) => {
+        temp.push(Object.assign({id: `${index}`}, x));
+      });
+      // session.push({date: moment(element.data().date._seconds * 1000).format('MMMM Do YYYY, h:mm:ss a'), questions: temp, session: element.data().session})
+      session = {
+        id: element.id,
+        questions: temp,
+        session: element.data().session,
+        DonorEmailAddress: element.data().DonorEmailAddress,
+        prolific_fail_link: element.data().prolific_fail_link,
+        prolific_success_link: element.data().prolific_success_link,
+      };
+      allSessions.push(session);
+    });
+    allSessions.sort((a, b) => parseInt(a.session) - parseInt(b.session));
+    return allSessions;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getAllanswersFromAllSessions = async () => {
+  // return firestore().collection('Questions').get();
+  try {
+    const a = await firestore().collection('AllDonationData').get();
+    let allAnswersBySessions = [];
+    let allQuestions = await getAllQuestionsFromAllSessions();
+    let allSessionsId = [];
+    for (let i = 0; i < allQuestions.length; i++) {
+      allSessionsId.push(allQuestions[i].id);
+      allAnswersBySessions.push([]);
+    }
+
+    const mapping = {
+      0: 'Multiple choices',
+      1: 'Multiple answers',
+      2: 'Drop down select',
+      3: 'Text entry',
+      4: 'Uploading image',
+      5: 'Good end',
+      6: 'Submit',
+      7: 'Mark on image',
+      8: 'Wellness check',
+      9: 'Number entry',
+      10: 'Statement',
+      11: 'Bad end',
+    };
+
+    await a.docs.forEach(async element => {
+      let answers = element.data().answer;
+      let index = allSessionsId.indexOf(element.data().sessionId);
+
+      let qId = [];
+      let question = [];
+      let qType = [];
+      let answer = [];
+
+      for (let i = 0; i < answers.length; i++) {
+        let id = answers[i].questionId;
+        let t = allQuestions[index].questions[id].type;
+        if (
+          id == 0 ||
+          t == '5' ||
+          t == '6' ||
+          t == '8' ||
+          t == '10' ||
+          t == '11'
+        ) {
+        } else {
+          qId.push(id);
+          question.push(
+            allQuestions[index].questions[id].description.join(' '),
+          );
+          qType.push(mapping[t]);
+
+          if (t == '4' || t == '7') {
+            if (answers[i].image.length > 0) {
+              answer.push(answers[i].image);
+            } else {
+              answer.push(answers[i].answer);
+            }
+          } else answer.push(answers[i].answer);
+        }
+      }
+      let temp = {qId: qId, question: question, qType: qType, answer: answer};
+
+      allAnswersBySessions[index].push(temp);
+    });
+
+    return allAnswersBySessions;
   } catch (error) {
     return error;
   }
@@ -281,6 +417,7 @@ export const getUserInfoByEmail = async email => {
         user = {
           id: element.id,
           email: element.data().email,
+          prolificId: element.data().prolificId,
           password: element.data().password,
           isAdmin: element.data().isAdmin,
           date: date,
@@ -457,7 +594,7 @@ export const saveAnswersToFirebase = async (
     sessionId: sessionId,
     userId: userId,
   };
-  console.log(finalData);
+  // console.log(finalData);
   await firestore().collection('AllDonationData').add(finalData);
 };
 

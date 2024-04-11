@@ -14,11 +14,14 @@ import {
 import auth from '@react-native-firebase/auth';
 import {
   getUserInfoByEmail,
-  getAllQuestions,
   getAllSessions,
   getAllSessionsByUserId,
   getAllUserInfo,
+  getAllQuestionsFromAllSessions,
+  getAllanswersFromAllSessions
 } from '../utils/database';
+import * as XLSX from 'xlsx';
+
 // import { showNotification, handle5SecNotification, handleCancel, handleScheduleNotification } from '../views/notification.android'
 // import DatePicker from 'react-native-date-picker';
 // import moment from 'moment';
@@ -68,6 +71,32 @@ const UserDonationsScreen = ({navigation}) => {
     fetchData();
     return unsubscribe;
   }, [navigation]);
+
+  const exportData = async() => {
+    try {
+
+      let allAnswers = await getAllanswersFromAllSessions()
+      for (let i = 0; i < allAnswers.length; i++) {
+
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(json);
+
+        for (let j = 0; j < allAnswers[i].length; j++) {
+          const element = array[j];
+          
+        }
+        const json = JSON.stringify(allAnswers[i])
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Answers');        
+      }
+
+      console.log(allAnswers[0].length);
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  };
 
   return render ? (
     <View>
@@ -164,6 +193,22 @@ const UserDonationsScreen = ({navigation}) => {
           disabled={currentPage === 1}
         />
         <Button
+          title="Export"
+          onPress={() => {
+            Alert.alert(
+              'Export Data',
+              'Are you sure you want to export all donation data?',
+              [
+                {
+                  text: 'Confirm',
+                  onPress: () => {exportData()},
+                },
+                {text: 'Cancel', style: 'cancel'},
+              ],
+            );
+          }}
+        />
+        <Button
           title="Next"
           onPress={() => {
             if (currentPage < Math.ceil(userList.length / pageSize)) {
@@ -201,6 +246,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#7BB2BA',
+    borderRadius: 4,
+  },
+  exportButton: {
+    flex: 2,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'red',
     borderRadius: 4,
   },
   reviewButton: {

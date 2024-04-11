@@ -11,8 +11,8 @@ import {
   EditScreen,
   UserDonationsScreen,
 } from '../screens';
-import SubStackNavigator from './SubStackNavigator'
-import AdminManageUserStackNavigator from './AdminManageUserStackNavigator'
+import SubStackNavigator from './SubStackNavigator';
+import AdminManageUserStackNavigator from './AdminManageUserStackNavigator';
 import {
   Text,
   Alert,
@@ -35,7 +35,8 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import {getUserInfoByEmail} from '../utils/database';
+import {getUserInfoByEmail, getProlificIdList} from '../utils/database';
+
 const Drawer = createDrawerNavigator();
 
 // const Stack = createStackNavigator();
@@ -51,18 +52,21 @@ function AppStackNavigator({navigation}) {
   const scaleValue = useRef(new Animated.Value(1)).current;
   const closeButtonOffset = useRef(new Animated.Value(0)).current;
   const [currentUser, setCurrentUser] = useState(null);
-  const [render, setRebder] = useState(false);
+  const [render, setRender] = useState(false);
+  const [prolificIdList, setProlificIdList] = useState();
 
   const onAuthStateChanged = async user => {
     try {
-        cur_user = await getUserInfoByEmail(user.email);
-        setCurrentUser(cur_user)
+      cur_user = await getUserInfoByEmail(user.email);
+      let id_list = await getProlificIdList();
+      setCurrentUser(cur_user);
+      setProlificIdList(id_list);
+      setRender(true);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
 
     // await setCurrentUser(user);
-    //   setRebder(true)
   };
 
   useEffect(() => {
@@ -91,7 +95,7 @@ function AppStackNavigator({navigation}) {
     );
   }
 
-  return (
+  return render ? (
     <Drawer.Navigator
       initialRouteName="Home"
       drawerContent={props => <CustomDrawerContent {...props} />}>
@@ -105,9 +109,14 @@ function AppStackNavigator({navigation}) {
         <Drawer.Screen name="AddSeed" component={AddSeedScreen} />
       )}
       {currentUser?.isAdmin === true && (
-        <Drawer.Screen name="UserDonations" component={AdminManageUserStackNavigator} />
+        <Drawer.Screen
+          name="UserDonations"
+          component={AdminManageUserStackNavigator}
+        />
       )}
     </Drawer.Navigator>
+  ) : (
+    <></>
   );
 }
 

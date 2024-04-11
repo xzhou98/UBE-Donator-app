@@ -48,12 +48,13 @@ const AddSeedScreen = () => {
       {/* <TouchableOpacity onPress={() => {fetchProlificUserInfo()}}>
         <Text>ss</Text>
       </TouchableOpacity> */}
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={async() => {
           await getVerificationCode();
         }}>
         <Text>ss</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      
     </View>
   );
 };

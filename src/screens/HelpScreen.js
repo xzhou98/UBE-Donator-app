@@ -12,7 +12,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 
 const HelpScreen = () => {
   const [categories, setCategories] = useState([
-    false,
+    true,
     false,
     false,
     false,
@@ -34,7 +34,7 @@ const HelpScreen = () => {
       <View style={{alignItems: 'center'}}></View>
       <Text style={styles.basetext}>
         UBE is a ChatBot App for Data Donation. It embeds some basic
-        functionalities and allows using text input, multiple-choice questions,
+        functionalities and allows text input, multiple-choice questions,
         and image upload. This page will help you in understanding how to use
         the functionalities.
       </Text>
@@ -192,6 +192,48 @@ const HelpScreen = () => {
                 styles.cate_title
               }>{`UBE allows you to upload your screenshots and then edit them in the app itself to hide anything you do not want to share with us.`}</Text>
 
+            <View style={{margin: 10}}>
+              <View style={{flexDirection: 'row'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: 'black',
+                    marginLeft: 10,
+                    marginRight: 5,
+                    marginVertical: 5,
+                  }}>
+                  1.
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: 'black',
+                    marginRight: 10,
+                    marginVertical: 5,
+                  }}>{`To upload screenshots, press on the "+ add image" button. Find the image you'd like to share, press on the circle “o” on the images to select them, click done. `}</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: 'black',
+                    marginLeft: 10,
+                    marginRight: 5,
+                    marginVertical: 5,
+                  }}>
+                  2.
+                </Text>
+
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: 'black',
+                    marginRight: 10,
+                    marginVertical: 5,
+                  }}>{`To edit and hide elements on the image, go to the next step > latest uploaded image thumbnail/s you see >  click picture icon for stickers, and paint brush to draw. > click save when done.*"`}</Text>
+              </View>
+            </View>
+
             {/* <Text
               style={[
                 styles.cate_text,
@@ -229,11 +271,11 @@ const HelpScreen = () => {
           style={[
             styles.cate_title,
             {paddingBottom: 10},
-          ]}>{`Didn’t find the answer to your question? For further questions regarding the app and study, contact:`}</Text>
+          ]}>{`Didn’t find the answer to your question? For further questions regarding the app and study;`}</Text>
 
         <View
           style={{
-            marginHorizontal:5,
+            marginHorizontal: 5,
             borderTopWidth: 0.5,
             borderBottomWidth: 0.5,
             padding: 10,
@@ -253,15 +295,16 @@ const HelpScreen = () => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL('https://drive.google.com/file/d/1L4GqT1BCtYjbDSlIk3KaAxrgu-2xtcj9/view?usp=sharing');
+                Linking.openURL(
+                  'https://docs.google.com/document/d/1_lSRj0hi4IyGQb3wkCI-Q1XwgZXVtTt_tnvN_b-Hn9E/edit?usp=sharing',
+                );
               }}>
               <Text
                 style={{
                   color: '#1f28fc',
                   fontSize: 16,
-                  
                 }}>
-                information pdf
+                information Google Doc
               </Text>
             </TouchableOpacity>
           </View>
@@ -290,6 +333,14 @@ const HelpScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
+
+          <Text
+            style={{
+              color: 'black',
+              fontSize: 16,
+            }}>
+            Still have question? Please contact{' '}
+          </Text>
         </View>
 
         <Text style={styles.boldtext}>Dr. Melissa McDonald</Text>
