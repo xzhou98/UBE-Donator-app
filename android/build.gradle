@@ -4,7 +4,7 @@ buildscript {
     ext {
         //push notification
         googlePlayServicesVersion = "+" // default: "+"
-        firebaseMessagingVersion = "+" // default: "21.1.0"
+//        firebaseMessagingVersion = "+" // default: "21.1.0"
 
         buildToolsVersion = "30.0.2"
         minSdkVersion = 21
