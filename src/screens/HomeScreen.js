@@ -6,6 +6,7 @@ import {
   Alert,
   TouchableOpacity,
   FlatList,
+  Linking,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {
@@ -146,8 +147,21 @@ const HomeScreen = ({navigation}) => {
           <View
             style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
             <TouchableOpacity
-              onPress={() => {
-                setWebViewDisplay(true);
+              // onPress={() => {
+              //   setWebViewDisplay(true);
+              // }}>
+              onPress={async () => {
+                const url = "https://docs.google.com/document/d/1grpucj5BZfQGlptG2RBkBsT6ltZGTXjg50K4_k4hV-I/edit?usp=sharing";
+                try {
+                  const supported = await Linking.canOpenURL(url);
+                  // if (supported) {
+                    await Linking.openURL(url);
+                  // } else {
+                  //   Alert.alert(`Don't know how to open this URL: ${url}`);
+                  // }
+                } catch (error) {
+                  console.error(error);
+                }
               }}>
               <Text style={{fontSize: 16, color: 'black'}}>Privacy Policy</Text>
             </TouchableOpacity>
