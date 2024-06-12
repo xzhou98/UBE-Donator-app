@@ -39,17 +39,23 @@ const SignUpScreen = ({navigation}) => {
   const handleOnSubmit = async () => {
     if (email != '' && prolificId != '' && password != '' && confirmPassword != '') {
       if (statement) {
-        if (password == confirmPassword) {
-          // G45S5D1Q
-          if (code == verificationCode) {
-            let success = await signUp(email, password);
-            if (success) await createUser(email, prolificId, password);
+        if (password) {
+          if (password == confirmPassword) {
+            // G45S5D1Q
+            if (code == verificationCode) {
+              console.log(1);
+              let success = await signUp(email, password);
+              if (success) await createUser(email, prolificId, password);
+            } else {
+              Alert.alert('The verification code is incorrect');
+            }
           } else {
-            Alert.alert('The verification code is incorrect');
+            Alert.alert('Password did not match');
           }
-        } else {
-          Alert.alert('Password did not match');
+        }else{
+          Alert.alert('The length of the password should be more than 6');
         }
+
       } else {
         Alert.alert('Please agree with the statement below');
       }
@@ -224,7 +230,7 @@ const SignUpScreen = ({navigation}) => {
         {/* Submit button */}
 
         {/* Footer */}
-        <View style={{alignItems: 'center', marginTop: 20}}>
+        <View style={{alignItems: 'center', marginVertical: 40}}>
           <Text style={{fontWeight: 'bold', color: 'grey', fontSize: 18}}>
             Already have an account?
           </Text>
