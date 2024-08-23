@@ -1,4 +1,4 @@
-package com.quizapp;
+package edu.umich.Ube;
 
 import com.facebook.react.ReactActivity;
 

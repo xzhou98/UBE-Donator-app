@@ -149,7 +149,7 @@ android {
 //    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.quizapp"
+        applicationId "edu.umich.Ube"
         targetSdkVersion rootProject.ext.targetSdkVersion
         minSdkVersion rootProject.ext.minSdkVersion
 //        targetSdkVersion 31
@@ -181,6 +181,7 @@ android {
                     abiFilters nativeArchitectures.split(',')
                 }
             }
+            debuggable false
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -188,6 +189,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            debuggable false
         }
     }
 

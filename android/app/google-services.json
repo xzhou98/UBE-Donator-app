@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:681002248888:android:02131b09e29c8134da624d",
+        "mobilesdk_app_id": "1:681002248888:android:4c81e58119eab979da624d",
         "android_client_info": {
-          "package_name": "com.fullstackquizapp"
+          "package_name": "com.quizapp"
         }
       },
       "oauth_client": [
@@ -36,9 +36,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:681002248888:android:4c81e58119eab979da624d",
+        "mobilesdk_app_id": "1:681002248888:android:b25452c0850b57c8da624d",
         "android_client_info": {
-          "package_name": "com.quizapp"
+          "package_name": "edu.umich.Ube"
         }
       },
       "oauth_client": [
